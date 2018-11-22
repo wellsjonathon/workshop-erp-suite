@@ -91,6 +91,10 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            workorder.Status = _context.WorkorderStatuses.Single(x => x.ID == 1);
+            workorder.DateCreated = DateTime.Now;
+
+
             _context.Workorders.Add(workorder);
             await _context.SaveChangesAsync();
 

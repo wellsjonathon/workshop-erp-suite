@@ -4,14 +4,16 @@ using ERP.Repositories.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ERP.Repositories.Migrations.Workorder
+namespace ERP.Repositories.Migrations
 {
     [DbContext(typeof(WorkorderContext))]
-    partial class WorkorderContextModelSnapshot : ModelSnapshot
+    [Migration("20181122194600_UpdatedStatusFK")]
+    partial class UpdatedStatusFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +82,16 @@ namespace ERP.Repositories.Migrations.Workorder
 
                     b.HasKey("ID");
 
-                    b.ToTable("WorkorderStatus");
+                    b.ToTable("WorkorderStatuses");
+
+                    b.HasData(
+                        new { ID = 1, Name = "New" },
+                        new { ID = 2, Name = "Scheduled" },
+                        new { ID = 3, Name = "In Progress" },
+                        new { ID = 4, Name = "Completed" },
+                        new { ID = 5, Name = "Rejected" },
+                        new { ID = 6, Name = "Cancelled" }
+                    );
                 });
 
             modelBuilder.Entity("ERP.Models.Workorder", b =>

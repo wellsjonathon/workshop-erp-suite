@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ERP.Repositories.Migrations.Workorder
+namespace ERP.Repositories.Migrations
 {
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "WorkorderStatus",
+                name: "WorkorderStatuses",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -18,7 +18,7 @@ namespace ERP.Repositories.Migrations.Workorder
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkorderStatus", x => x.ID);
+                    table.PrimaryKey("PK_WorkorderStatuses", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,11 +51,24 @@ namespace ERP.Repositories.Migrations.Workorder
                 {
                     table.PrimaryKey("PK_Workorders", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Workorders_WorkorderStatus_StatusID",
+                        name: "FK_Workorders_WorkorderStatuses_StatusID",
                         column: x => x.StatusID,
-                        principalTable: "WorkorderStatus",
+                        principalTable: "WorkorderStatuses",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "WorkorderStatuses",
+                columns: new[] { "ID", "Name" },
+                values: new object[,]
+                {
+                    { 1, "New" },
+                    { 2, "Scheduled" },
+                    { 3, "In Progress" },
+                    { 4, "Completed" },
+                    { 5, "Rejected" },
+                    { 6, "Cancelled" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -70,7 +83,7 @@ namespace ERP.Repositories.Migrations.Workorder
                 name: "Workorders");
 
             migrationBuilder.DropTable(
-                name: "WorkorderStatus");
+                name: "WorkorderStatuses");
         }
     }
 }

@@ -32,8 +32,6 @@ namespace ERP.API
             // on an abstraction
             services.AddDbContext<WorkorderContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<WorkorderStatusContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<VendorContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 

@@ -8,7 +8,7 @@ namespace ERP.Models
     public class Workorder
     {
         public int ID { get; set; }
-        public WorkorderStatus Status { get; set; }
+        public virtual WorkorderStatus Status { get; set; }
         // public WorkorderUse Use { get; set; }
         // public Faculty Faculty { get; set; }
         // public Semester Semester { get; set; } // Enum? Is it even needed?
