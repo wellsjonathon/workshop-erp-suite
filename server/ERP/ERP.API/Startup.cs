@@ -27,6 +27,13 @@ namespace ERP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // I think we can replace all of these AddDbContext calls using
+            // something like Castle Windsor that can register all contexts based
+            // on an abstraction
+            services.AddDbContext<WorkorderContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<WorkorderStatusContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<VendorContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
