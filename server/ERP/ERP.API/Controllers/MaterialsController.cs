@@ -12,56 +12,56 @@ namespace ERP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WorkordersController : ControllerBase
+    public class MaterialsController : ControllerBase
     {
-        private readonly WorkorderContext _context;
+        private readonly MaterialContext _context;
 
-        public WorkordersController(WorkorderContext context)
+        public MaterialsController(MaterialContext context)
         {
             _context = context;
         }
 
-        // GET: api/Workorders
+        // GET: api/Materials
         [HttpGet]
-        public IEnumerable<Workorder> GetWorkorders()
+        public IEnumerable<Material> GetMaterials()
         {
-            return _context.Workorders;
+            return _context.Materials;
         }
 
-        // GET: api/Workorders/5
+        // GET: api/Materials/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetWorkorder([FromRoute] int id)
+        public async Task<IActionResult> GetMaterial([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.FindAsync(id); //get.include(context something)
+            var material = await _context.Materials.FindAsync(id);
 
-            if (workorder == null)
+            if (material == null)
             {
                 return NotFound();
             }
 
-            return Ok(workorder);
+            return Ok(material);
         }
 
-        // PUT: api/Workorders/5
+        // PUT: api/Materials/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkorder([FromRoute] int id, [FromBody] Workorder workorder)
+        public async Task<IActionResult> PutMaterial([FromRoute] int id, [FromBody] Material material)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != workorder.ID)
+            if (id != material.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(workorder).State = EntityState.Modified;
+            _context.Entry(material).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace ERP.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WorkorderExists(id))
+                if (!MaterialExists(id))
                 {
                     return NotFound();
                 }
@@ -82,49 +82,46 @@ namespace ERP.API.Controllers
             return NoContent();
         }
 
-        // POST: api/Workorders
+        // POST: api/Materials
         [HttpPost]
-        public async Task<IActionResult> PostWorkorder([FromBody] Workorder workorder)
+        public async Task<IActionResult> PostMaterial([FromBody] Material material)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            workorder.Status = _context.WorkorderStatuses.Single(x => x.ID == 1);
-            workorder.DateCreated = DateTime.Now;
-
-
-            _context.Workorders.Add(workorder);
+            material.Category = _context.MaterialCategories.Single<MaterialCategory>(c => c.ID == material.Category.ID);
+            material.Type = _context.MaterialTypes.Single<MaterialType>(c => c.ID == material.Type.ID);
+            _context.Materials.Add(material);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkorder", new { id = workorder.ID }, workorder);
+            return CreatedAtAction("GetMaterial", new { id = material.ID }, material);
         }
 
-        // DELETE: api/Workorders/5
+        // DELETE: api/Materials/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkorder([FromRoute] int id)
+        public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.FindAsync(id);
-            if (workorder == null)
+            var material = await _context.Materials.FindAsync(id);
+            if (material == null)
             {
                 return NotFound();
             }
 
-            _context.Workorders.Remove(workorder);
+            _context.Materials.Remove(material);
             await _context.SaveChangesAsync();
 
-            return Ok(workorder);
+            return Ok(material);
         }
 
-        private bool WorkorderExists(int id)
+        private bool MaterialExists(int id)
         {
-            return _context.Workorders.Any(e => e.ID == id);
+            return _context.Materials.Any(e => e.ID == id);
         }
     }
 }

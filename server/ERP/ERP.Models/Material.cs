@@ -9,8 +9,8 @@ namespace ERP.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public MaterialCategory Category { get; set; }
-        public MaterialType Type { get; set; }
+        public virtual MaterialCategory Category { get; set; }
+        public virtual MaterialType Type { get; set; }
         public float QuantityInStock { get; set; }
         public string Details { get; set; }
     }

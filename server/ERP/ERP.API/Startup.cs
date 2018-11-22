@@ -34,6 +34,8 @@ namespace ERP.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<VendorContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MaterialContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Is this line needed if we're not using RazorPages?
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
