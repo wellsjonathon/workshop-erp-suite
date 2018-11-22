@@ -7,6 +7,7 @@
 3. Ctrl-c to stop it
 
 Note: Run with a command prompt, not a Git Bash prompt, otherwise the process won't be killed on exit
+
 Note: Stop the server to create new controllers and migrations
 
 ### Adding additional models
