@@ -25,7 +25,7 @@ namespace ERP.API.Controllers
         [HttpGet]
         public IEnumerable<Workorder> GetWorkorders()
         {
-            return _context.Workorders;
+            return _context.Workorders.Include(w => w.Status);
         }
 
         // GET: api/Workorders/5
@@ -37,7 +37,9 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.FindAsync(id); //get.include(context something)
+            var workorder = await _context.Workorders
+                .Include(w => w.Status)
+                .FirstOrDefaultAsync(w => w.ID == id); //get.include(context something)
 
             if (workorder == null)
             {
@@ -93,7 +95,6 @@ namespace ERP.API.Controllers
 
             workorder.Status = _context.WorkorderStatuses.Single(x => x.ID == 1);
             workorder.DateCreated = DateTime.Now;
-
 
             _context.Workorders.Add(workorder);
             await _context.SaveChangesAsync();
