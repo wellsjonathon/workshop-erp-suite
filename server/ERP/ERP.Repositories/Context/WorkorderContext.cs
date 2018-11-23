@@ -16,6 +16,7 @@ namespace ERP.Repositories.Context
 
         public DbSet<Workorder> Workorders { get; set; }
         public DbSet<WorkorderStatus> WorkorderStatuses { get; set; }
+        public DbSet<WorkorderMaterial> WorkorderMaterials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

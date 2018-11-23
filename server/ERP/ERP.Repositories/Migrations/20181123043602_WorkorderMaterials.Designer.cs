@@ -4,14 +4,16 @@ using ERP.Repositories.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ERP.Repositories.Migrations
 {
     [DbContext(typeof(WorkorderContext))]
-    partial class WorkorderContextModelSnapshot : ModelSnapshot
+    [Migration("20181123043602_WorkorderMaterials")]
+    partial class WorkorderMaterials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
