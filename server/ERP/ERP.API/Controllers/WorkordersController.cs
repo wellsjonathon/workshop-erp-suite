@@ -39,7 +39,7 @@ namespace ERP.API.Controllers
 
             var workorder = await _context.Workorders
                 .Include(w => w.Status)
-                .FirstOrDefaultAsync(w => w.ID == id); //get.include(context something)
+                .FirstOrDefaultAsync(w => w.ID == id);
 
             if (workorder == null)
             {
@@ -84,6 +84,44 @@ namespace ERP.API.Controllers
             return NoContent();
         }
 
+        // PUT: api/Workorders/5/status
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> PutWorkorderStatus([FromRoute] int id, [FromBody] WorkorderStatus status)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.ID == id);
+
+            if (id != workorder.ID)
+            {
+                return BadRequest();
+            }
+
+            workorder.Status = await _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.ID == status.ID);
+            _context.Entry(workorder).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkorderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // POST: api/Workorders
         [HttpPost]
         public async Task<IActionResult> PostWorkorder([FromBody] Workorder workorder)
@@ -93,7 +131,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            workorder.Status = _context.WorkorderStatuses.Single(x => x.ID == 1);
+            workorder.Status = await _context.WorkorderStatuses.FirstOrDefaultAsync(x => x.ID == 1);
             workorder.DateCreated = DateTime.Now;
 
             _context.Workorders.Add(workorder);
