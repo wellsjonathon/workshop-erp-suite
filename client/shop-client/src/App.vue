@@ -1,25 +1,24 @@
 <template>
   <div id="app">
-    <NavTop id="nav__top"/>
-    <NavSide id="nav__side"/>
+    <Nav id="nav"/>
     <div id="content">
-      <img alt="Vue logo" src="./assets/logo.png">
-      <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <div id="content-area">
+
+      </div>
     </div>
+    <Pmqa id="pmqa"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import NavTop from './components/Nav/Top.vue'
-import NavSide from './components/Nav/Side.vue'
+import Nav from './components/Menus/Nav.vue'
+import Pmqa from './components/Menus/PMQuickAccess.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
-    NavTop,
-    NavSide
+    Pmqa,
+    Nav
   }
 }
 </script>
@@ -28,6 +27,7 @@ export default {
 body {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -39,33 +39,42 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
+  display: grid;
+  grid-template-columns: 300px auto 300px;
+  grid-template-rows: auto;
 }
-#nav__top {
-  height: 50px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-}
-#nav__side {
+#nav {
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
   height: 100%;
-  width: 60px;
+  width: 100%;
+  /*width: 300px;*/
   margin: 0;
   padding: 0;
-  position: fixed;
-  top: 50px;
-  left: 0;
   z-index: 99;
+  background-color: #425B72;
 }
 #content {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
   height: 100%;
   width: 100%;
-  top: 50px;
-  left: 60px;
-  position: fixed;
-  background-color: aqua;
+  background-color: #EFEFF4;
+}
+#content-area {
+  /* margin: 28px; */
+  width: 97%;
+  height: 97%;
+  margin: 1.5%;
+  border-radius: 7px;
+  background-color: #FFFFFF;
+}
+#pmqa {
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
+  height: 100%;
+  width: 100%;
+  /* width: 300px; */
+  background-color: #425B72;
 }
 </style>
