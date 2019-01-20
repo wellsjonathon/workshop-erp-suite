@@ -10,7 +10,8 @@ import { faChevronCircleLeft,
   faWarehouse,
   faCalendarAlt,
   faChartPie,
-  faCog } from '@fortawesome/free-solid-svg-icons'
+  faCog,
+  faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(VueRouter)
@@ -24,6 +25,7 @@ library.add(faWarehouse)
 library.add(faCalendarAlt)
 library.add(faChartPie)
 library.add(faCog)
+library.add(faUser)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 

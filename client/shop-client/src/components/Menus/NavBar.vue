@@ -1,5 +1,11 @@
 <template>
   <div :class="['nav', !isCollapsed ? 'extended' : 'collapsed']">
+    <router-link to="/account" :class="['nav__account', !collapsed ? 'extended' : 'collapsed']">
+      <FaIcon class="nav__account__icon" icon="user"/>
+      <div :class="['nav__account__link', !collapsed ? 'extended' : 'collapsed']">
+        Account
+      </div>
+    </router-link>
     <div class="nav__links">
       <NavBarItem :collapsed="isCollapsed"
                   link="/dashboard"
@@ -61,6 +67,7 @@ export default {
 
 <style scoped>
 .nav {
+  position: relative;
   display: flex;
   transition-duration: 0.5s;
   background-color: #425B72;
@@ -75,6 +82,49 @@ export default {
 }
 .nav__links {
   margin: auto 0;
+  position: relative;
+}
+.nav__account {
+  position: absolute;
+  background-color: #EFEFF4;
+  display: flex;
+  width: 100%;
+  margin: 0;
+  color: #425B72;
+  transition-duration: 0.2s;
+  box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
+              0px -2px 16px -2px rgba(1,1,1,0.075) inset;
+}
+.nav__account:hover {
+  background-color: #607589;
+  cursor: pointer;
+}
+.nav__account:active {
+  width: calc(100% + 2px);
+  transition-duration: 0s;
+  background-color: #8796A4;
+  transform: translate(-2px, 2px);
+}
+.nav__account__icon {
+  width: 36px;
+  height: 36px;
+  padding: 12px;
+}
+.nav__account__link {
+  width: 220px; /* Upgrade to Sass, use extended - collapsed */
+  margin: auto 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.49s;
+}
+.nav__account__link.extended {
+  display: block;
+}
+.nav__account__link.collapsed {
+  width: 0px;
+}
+a {
+  text-decoration: none;
 }
 .nav__btn {
   position: absolute;
