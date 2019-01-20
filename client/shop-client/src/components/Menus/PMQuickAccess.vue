@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'ProjectManagementQuickAccess',
+  name: 'PMQuickAccess',
   props: {
     collapsed: {
       type: Boolean,
@@ -30,33 +30,35 @@ export default {
 
 <style scoped>
 .pmqa {
-  /* width: 300px; */
   transition-duration: 0.5s;
   background-color: #425B72;
-  box-shadow: -2px -2px 4px rgba(1,1,1,0.1),
-              -1px -1px 16px rgba(1,1,1,0.075);
+  box-shadow: -2px 0 4px 1px rgba(1,1,1,0.175),
+              -1px 0 16px 1px rgba(1,1,1,0.1);
 }
 .pmqa.extended {
   width: 300px;
 }
 .pmqa.collapsed {
-  width: 50px;
+  width: 60px;
 }
 .pmqa__btn {
-  position: relative;
+  position: absolute;
   width: 26px;
   height: 26px;
   left: -12px;
-  /* left: calc(0% - 12px); */
-  top: calc(50% - 13px);
-  transition-duration: 0.5s;
+  top: calc(50% - 15px);
+  transition: transform 0.5s, color 0.2s;
   color: #19344B;
   background-color: #42586E;
   border: 2px solid #42586E;
-  border-radius: 14px;
+  border-radius: 15px;
+}
+.pmqa__btn.extended {
+  filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175));
 }
 .pmqa__btn.collapsed {
   transform: rotate(-180deg);
+  filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175));
 }
 .pmqa__btn:hover {
   color: rgba(25, 52, 75, 0.7);

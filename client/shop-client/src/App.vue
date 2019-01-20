@@ -6,19 +6,19 @@
 
       </div>
     </div>
-    <ProjectManagementQuickAccess class="pmqa"/>
+    <PMQuickAccess class="pmqa"/>
   </div>
 </template>
 
 <script>
-import NavBar from './components/Menus/Nav.vue'
-import ProjectManagementQuickAccess from './components/Menus/PMQuickAccess.vue'
+import NavBar from './components/Menus/NavBar.vue'
+import PMQuickAccess from './components/Menus/PMQuickAccess.vue'
 
 export default {
   name: 'app',
   components: {
     NavBar,
-    ProjectManagementQuickAccess
+    PMQuickAccess
   }
 }
 </script>
@@ -46,9 +46,8 @@ body {
 .nav {
   grid-row: 1 / 2;
   grid-column: 1 / 2;
+  position: relative;
   height: 100%;
-  /* width: 100%; */
-  /*width: 300px;*/
   margin: 0;
   padding: 0;
   z-index: 99;
@@ -67,10 +66,13 @@ body {
   border-radius: 7px;
   box-sizing: border-box;
   background-color: #FFFFFF;
+  box-shadow: 2px 2px 8px rgba(1,1,1,0.1),
+              -2px 2px 8px rgba(1,1,1,0.1);
 }
 .pmqa {
   grid-row: 1 / 2;
   grid-column: 3 / 4;
+  position: relative;
   height: 100%;
 }
 </style>
