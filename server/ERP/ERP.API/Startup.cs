@@ -27,6 +27,8 @@ namespace ERP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             // I think we can replace all of these AddDbContext calls using
             // something like Castle Windsor that can register all contexts based
             // on an abstraction
@@ -38,7 +40,7 @@ namespace ERP.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Is this line needed if we're not using RazorPages?
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +55,11 @@ namespace ERP.API
                 app.UseHsts();
             }
 
+            // TODO: Update this with a proper domain
+            // This may come when we look into creating an executable that hosts both the server and the client
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:8080").AllowAnyMethod()
+            );
             app.UseHttpsRedirection();
             app.UseMvc();
         }
