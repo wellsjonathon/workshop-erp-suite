@@ -1,8 +1,8 @@
 <template>
   <div :class="['nav', !isCollapsed ? 'extended' : 'collapsed']">
-    <router-link to="/account" :class="['nav__account', !collapsed ? 'extended' : 'collapsed']">
+    <router-link to="/account" :class="['nav__account', !isCollapsed ? 'extended' : 'collapsed']">
       <FaIcon class="nav__account__icon" icon="user"/>
-      <div :class="['nav__account__link', !collapsed ? 'extended' : 'collapsed']">
+      <div :class="['nav__account__link', !isCollapsed ? 'extended' : 'collapsed']">
         Account
       </div>
     </router-link>
@@ -67,15 +67,16 @@ export default {
 
 <style scoped>
 .nav {
-  position: relative;
   display: flex;
+  position: relative;
+  font-size: 1.6rem;
   transition-duration: 0.5s;
   background-color: #425B72;
   box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
               1px 0px 16px 1px rgba(1,1,1,0.075);
 }
 .nav.extended {
-  width: 300px;
+  width: 280px;
 }
 .nav.collapsed {
   width: 60px;
@@ -86,11 +87,12 @@ export default {
 }
 .nav__account {
   position: absolute;
-  background-color: #EFEFF4;
+  background-color: #8796A4;
   display: flex;
   width: 100%;
   margin: 0;
-  color: #425B72;
+  top: -2px;
+  color: #EFEFF4;
   transition-duration: 0.2s;
   box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
               0px -2px 16px -2px rgba(1,1,1,0.075) inset;

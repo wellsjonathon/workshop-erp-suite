@@ -65,7 +65,7 @@ export default {
   padding: 12px;
 }
 .nav__item__link {
-  width: 220px; /* Upgrade to Sass, use extended - collapsed */
+  width: 200px; /* Upgrade to Sass, use extended - collapsed */
   margin: auto 0;
   overflow: hidden;
   white-space: nowrap;
@@ -80,6 +80,9 @@ export default {
 .router-link-active {
   background-color: #EFEFF4;
   color: #425B72;
+}
+.router-link-active:hover {
+  color: #8796A4;
 }
 a {
   text-decoration: none;

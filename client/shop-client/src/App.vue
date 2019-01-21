@@ -2,9 +2,7 @@
   <div id="app">
     <NavBar class="nav"/>
     <div id="content">
-      <div id="content-area">
-
-      </div>
+      <router-view></router-view>
     </div>
     <PMQuickAccess class="pmqa"/>
   </div>
@@ -24,13 +22,18 @@ export default {
 </script>
 
 <style>
+html {
+  font-size: 62.5%;
+  /* font-family: 'Roboto', sans-serif; */
+  font-family: 'Montserrat', sans-serif
+}
 body {
   padding: 0;
   margin: 0;
   height: 100%;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center;
@@ -59,7 +62,7 @@ body {
   width: 100%;
   background-color: #EFEFF4;
 }
-#content-area {
+/* .page {
   width: 95%;
   height: 97%;
   margin: 14px auto;
@@ -68,7 +71,7 @@ body {
   background-color: #FFFFFF;
   box-shadow: 2px 2px 8px rgba(1,1,1,0.1),
               -2px 2px 8px rgba(1,1,1,0.1);
-}
+} */
 .pmqa {
   grid-row: 1 / 2;
   grid-column: 3 / 4;
