@@ -11,8 +11,7 @@ namespace ERP.Repositories.Context
     {
         public VendorContext(DbContextOptions<VendorContext> options)
             : base(options)
-        {
-        }
+        {}
 
         public DbSet<Vendor> Vendors { get; set; }
     }
