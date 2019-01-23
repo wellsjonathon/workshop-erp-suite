@@ -78,4 +78,19 @@ body {
   position: relative;
   height: 100%;
 }
+button { /* Just default values, change where needed */
+  padding: 7px 14px;
+  color: #EFEFF4;
+  background-color: #42586E;
+  border: none;
+  border-radius: 7px;
+}
+button:hover {
+  background-color: #607589;
+  cursor: pointer;
+}
+button:active {
+  background-color: #8796A4;
+  outline: none;
+}
 </style>

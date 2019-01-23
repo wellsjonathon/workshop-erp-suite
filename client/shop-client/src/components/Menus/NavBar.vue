@@ -72,8 +72,8 @@ export default {
   font-size: 1.6rem;
   transition-duration: 0.5s;
   background-color: #425B72;
-  box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
-              1px 0px 16px 1px rgba(1,1,1,0.075);
+  /* box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
+              1px 0px 16px 1px rgba(1,1,1,0.075); */
 }
 .nav.extended {
   width: 280px;
@@ -87,13 +87,13 @@ export default {
 }
 .nav__account {
   position: absolute;
-  background-color: #8796A4;
   display: flex;
   width: 100%;
   margin: 0;
   top: -2px;
   color: #EFEFF4;
   transition-duration: 0.2s;
+  background-color: #8796A4;
   box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
               0px -2px 16px -2px rgba(1,1,1,0.075) inset;
 }
@@ -140,12 +140,12 @@ a {
   border: 2px solid #42586E;
   border-radius: 15px;
 }
-.nav__btn.extended {
+/* .nav__btn.extended {
   filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175));
-}
+} */
 .nav__btn.collapsed {
   transform: rotate(180deg);
-  filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175));
+  /* filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175)); */
 }
 .nav__btn:hover {
   color: rgba(25, 52, 75, 0.7);
