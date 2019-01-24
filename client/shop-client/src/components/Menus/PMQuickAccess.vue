@@ -11,18 +11,17 @@
       </div>
     </div>
     <div :class="['pmqa__tools', !isCollapsed ? 'extended' : 'collapsed']">
-      <div class="pmqa__tools__datepicker">
-        <FaIcon class="pmqa__tools__datepicker__decr"  @click="this.decrSelectedDate" icon="chevron-left"/>
-        <div class="pmqa__tools__datepicker__date">
-          {{
-            this.selectedDate.date == this.date.date &&
-            this.selectedDate.month == this.date.month &&
-            this.selectedDate.year == this.date.year
-              ? 'Today'
-              : this.daysShort[this.selectedDate.day] + ', ' + this.monthsShort[this.selectedDate.month] + ' ' + this.selectedDate.date
-          }}
+      <div class="pmqa__datepicker">
+        <FaIcon class="pmqa__datepicker__decr"  @click="this.decrSelectedDate" icon="chevron-left"/>
+        <div class="pmqa__datepicker__date">
+          {{ this.displayDate() }}
         </div>
-        <FaIcon class="pmqa__tools__datepicker__incr" @click="this.incrSelectedDate" icon="chevron-right"/>
+        <FaIcon class="pmqa__datepicker__incr" @click="this.incrSelectedDate" icon="chevron-right"/>
+      </div>
+      <div class="pmqa__times">
+        <span class="pmqa__times__separator"/>
+        Stuff
+        <span class="pmqa__times__separator"/>
       </div>
     </div>
     <FaIcon :class="['pmqa__btn', !isCollapsed ? 'extended' : 'collapsed']"
@@ -70,6 +69,19 @@ export default {
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed
     },
+    displayDate() {
+      if (this.selectedDate.date == this.date.date &&
+        this.selectedDate.month == this.date.month &&
+        this.selectedDate.year == this.date.year)
+      {
+        return 'Today'
+      }
+      else
+      {
+        // Requires proper date parsing (currently only works within current week/month)
+        return this.daysShort[this.selectedDate.day] + ', ' + this.monthsShort[this.selectedDate.month] + ' ' + this.selectedDate.date
+      }
+    },
     decrSelectedDate() {
       this.selectedDate.date--;
       this.selectedDate.day--;
@@ -89,26 +101,14 @@ export default {
   font-size: 1.6rem;
   transition: 0.5s;
   background-color: #425B72;
-  box-shadow: -2px 0 4px 1px rgba(1,1,1,0.175),
-              -1px 0 16px 1px rgba(1,1,1,0.1);
+  /* box-shadow: -2px 0 4px 1px rgba(1,1,1,0.175),
+              -1px 0 16px 1px rgba(1,1,1,0.1); */
 }
 .pmqa.extended {
   width: 280px;
 }
 .pmqa.collapsed {
   width: 60px;
-}
-.pmqa__btn {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  left: -12px;
-  top: calc(50% - 15px);
-  transition: transform 0.5s, color 0.2s;
-  color: #19344B;
-  background-color: #42586E;
-  border: 2px solid #42586E;
-  border-radius: 15px;
 }
 .pmqa__notifications {
   position: absolute;
@@ -129,15 +129,16 @@ export default {
   height: 36px;
   margin: 12px;
   text-align: center;
-  color: #425B72;
+  color: #425B72; /* The contrast is not enough, figure something out */
   border-radius: 18px;
+  /* border: 1px solid #607589; */
   background-color: #EFEFF4;
-  box-shadow: 0px 0px 4px rgba(1,1,1,0.125),
-              0px 0px 16px rgba(1,1,1,0.075);
+  /* box-shadow: 0px 0px 4px 1px rgba(66,91,114,0.25),
+              0px 0px 16px 2px rgba(66,91,114,0.5); */
 }
 .pmqa__notifications__count.new-notifications {
   color: #EFEFF4;
-  background-color: #b06560;
+  background-color: #B06660;
 }
 .pmqa__notifications__count__value {
   width: 100%;
@@ -158,7 +159,7 @@ export default {
   margin-top: 60px;
   width: 100%;
 }
-.pmqa__tools__datepicker {
+.pmqa__datepicker {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -167,25 +168,50 @@ export default {
   color: #EFEFF4;
   box-sizing: border-box;
 }
-.pmqa__tools__datepicker__decr,
-.pmqa__tools__datepicker__incr {
+.pmqa__datepicker__decr,
+.pmqa__datepicker__incr {
   width: 30px;
   height: 30px;
 }
-.pmqa__tools__datepicker__decr:hover,
-.pmqa__tools__datepicker__incr:hover {
+.pmqa__datepicker__decr:hover,
+.pmqa__datepicker__incr:hover {
   cursor: pointer;
 }
-.pmqa__tools__datepicker__date {
+.pmqa__datepicker__date {
   width: calc(100% - 60px);
   text-align: center;
 }
-.pmqa__btn.extended {
-  filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175));
+.pmqa__times {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
+.pmqa__times__separator {
+  display: block;
+  width: 92%;
+  height: 1px;
+  border: none;
+  background-image: linear-gradient(90deg, rgba(0,0,0,0), #EFEFF4, rgba(0,0,0,0));
+}
+.pmqa__btn {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: -12px;
+  top: calc(50% - 15px);
+  transition: transform 0.5s, color 0.2s;
+  color: #19344B;
+  background-color: #42586E;
+  border: 2px solid #42586E;
+  border-radius: 15px;
+}
+/* .pmqa__btn.extended {
+  filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175));
+} */
 .pmqa__btn.collapsed {
   transform: rotate(-180deg);
-  filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175));
+  /* filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175)); */
 }
 .pmqa__btn:hover {
   color: rgba(25, 52, 75, 0.7);

@@ -13,7 +13,9 @@ import {
   faCalendarAlt,
   faChartPie,
   faCog,
-  faUser } from '@fortawesome/free-solid-svg-icons'
+  faUser,
+  faSearch,
+  faSearchPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(VueRouter)
@@ -30,6 +32,8 @@ library.add(faCalendarAlt)
 library.add(faChartPie)
 library.add(faCog)
 library.add(faUser)
+library.add(faSearch)
+library.add(faSearchPlus)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 

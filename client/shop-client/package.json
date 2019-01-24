@@ -13,9 +13,9 @@
     "@fortawesome/vue-fontawesome": "^0.1.5",
     "@vue/cli": "^3.3.0",
     "axios": "^0.18.0",
-    "vue": "^2.5.22",
-    "vue-router": "^3.0.2",
-    "vuejs-smart-table": "0.0.3"
+    "moment": "^2.24.0",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.1.1",
