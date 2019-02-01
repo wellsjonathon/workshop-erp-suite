@@ -14,7 +14,7 @@
       <div class="pmqa__datepicker">
         <FaIcon class="pmqa__datepicker__decr"  @click="this.decrSelectedDate" icon="chevron-left"/>
         <div class="pmqa__datepicker__date">
-          {{ this.displayDate() }}
+          {{ this.selectedDateString }}
         </div>
         <FaIcon class="pmqa__datepicker__incr" @click="this.incrSelectedDate" icon="chevron-right"/>
       </div>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { days, daysShort, months, monthsShort } from './../../misc.js'
+import moment from 'moment'
 
 export default {
   name: 'PMQuickAccess',
@@ -50,45 +50,31 @@ export default {
       isCollapsed: this.collapsed,
       newNotifications: this.notifications.length > 0,
       date: {
-        day: new Date().getDay(),
-        month: new Date().getMonth(),
-        year: new Date().getYear(),
-        date: new Date().getDate()
-      },
-      selectedDate: {
-        day: new Date().getDay(),
-        month: new Date().getMonth(),
-        year: new Date().getYear(),
-        date: new Date().getDate()
-      },
-      daysShort: daysShort,
-      monthsShort: monthsShort
+        current: moment(),
+        selected: moment()
+      }
     }
+  },
+  computed: {
+    selectedDateString: function () {
+      return (this.date.selected.isSame(this.date.current)
+        ? 'Today'
+        : this.date.selected.format('ddd., MMM Do'))
+    }
+  },
+  mounted: function () {
+    this.date.current = moment()
+    this.date.selected = moment(this.date.current)
   },
   methods: {
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed
     },
-    displayDate() {
-      if (this.selectedDate.date == this.date.date &&
-        this.selectedDate.month == this.date.month &&
-        this.selectedDate.year == this.date.year)
-      {
-        return 'Today'
-      }
-      else
-      {
-        // Requires proper date parsing (currently only works within current week/month)
-        return this.daysShort[this.selectedDate.day] + ', ' + this.monthsShort[this.selectedDate.month] + ' ' + this.selectedDate.date
-      }
-    },
     decrSelectedDate() {
-      this.selectedDate.date--;
-      this.selectedDate.day--;
+      this.date.selected = this.date.selected.subtract(1, 'days')
     },
     incrSelectedDate() {
-      this.selectedDate.date++;
-      this.selectedDate.day++;
+      this.date.selected = this.date.selected.add(1, 'days')
     }
   }
 }
@@ -138,7 +124,8 @@ export default {
 }
 .pmqa__notifications__count.new-notifications {
   color: #EFEFF4;
-  background-color: #B06660;
+  background-color: #CE4D42;
+  box-shadow: 0 0 4px rgba(1,1,1,0.125) inset;
 }
 .pmqa__notifications__count__value {
   width: 100%;
