@@ -65,21 +65,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../../styles/variables.scss";
+
 .nav {
   display: flex;
   position: relative;
   font-size: 1.6rem;
   transition-duration: 0.5s;
-  background-color: #425B72;
+  background-color: $primary;
   /* box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
               1px 0px 16px 1px rgba(1,1,1,0.075); */
-}
-.nav.extended {
-  width: 280px;
-}
-.nav.collapsed {
-  width: 60px;
+  &.extended {
+    width: $width-extended;
+  }
+  &.collapsed {
+    width: $width-collapsed;
+  }
 }
 .nav__links {
   margin: auto 0;
@@ -91,21 +93,21 @@ export default {
   width: 100%;
   margin: 0;
   top: -2px;
-  color: #EFEFF4;
+  color: $offwhite;
   transition-duration: 0.2s;
-  background-color: #8796A4;
+  background-color: $primary-lightest;
   box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
               0px -2px 16px -2px rgba(1,1,1,0.075) inset;
-}
-.nav__account:hover {
-  background-color: #607589;
-  cursor: pointer;
-}
-.nav__account:active {
-  width: calc(100% + 2px);
-  transition-duration: 0s;
-  background-color: #8796A4;
-  transform: translate(-2px, 2px);
+  &:hover {
+    background-color: $primary-lighter;
+    cursor: pointer;
+  }
+  &:active {
+    width: calc(100% + 2px);
+    transition-duration: 0s;
+    background-color: $primary-lightest;
+    transform: translate(-2px, 2px);
+  }
 }
 .nav__account__icon {
   width: 36px;
@@ -113,20 +115,17 @@ export default {
   padding: 12px;
 }
 .nav__account__link {
-  width: 220px; /* Upgrade to Sass, use extended - collapsed */
+  width: $width-extended - $width-collapsed; /* Upgrade to Sass, use extended - collapsed */
   margin: auto 0;
   overflow: hidden;
   white-space: nowrap;
   transition: width 0.49s;
-}
-.nav__account__link.extended {
-  display: block;
-}
-.nav__account__link.collapsed {
-  width: 0px;
-}
-a {
-  text-decoration: none;
+  &.extended {
+    display: block;
+  }
+  &.collapsed {
+    width: 0px;
+  }
 }
 .nav__btn {
   position: absolute;
@@ -135,24 +134,20 @@ a {
   right: -12px;
   top: calc(50% - 15px);
   transition: transform 0.5s, color 0.2s;
-  color: #19344B;
-  background-color: #42586E;
-  border: 2px solid #42586E;
+  color: $primary-dark;
+  background-color: $primary;
+  border: 2px solid $primary;
   border-radius: 15px;
-}
-/* .nav__btn.extended {
-  filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175));
-} */
-.nav__btn.collapsed {
-  transform: rotate(180deg);
-  /* filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175)); */
-}
-.nav__btn:hover {
-  color: rgba(25, 52, 75, 0.7);
-  cursor: pointer;
-}
-.nav__btn:active {
-  color: rgba(25, 52, 75, 0.45);
+  &.collapsed {
+    transform: rotate(180deg);
+  }
+  &:hover {
+    color: $primary-darker;
+    cursor: pointer;
+  }
+  &:active {
+    color: $primary-darkest;
+  }
 }
 </style>
 

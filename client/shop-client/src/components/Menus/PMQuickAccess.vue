@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'PMQuickAccess',
@@ -50,8 +50,8 @@ export default {
       isCollapsed: this.collapsed,
       newNotifications: this.notifications.length > 0,
       date: {
-        current: moment(),
-        selected: moment()
+        current: dayjs(Date()),
+        selected: dayjs(Date())
       }
     }
   },
@@ -59,12 +59,12 @@ export default {
     selectedDateString: function () {
       return (this.date.selected.isSame(this.date.current)
         ? 'Today'
-        : this.date.selected.format('ddd., MMM Do'))
+        : this.date.selected.format('ddd, MMM. D'))
     }
   },
   mounted: function () {
-    this.date.current = moment()
-    this.date.selected = moment(this.date.current)
+    this.date.current = dayjs(new Date())
+    this.date.selected = dayjs(this.date.current)
   },
   methods: {
     toggleCollapse() {
@@ -80,21 +80,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../../styles/variables.scss";
+
 .pmqa {
   display: flex;
   position: relative;
   font-size: 1.6rem;
   transition: 0.5s;
-  background-color: #425B72;
+  background-color: $primary;
   /* box-shadow: -2px 0 4px 1px rgba(1,1,1,0.175),
               -1px 0 16px 1px rgba(1,1,1,0.1); */
-}
-.pmqa.extended {
-  width: 280px;
-}
-.pmqa.collapsed {
-  width: 60px;
+  &.extended {
+    width: 280px;
+  }
+  &.collapsed {
+    width: 60px;
+  }
 }
 .pmqa__notifications {
   position: absolute;
@@ -105,10 +107,10 @@ export default {
   top: -2px;
   color: #EFEFF4;
   transition: 0.2s, width 0.42s, border-radius 0.5s;
-  background-color: #8796A4;
+  background-color: $primary-lightest;
   box-sizing: border-box;
-  box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
-              0px -2px 16px -2px rgba(1,1,1,0.075) inset;
+  box-shadow: 0px -3px 4px -2px rgba(0,0,0,0.175) inset,
+              0px -2px 16px -2px rgba(0,0,0,0.075) inset;
 }
 .pmqa__notifications__count {
   width: 36px;
@@ -121,11 +123,12 @@ export default {
   background-color: #EFEFF4;
   /* box-shadow: 0px 0px 4px 1px rgba(66,91,114,0.25),
               0px 0px 16px 2px rgba(66,91,114,0.5); */
-}
-.pmqa__notifications__count.new-notifications {
-  color: #EFEFF4;
-  background-color: #CE4D42;
-  box-shadow: 0 0 4px rgba(1,1,1,0.125) inset;
+  &.new-notifications {
+    color: #EFEFF4;
+    // background-color: hsl(2, 56%, 42%);
+    background-color: #B03930;
+    box-shadow: 0 0 6px rgba(255,255,255,0.125) inset;
+  }
 }
 .pmqa__notifications__count__value {
   width: 100%;
@@ -138,9 +141,9 @@ export default {
   white-space: nowrap;
   transition: width 0.5s;
   text-align: center;
-}
-.pmqa__notifications__text.collapsed {
-  width: 0px;
+  &.collapsed {
+    width: 0px;
+  }
 }
 .pmqa__tools {
   margin-top: 60px;
@@ -151,18 +154,19 @@ export default {
   flex-direction: row;
   width: 100%;
   padding: 20px 16px;
-  font-size: 2.6rem;
+  font-size: 2rem;
+  line-height: 30px;
   color: #EFEFF4;
   box-sizing: border-box;
 }
 .pmqa__datepicker__decr,
 .pmqa__datepicker__incr {
-  width: 30px;
-  height: 30px;
-}
-.pmqa__datepicker__decr:hover,
-.pmqa__datepicker__incr:hover {
-  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  padding: 2px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .pmqa__datepicker__date {
   width: calc(100% - 60px);
@@ -188,24 +192,20 @@ export default {
   left: -12px;
   top: calc(50% - 15px);
   transition: transform 0.5s, color 0.2s;
-  color: #19344B;
-  background-color: #42586E;
-  border: 2px solid #42586E;
+  color: $primary-dark;
+  background-color: $primary;
+  border: 2px solid $primary;
   border-radius: 15px;
-}
-/* .pmqa__btn.extended {
-  filter: drop-shadow(-4px 0 8px rgba(1,1,1,0.175));
-} */
-.pmqa__btn.collapsed {
-  transform: rotate(-180deg);
-  /* filter: drop-shadow(4px 0 8px rgba(1,1,1,0.175)); */
-}
-.pmqa__btn:hover {
-  color: rgba(25, 52, 75, 0.7);
-  cursor: pointer;
-}
-.pmqa__btn:active {
-  color: rgba(25, 52, 75, 0.45);
+  &.collapsed {
+    transform: rotate(-180deg);
+  }
+  &:hover {
+    color: $primary-darker;
+    cursor: pointer;
+  }
+  &:active {
+    color: $primary-darkest;
+  }
 }
 </style>
 

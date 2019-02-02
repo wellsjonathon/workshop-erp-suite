@@ -10,7 +10,7 @@
           <FaIcon icon="search"/>
         </button>
         <button class="page__heading__search__advanced-btn" @click="this.toggleAdvSearch">
-          <FaIcon class="btn-icon" icon="search-plus"/>
+          <FaIcon class="btn-icon" icon="chevron-down"/>
         </button>
       </div>
     </div>

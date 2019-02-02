@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronCircleLeft, faChevronCircleRight,
   faChevronLeft, faChevronRight,
+  faChevronDown, faChevronUp,
   faHome,
   faFile,
   faWarehouse,
@@ -14,8 +15,7 @@ import {
   faChartPie,
   faCog,
   faUser,
-  faSearch,
-  faSearchPlus } from '@fortawesome/free-solid-svg-icons'
+  faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(VueRouter)
@@ -25,6 +25,8 @@ library.add(faChevronCircleLeft)
 library.add(faChevronCircleRight)
 library.add(faChevronLeft)
 library.add(faChevronRight)
+library.add(faChevronDown)
+library.add(faChevronUp)
 library.add(faHome)
 library.add(faFile)
 library.add(faWarehouse)
@@ -33,7 +35,6 @@ library.add(faChartPie)
 library.add(faCog)
 library.add(faUser)
 library.add(faSearch)
-library.add(faSearchPlus)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 

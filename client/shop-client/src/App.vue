@@ -21,11 +21,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "./styles/variables.scss";
+
 html {
   font-size: 62.5%;
-  /* font-family: 'Roboto', sans-serif; */
-  font-family: 'Montserrat', sans-serif
+  /* font-family: $body-font-stack */
+  font-family: $heading-font-stack
 }
 body {
   padding: 0;
@@ -33,11 +35,8 @@ body {
   height: 100%;
 }
 #app {
-  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center;
-  color: #2c3e50; */
   margin: 0;
   padding: 0;
   height: 100%;
@@ -60,18 +59,8 @@ body {
   grid-column: 2 / 3;
   height: 100%;
   width: 100%;
-  background-color: #EFEFF4;
+  background-color: $offwhite;
 }
-/* .page {
-  width: 95%;
-  height: 97%;
-  margin: 14px auto;
-  border-radius: 7px;
-  box-sizing: border-box;
-  background-color: #FFFFFF;
-  box-shadow: 2px 2px 8px rgba(1,1,1,0.1),
-              -2px 2px 8px rgba(1,1,1,0.1);
-} */
 .pmqa {
   grid-row: 1 / 2;
   grid-column: 3 / 4;
@@ -80,17 +69,20 @@ body {
 }
 button { /* Just default values, change where needed */
   padding: 7px 14px;
-  color: #EFEFF4;
-  background-color: #42586E;
+  color: $offwhite;
+  background-color: $primary;
   border: none;
   border-radius: 7px;
+  &:hover {
+    background-color: $primary-lighter;
+    cursor: pointer;
+  }
+  &:active {
+    background-color: $primary-lightest;
+    outline: none;
+  }
 }
-button:hover {
-  background-color: #607589;
-  cursor: pointer;
-}
-button:active {
-  background-color: #8796A4;
-  outline: none;
+a {
+  text-decoration: none;
 }
 </style>

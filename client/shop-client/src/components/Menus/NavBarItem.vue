@@ -38,26 +38,28 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../../styles/variables.scss";
+
 .nav__item {
   display: flex;
   width: 100%;
   margin: 14px 0;
-  color: #EFEFF4;
+  color: $offwhite;
   transition: 0.2s, border-radius 0.5s;
-}
-.nav__item:hover {
-  background-color: #607589;
-  cursor: pointer;
-}
-.nav__item:active {
-  width: calc(100% + 2px);
-  transition-duration: 0s;
-  background-color: #8796A4;
-  transform: translate(-2px, 2px);
-}
-.nav__item.extended {
-  border-radius: 0 7px 7px 0;
+  &:hover {
+    background-color: $primary-lighter;
+    cursor: pointer;
+  }
+  &:active {
+    width: calc(100% + 2px);
+    transition-duration: 0s;
+    background-color: $primary-lightest;
+    transform: translate(-2px, 2px);
+  }
+  &.extended {
+    border-radius: 0 7px 7px 0;
+  }
 }
 .nav__item__icon {
   width: 36px;
@@ -65,26 +67,20 @@ export default {
   padding: 12px;
 }
 .nav__item__link {
-  width: 200px; /* Upgrade to Sass, use extended - collapsed */
+  width: $width-extended - $width-collapsed - 20px;
   margin: auto 0;
   overflow: hidden;
   white-space: nowrap;
   transition: width 0.49s;
-}
-.nav__item__link.extended {
-  display: block;
-}
-.nav__item__link.collapsed {
-  width: 0px;
+  &.extended {
+    display: block;
+  }
+  &.collapsed {
+    width: 0px;
+  }
 }
 .router-link-active {
-  background-color: #EFEFF4;
-  color: #425B72;
-}
-.router-link-active:hover {
-  color: #8796A4;
-}
-a {
-  text-decoration: none;
+  background-color: $offwhite;
+  color: $primary;
 }
 </style>
