@@ -12,10 +12,20 @@ $primary-darkest: hsl(209, 33%, 16%);
 
 $white: hsl(0, 0%, 100%);
 $offwhite: hsl(240, 19%, 95%);
+$offwhite-med: hsl(240, 10%, 97%);
+$grey: hsl(0, 0%, 80%);
 
-// $green: ;
+// Should these be called "success", "warning", etc.? Seems to be the standard
+$green: hsl(131, 30%, 41%);
 // $red: ;
 
 // Side Menus
 $width-extended: 280px;
 $width-collapsed: 60px;
+
+// Standards
+$radius: 4px;
+$padding: 25px; // Might require more finesse than this
+
+// Animations
+$btn-transition-duration: 0.15s;

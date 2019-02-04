@@ -28,7 +28,12 @@ namespace ERP.API.Controllers
         [HttpGet]
         public IEnumerable<Workorder> GetWorkorders()
         {
-            return _context.Workorders;
+            //var workorders = _context.Workorders;
+            //foreach (Workorder w in workorders)
+            //{
+            //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.ID == w.Status.ID);
+            //}
+            return _context.Workorders.Include(w => w.Status);
         }
 
         // GET: api/Workorders/5

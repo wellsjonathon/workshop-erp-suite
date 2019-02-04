@@ -72,7 +72,8 @@ button { /* Just default values, change where needed */
   color: $offwhite;
   background-color: $primary;
   border: none;
-  border-radius: 7px;
+  border-radius: $radius;
+  transition-duration: $btn-transition-duration;
   &:hover {
     background-color: $primary-lighter;
     cursor: pointer;
@@ -84,5 +85,11 @@ button { /* Just default values, change where needed */
 }
 a {
   text-decoration: none;
+}
+h1 {
+  font-size: 2.6rem;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
 }
 </style>

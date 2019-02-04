@@ -58,7 +58,7 @@ export default {
     transform: translate(-2px, 2px);
   }
   &.extended {
-    border-radius: 0 7px 7px 0;
+    border-radius: 0 4px 4px 0;
   }
 }
 .nav__item__icon {
