@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <!-- <div class="page">
     <div class="page_header">
       <h1 class="page_header__title">
         Workorders
@@ -15,66 +15,82 @@
       </div>
     </div>
     <div :class="['adv-search', advSearchCollapsed ? 'collapsed' : 'extended']">
-    </div>
+    </div> -->
     <div class="container">
-      <div class="card">
-        <div class="card__header">
-          <div class="filters">
-            <div class="filters__tab">All</div>
-            <div class="filters__tab">New</div>
-            <div class="filters__tab">In Progress</div>
-            <div class="filters__tab">More</div>
-          </div>
-          <div class="pagination">
-            <span class="pagination__rows-displayed">1 - 20 of 1000</span>
-            <span class="pagination__btns">
-              <button id="pagination--back"><FaIcon icon="chevron-left"/></button>
-              <button id="pagination--forward"><FaIcon icon="chevron-right"/></button>
-            </span>
-          </div>
+      <div class="container__row">
+        <div class="breadcrumbs">
+          <ul>
+            <li><router-link to="/home">Home</router-link></li>
+            <li><router-link to="/workorders">Workorders</router-link></li>
+          </ul>
         </div>
-        <div class="data-table">
-          <table>
-            <thead>
-              <th scope="col">ID</th>
-              <th scope="col">Faculty</th>
-              <th scope="col">Client</th>
-              <th scope="col">Description</th>
-              <th scope="col">Date Created</th>
-              <th scope="col">Date Requested By</th>
-              <th scope="col">Status</th>
-              <col>
-            </thead>
-            <tbody>
-              <tr v-for="workorder in workorders" :key="workorder.id">
-                <td>{{workorder.id}}</td>
-                <td>SSE</td> <!-- placeholder -->
-                <td>{{workorder.clientName}}</td>
-                <td>{{workorder.description}}</td>
-                <td>{{workorder.dateCreated}}</td>
-                <td>{{workorder.dateRequiredBy}}</td>
-                <td class="status-row">
-                  <span class="status__indicator"></span>
-                  <span class="status__name">{{workorder.status.name}}</span>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- <ul>
-            <li v-for="workorder in workorders" :key="workorder.id">
-              ID: {{workorder.id}} <br/>
-              Client: {{workorder.clientName}} <br/>
-              Client Email: {{workorder.clientEmail}} <br/>
-            </li>
-          </ul> -->
+      </div>
+      <div class="container__row">
+        <div class="card">
+          <div class="card__row">
+            <h1>Workorders</h1>
+          </div>
+          <div class="card__row">
+            <div class="filters floating-tab-group">
+              <div class="filters__tab">All</div>
+              <div class="filters__tab">New</div>
+              <div class="filters__tab">In Progress</div>
+              <div class="filters__tab">More</div>
+            </div>
+            <div class="pagination">
+              <span class="pagination__showing">1 - 20 of 1000</span>
+              <div class="pagination__btns btn-group">
+                <button id="pagination--back"><FaIcon icon="chevron-left"/></button>
+                <button id="pagination--forward"><FaIcon icon="chevron-right"/></button>
+              </div>
+            </div>
+          </div>
+          <div class="card__row data-table">
+            <table>
+              <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Faculty</th>
+                <th scope="col">Client</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date Created</th>
+                <th scope="col">Date Requested By</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+              </thead>
+              <tbody>
+                <tr v-for="workorder in workorders" :key="workorder.id">
+                  <td>{{workorder.id}}</td>
+                  <td>SSE</td> <!-- placeholder -->
+                  <td>{{workorder.clientName}}</td>
+                  <td>{{workorder.description}}</td>
+                  <td>{{displayDate(workorder.dateCreated)}}</td>
+                  <td>{{displayDate(workorder.dateRequiredBy)}}</td>
+                  <td class="status-row">
+                    <span class="status__indicator"></span>
+                    <span class="status__name">{{workorder.status.name}}</span>
+                  </td>
+                  <td>
+                    <router-link
+                      :to="{ name: 'workorder_by_id',
+                      params: { workorderId: workorder.id }}">
+                      View
+                    </router-link> |
+                    <a href="">Edit</a> |
+                    <a href="">Delete</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
   name: "Workorders",
   data: function () {
@@ -86,6 +102,9 @@ export default {
   methods: {
     toggleAdvSearch() {
       this.advSearchCollapsed = !this.advSearchCollapsed
+    },
+    displayDate(date) {
+      return dayjs(date).format('MMMM DD, YYYY');
     }
   },
   mounted: function () {
@@ -147,17 +166,7 @@ export default {
 .adv-search.collapsed {
   height: 0;
 }
-.container {
-  display: flex;
-  flex-direction: column;
-  padding: 25px;
-}
-.card {
-  padding: 10px;
-  border-radius: $radius;
-  background-color: $white;
-}
-.card__header {
+.card__row {
   display: flex;
   margin: 15px;
   flex-direction: row;
@@ -170,28 +179,34 @@ export default {
   // background-color: $white;
 }
 .filters__tab {
-  padding: 7px 14px;
+  // padding: 7px 14px;
   background-color: $offwhite-med;
-  border: 1px solid $grey;
+  // border: 1px solid $grey;
   box-sizing: border-box;
-  &:first-child {
-    border-radius: $radius 0 0 $radius;
-  }
-  &:last-child {
-    border-radius: 0 $radius $radius 0;
-  }
+
+  // &:first-child {
+  //   border-radius: $radius 0 0 $radius;
+  // }
+  // &:last-child {
+  //   border-radius: 0 $radius $radius 0;
+  // }
   &:hover {
     cursor: pointer;
     background-color: darken($offwhite-med, 5%);
-    border: 1px solid $grey;
+    // border: 1px solid $grey;
   }
 }
 .pagination {
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  &.pagination{
+  & .pagination__showing {
     margin: 0 25px;
+  }
+  & .pagination__btns button {
+    &:hover {
+      background-color: darken($offwhite, 5%);
+    }
   }
 }
 .data-table {
@@ -199,19 +214,39 @@ export default {
   & table {
     width: 100%;
     text-align: left;
-    border-collapse: collapse;
+    border: 1px solid $grey;
+    border-spacing: 0;
+    border-radius: $radius;
+    // border-collapse: collapse;
   }
   & thead {
     background-color: $offwhite;
+    & th {
+      border-bottom: 1px solid $grey;
+    }
+    & th:first-child {
+      border-radius: $radius 0 0 0;
+    }
+    & th:last-child {
+      border-radius: 0 $radius 0 0;
+    }
+  }
+  & tr:last-child td {
+    &:first-child {
+      border-radius: 0 0 0 $radius;
+    }
+    &:last-child {
+      border-radius: 0 0 $radius 0;
+    }
+  }
+  & tr:not(:last-child) {
+    border-bottom: 1px solid $grey;
   }
   & td, th {
     padding: 15px 10px;
   }
-  & tr, thead {
-    border: 1px solid $grey;
-  }
   & tr:hover {
-    cursor: pointer;
+    // cursor: pointer;
     background-color: darken($offwhite-med, 5%);
   }
   & .status-row {

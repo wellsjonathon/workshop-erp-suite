@@ -8,7 +8,7 @@
     </router-link>
     <div class="nav__links">
       <NavBarItem :collapsed="isCollapsed"
-                  link="/dashboard"
+                  link="/home"
                   linkName="Dashboard"
                   linkIcon="home"/>
       <NavBarItem :collapsed="isCollapsed"

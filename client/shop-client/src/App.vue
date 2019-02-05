@@ -67,6 +67,39 @@ body {
   position: relative;
   height: 100%;
 }
+.breadcrumbs {
+  font-size: 1.6rem;
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  & li {
+    display: inline;
+  }
+  & li+li:before {
+    padding: 8px;
+    color: $grey;
+    content: "/\00a0";
+  }
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  & .container__row {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+  }
+}
+.card {
+  padding: 10px;
+  border-radius: $radius;
+  background-color: $white;
+  box-shadow: 0 1px 4px 1px hsla(0, 0, 0, 0.05);
+  flex-grow: 1;
+}
 button { /* Just default values, change where needed */
   padding: 7px 14px;
   color: $offwhite;
@@ -81,6 +114,30 @@ button { /* Just default values, change where needed */
   &:active {
     background-color: $primary-lightest;
     outline: none;
+  }
+}
+.btn-group, .floating-tab-group {
+  display: flex;
+  flex-direction: row;
+  & button, div {
+    padding: 7px 14px;
+    text-align: center;
+    color: $grey;
+    border: 1px solid $grey;
+    background-color: $offwhite-med;
+    &:first-child {
+      border-radius: $radius 0 0 $radius;
+    }
+    &:last-child {
+      border-radius: 0 $radius $radius 0;
+    }
+    &:not(:last-child) {
+      border-right: none;
+    }
+    & FaIcon {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 a {
