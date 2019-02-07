@@ -58,7 +58,7 @@ namespace ERP.API
             // TODO: Update this with a proper domain
             // This may come when we look into creating an executable that hosts both the server and the client
             app.UseCors(
-                options => options.WithOrigins("http://localhost:8080").AllowAnyMethod()
+                options => options.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader()
             );
             app.UseHttpsRedirection();
             app.UseMvc();

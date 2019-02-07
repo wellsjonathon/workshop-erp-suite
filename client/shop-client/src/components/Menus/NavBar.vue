@@ -110,8 +110,8 @@ export default {
   }
 }
 .nav__account__icon {
-  width: 36px;
-  height: 36px;
+  width: $nav-icon-size;
+  height: $nav-icon-size;
   padding: 12px;
 }
 .nav__account__link {

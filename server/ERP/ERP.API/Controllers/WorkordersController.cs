@@ -45,7 +45,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.FindAsync(id);
+            var workorder = await _context.Workorders.Include(w => w.Status).FirstOrDefaultAsync(w => w.ID == id);
 
             if (workorder == null)
             {

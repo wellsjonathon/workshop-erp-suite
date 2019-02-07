@@ -95,7 +95,7 @@ export default {
     width: 280px;
   }
   &.collapsed {
-    width: 60px;
+    width: $width-collapsed;
   }
 }
 .pmqa__notifications {
@@ -113,12 +113,12 @@ export default {
               0px -2px 16px -2px rgba(0,0,0,0.075) inset;
 }
 .pmqa__notifications__count {
-  width: 36px;
-  height: 36px;
+  width: $nav-icon-size;
+  height: $nav-icon-size;
   margin: 12px;
   text-align: center;
   color: #425B72; /* The contrast is not enough, figure something out */
-  border-radius: 18px;
+  border-radius: $nav-icon-size / 2;
   /* border: 1px solid #607589; */
   background-color: #EFEFF4;
   /* box-shadow: 0px 0px 4px 1px rgba(66,91,114,0.25),
@@ -127,12 +127,12 @@ export default {
     color: #EFEFF4;
     // background-color: hsl(2, 56%, 42%);
     background-color: #B03930;
-    box-shadow: 0 0 6px rgba(255,255,255,0.125) inset;
+    // box-shadow: 0 0 6px rgba(255,255,255,0.125) inset;
   }
 }
 .pmqa__notifications__count__value {
   width: 100%;
-  line-height: 36px;
+  line-height: $nav-icon-size;
 }
 .pmqa__notifications__text {
   width: 220px; /* Upgrade to Sass, use extended - collapsed */

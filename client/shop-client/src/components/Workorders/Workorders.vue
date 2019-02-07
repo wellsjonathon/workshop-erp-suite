@@ -27,7 +27,7 @@
       </div>
       <div class="container__row">
         <div class="card">
-          <div class="card__row">
+          <div class="card__row card__header">
             <h1>Workorders</h1>
           </div>
           <div class="card__row">
@@ -167,12 +167,6 @@ export default {
 .adv-search.collapsed {
   height: 0;
 }
-.card__row {
-  display: flex;
-  margin: 15px;
-  flex-direction: row;
-  justify-content: space-between;
-}
 .filters {
   display: flex;
   flex-direction: row;
@@ -180,21 +174,13 @@ export default {
   // background-color: $white;
 }
 .filters__tab {
-  // padding: 7px 14px;
-  background-color: $offwhite-med;
-  // border: 1px solid $grey;
+  background-color: $offwhite;
   box-sizing: border-box;
-
-  // &:first-child {
-  //   border-radius: $radius 0 0 $radius;
-  // }
-  // &:last-child {
-  //   border-radius: 0 $radius $radius 0;
-  // }
+  color: black;
+  font-weight: bold;
   &:hover {
     cursor: pointer;
-    background-color: darken($offwhite-med, 5%);
-    // border: 1px solid $grey;
+    background-color: darken($offwhite, 5%);
   }
 }
 .pagination {
@@ -205,64 +191,10 @@ export default {
     margin: 0 25px;
   }
   & .pagination__btns button {
+    background-color: $offwhite;
+    color: $dark-grey;
     &:hover {
       background-color: darken($offwhite, 5%);
-    }
-  }
-}
-.data-table {
-  margin: 15px;
-  border-radius: $radius;
-  overflow: hidden;
-  & table {
-    width: 100%;
-    text-align: left;
-    // border-spacing: 0;
-    border-radius: $radius;
-    border: 1px solid $grey;
-    border-collapse: collapse;
-  }
-  & thead {
-    background-color: $offwhite;
-    border-bottom: 1px solid $grey;
-    & th:first-child {
-      border-radius: $radius 0 0 0;
-    }
-    & th:last-child {
-      border-radius: 0 $radius 0 0;
-    }
-  }
-  & tr:last-child {
-    & td:first-child {
-      border-radius: 0 0 0 $radius;
-    }
-    & td:last-child {
-      border-radius: 0 0 $radius 0;
-    }
-  }
-  & tr {
-    border: 1px solid $grey;
-    &:hover {
-      // cursor: pointer;
-      background-color: darken($offwhite-med, 5%);
-    }
-  }
-  // & tr:not(:last-child) {
-  //   border-bottom: 1px solid $grey;
-  // }
-  & td, th {
-    padding: 15px 10px;
-  }
-  & .status-row {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: baseline;
-    & .status__indicator {
-      margin: 0 5px 0 0;
-      width: 1rem;
-      height: 1rem;
-      border-radius: 0.5rem;
-      background-color: $green;
     }
   }
 }

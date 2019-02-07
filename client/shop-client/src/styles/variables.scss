@@ -13,7 +13,9 @@ $primary-darkest: hsl(209, 33%, 16%);
 $white: hsl(0, 0%, 100%);
 $offwhite: hsl(240, 19%, 95%);
 $offwhite-med: hsl(240, 10%, 97%);
-$grey: hsl(0, 0%, 80%);
+// $grey: hsl(0, 0%, 80%);
+$grey: hsl(240, 5%, 80%);
+$dark-grey: hsl(240, 5%, 60%);
 
 // Should these be called "success", "warning", etc.? Seems to be the standard
 $green: hsl(131, 30%, 41%);

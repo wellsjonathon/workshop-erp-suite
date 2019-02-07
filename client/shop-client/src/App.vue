@@ -69,6 +69,7 @@ body {
 }
 .breadcrumbs {
   font-size: 1.6rem;
+  margin: 10px;
   & ul {
     list-style: none;
     padding: 0;
@@ -90,23 +91,35 @@ body {
   & .container__row {
     display: flex;
     flex-direction: row;
-    margin: 10px;
+    // margin: 10px;
+    & .card {
+      margin: 10px;
+      padding: 10px;
+      border-radius: $radius;
+      background-color: $white;
+      box-shadow: 0 1px 2px hsla(0, 0, 0, 0.05);
+      flex-basis: 0;
+      flex-grow: 1;
+      & .card__row {
+        display: flex;
+        margin: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        &.card__header {
+          padding: 0 0 10px;
+        }
+      }
+    }
   }
-}
-.card {
-  padding: 10px;
-  border-radius: $radius;
-  background-color: $white;
-  box-shadow: 0 1px 4px 1px hsla(0, 0, 0, 0.05);
-  flex-grow: 1;
 }
 button { /* Just default values, change where needed */
   padding: 7px 14px;
+  font-size: 1.2rem;
   color: $offwhite;
   background-color: $primary;
   border: none;
   border-radius: $radius;
-  transition-duration: $btn-transition-duration;
+  // transition-duration: $btn-transition-duration;
   &:hover {
     background-color: $primary-lighter;
     cursor: pointer;
@@ -140,6 +153,13 @@ button { /* Just default values, change where needed */
     }
   }
 }
+.btn-group--unattached {
+  & button, div {
+    &:not(:last-child) {
+      margin: 0 10px 0 0;
+    }
+  }
+}
 a {
   text-decoration: none;
 }
@@ -148,5 +168,70 @@ h1 {
   font-weight: 400;
   padding: 0;
   margin: 0;
+}
+
+.data-table {
+  margin: 15px;
+  // border-radius: $radius;
+  overflow: hidden;
+  & table {
+    width: 100%;
+    text-align: left;
+    // border-spacing: 0;
+    // border-radius: $radius;
+    border: 1px solid $grey;
+    border-collapse: collapse;
+  }
+  & thead, tfoot {
+    font-weight: bold;
+    background-color: $offwhite;
+    border-bottom: 1px solid $grey;
+    // & th:first-child {
+    //   border-radius: $radius 0 0 0;
+    // }
+    // & th:last-child {
+    //   border-radius: 0 $radius 0 0;
+    // }
+  }
+  & tr {
+    border: 1px solid $grey;
+    &:hover {
+      background-color: darken($offwhite-med, 5%);
+    }
+    // &:last-child td:first-child {
+    //   border-radius: 0 0 0 $radius;
+    // }
+    // &:last-child td:last-child {
+    //   border-radius: 0 0 $radius 0;
+    // }
+  }
+  & td, th {
+    padding: 15px 10px;
+  }
+  & .status-row {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: baseline;
+    & .status__indicator {
+      margin: 0 5px 0 0;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 0.5rem;
+      background-color: $green;
+    }
+  }
+}
+.status-row {
+  display: inline-flex;
+  flex-direction: row;
+  font-size: 1.2rem;
+  align-items: baseline;
+  & .status__indicator {
+    margin: 0 5px 0 0;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+    background-color: $green;
+  }
 }
 </style>
