@@ -71,7 +71,7 @@ export default {
 .nav {
   display: flex;
   position: relative;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   transition-duration: 0.5s;
   background-color: $primary;
   /* box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
