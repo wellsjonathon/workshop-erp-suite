@@ -211,19 +211,19 @@ export default {
 }
 .data-table {
   margin: 15px;
+  border-radius: $radius;
+  overflow: hidden;
   & table {
     width: 100%;
     text-align: left;
-    border: 1px solid $grey;
-    border-spacing: 0;
+    // border-spacing: 0;
     border-radius: $radius;
-    // border-collapse: collapse;
+    border: 1px solid $grey;
+    border-collapse: collapse;
   }
   & thead {
     background-color: $offwhite;
-    & th {
-      border-bottom: 1px solid $grey;
-    }
+    border-bottom: 1px solid $grey;
     & th:first-child {
       border-radius: $radius 0 0 0;
     }
@@ -231,23 +231,26 @@ export default {
       border-radius: 0 $radius 0 0;
     }
   }
-  & tr:last-child td {
-    &:first-child {
+  & tr:last-child {
+    & td:first-child {
       border-radius: 0 0 0 $radius;
     }
-    &:last-child {
+    & td:last-child {
       border-radius: 0 0 $radius 0;
     }
   }
-  & tr:not(:last-child) {
-    border-bottom: 1px solid $grey;
+  & tr {
+    border: 1px solid $grey;
+    &:hover {
+      // cursor: pointer;
+      background-color: darken($offwhite-med, 5%);
+    }
   }
+  // & tr:not(:last-child) {
+  //   border-bottom: 1px solid $grey;
+  // }
   & td, th {
     padding: 15px 10px;
-  }
-  & tr:hover {
-    // cursor: pointer;
-    background-color: darken($offwhite-med, 5%);
   }
   & .status-row {
     display: inline-flex;
