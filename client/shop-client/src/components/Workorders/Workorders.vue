@@ -71,8 +71,9 @@
                   </td>
                   <td>
                     <router-link
-                      :to="{ name: 'workorder_by_id',
-                      params: { workorderId: workorder.id }}">
+                      :to="{
+                        name: 'workorder_by_id',
+                        params: { workorderId: workorder.id }}">
                       View
                     </router-link> |
                     <a href="">Edit</a> |
