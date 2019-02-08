@@ -16,5 +16,6 @@ Note: Stop the server to create new controllers and migrations
 2. Create context in ERP.Repositories > Contexts
 3. Register context in ERP.API > Startup.cs
 4. Create controller in ERP.API > Controllers
-5. Create the migration - Add-Migration InitialCreate -Context YourContext
-6. Update the database - Update-Database -Context YourContext
+5. Change "Default project:" to "ERP.Repositories" for Package Manager Console
+6. Create the migration - Add-Migration InitialCreate -Context YourContext
+7. Update the database - Update-Database -Context YourContext
