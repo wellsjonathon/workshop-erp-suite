@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ERP.Repositories.Context;
 using Microsoft.AspNetCore.Identity;
+using OpenIddict.Validation;
 
 namespace ERP.API
 {
@@ -31,13 +32,37 @@ namespace ERP.API
             // services.AddAuthentication();
 
             services.AddCors();
-            
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseOpenIddict();
+            });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddOpenIddict()
+                .AddCore(options =>
+                {
+                    options.UseEntityFrameworkCore()
+                        .UseDbContext<ApplicationDbContext>();
+                })
+                .AddServer(options =>
+                {
+                    options.UseMvc();
+                    options.EnableTokenEndpoint("/connect/token");
+                    options.AllowPasswordFlow();
+                    options.AcceptAnonymousClients(); // TODO: Remove this after development
+                    // options.DisableHttpsRequirement(); // TODO: Remove this after development
+                })
+                .AddValidation();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = OpenIddictValidationDefaults.AuthenticationScheme;
+            });
 
             // Is this line needed if we're not using RazorPages?
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -60,10 +85,10 @@ namespace ERP.API
 
             // TODO: Update this with a proper domain
             // This may come when we look into creating an executable that hosts both the server and the client
-            app.UseCors(
-                options => options.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader()
-            );
+            app.UseCors(options => 
+                options.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
             dbContext.Database.EnsureCreated();
         }
