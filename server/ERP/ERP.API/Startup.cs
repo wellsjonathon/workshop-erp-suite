@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ERP.Repositories.Context;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP.API
 {
@@ -27,24 +28,26 @@ namespace ERP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            // services.AddAuthentication();
 
-            // I think we can replace all of these AddDbContext calls using
-            // something like Castle Windsor that can register all contexts based
-            // on an abstraction
-            services.AddDbContext<WorkorderContext>(options =>
+            services.AddCors();
+            
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<VendorContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<MaterialContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             // Is this line needed if we're not using RazorPages?
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +65,7 @@ namespace ERP.API
             );
             app.UseHttpsRedirection();
             app.UseMvc();
+            dbContext.Database.EnsureCreated();
         }
     }
 }

@@ -17,9 +17,9 @@ namespace ERP.API.Controllers
     [ApiController]
     public class WorkordersController : ControllerBase
     {
-        private readonly WorkorderContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public WorkordersController(WorkorderContext context)
+        public WorkordersController(ApplicationDbContext context)
         {
             _context = context;
         }
