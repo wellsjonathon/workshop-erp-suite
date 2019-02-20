@@ -61,7 +61,8 @@ namespace ERP.API
 
             services.AddAuthentication(options =>
             {
-                options.DefaultScheme = OpenIddictValidationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = OpenIddictValidationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIddictValidationDefaults.AuthenticationScheme;
             });
 
             // Is this line needed if we're not using RazorPages?

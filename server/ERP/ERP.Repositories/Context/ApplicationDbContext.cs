@@ -8,6 +8,7 @@ using ERP.Models;
 
 namespace ERP.Repositories.Context
 {
+    // TODO: IdentityDbContext can be templated with custom Account object, determine if needed
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

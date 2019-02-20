@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ERP.Models;
 using ERP.Repositories.Context;
+using Microsoft.AspNetCore.Authorization;
 
 // TODO: Delegate any calls that needs to build the object to the
 //         services - allows use of multiple contexts
@@ -14,6 +15,7 @@ using ERP.Repositories.Context;
 namespace ERP.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class WorkordersController : ControllerBase
     {
