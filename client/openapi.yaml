@@ -1,0 +1,294 @@
+openapi: 3.0.0
+info:
+  title: Workshop ERP Suite
+  description: Enterprise application for workshop management
+  version: 1.0.0
+servers:
+- url: https://localhost:{port}/{basePath}
+  description: Development API server
+  variables:
+    port:
+      default: '5001'
+    basePath:
+      default: api
+paths:
+  /workorders:
+    get:
+      description: Returns all workorders
+      responses:
+        200:
+          description: List of all workorders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workorders"
+    post:
+      description: Creates a new workorder
+      responses:
+        201:
+          description: Created workorder returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workorder"
+        400:
+          description: Request was invalid
+  /workorders/{workorder-id}:
+    get:
+      description: Returns workorder based on ID
+      summary: Finds workorder by ID
+      responses:
+        200:
+          description: Workorder found and returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workorder"
+        404:
+          description: Workorder not found
+    patch:
+      description: Update specified fields for specified workorder
+      responses:
+        200:
+          description: Fields successfully updated and workorder returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workorder"
+        404:
+          description: Workorder not found
+    delete:
+      description: Deletes a specified workorder
+      responses:
+        204:
+          description: Workorder successfully deleted
+        404:
+          description: Workorder not found
+  /workorders/{workorder-id}/estimates:
+    get:
+      description: Returns all estimates for workorder
+      responses:
+        200:
+          description: List of all estimates for workorder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderEstimates"
+    post:
+      description: Create a new workorder estimate
+      responses:
+        201:
+          description: Workorder estimate returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderEstimate"
+        400:
+          description: Request was invalid
+  /workorders/{workorder-id}/estimates/{estimate-id}:
+    get:
+      description: Returns specified estimate for specified workorder
+      responses:
+        200:
+          description: Workorder estimate found and returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderEstimate"
+        404:
+          description: Estimate not found
+    put:
+      description: Update specified estimate for specified workorder
+      responses:
+        200:
+          description: Workorder estimate returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderEstimate"
+        404:
+          description: Request was invalid
+    delete:
+      description: Delete a specified estimate for a specified workorder
+      responses:
+        204:
+          description: Workorder estimate deleted
+        404:
+          description: Request was invalid
+  /workorders/{workorder-id}/comments:
+  /workorders/{workorder-id}/comments/{comment-id}:
+    get:
+      responses:
+        200:
+          description: Comment {comment-id} for workorder {workorder-id} found and returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderComment"
+        404:
+          description: Comment {comment-id} for workorder {workorder-id} not found
+    put:
+      responses:
+        200:
+          description: Comment {comment-id} for workorder {workorder-id} successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkorderComment"
+        404:
+          description: Comment {comment-id} for workorder {workorder-id} not found
+    delete:
+      responses:
+        204:
+          description: Comment {comment-id} for workorder {workorder-id} successfully deleted
+        404:
+          description: Comment {comment-id} for workorder {workorder-id} not found
+  /workorders/{workorder-id}/notes:
+  /workorders/{workorder-id}/notes/{note-id}:
+    get:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    put:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    delete:
+      responses:
+        204:
+          description: 
+        404:
+          description: 
+  /workorders/{workorder-id}/materials:
+  /workorders/{workorder-id}/materials/{material-id}:
+    get:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    put:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    delete:
+      responses:
+        204:
+          description: 
+        404:
+          description: 
+  /workorders/{workorder-id}/attachments:
+  /workorders/{workorder-id}/attachments/{attachment-id}:
+    get:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    put:
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/"
+        404:
+          description: 
+    delete:
+      responses:
+        204:
+          description: 
+        404:
+          description: 
+  /workorders/{workorder-id}/transitions:
+  /calendar:
+  /calendar/time-entries:
+  /calendar/time-entries/{time-entry-id}:
+  /calendar/events:
+  /calendar/events/{event-id}:
+  /calendar/availability-entries:
+  /calendar/availability-entries/{availability-entry-id}:
+  /calendar/workorders:
+  /calendar/workorders/{workorder-id}:
+  /inventory/materials:
+  /inventory/materials/{material-id}:
+  /inventory/materials/types:
+  /inventory/materials/types/{type-id}:
+  /inventory/materials/categories:
+  /inventory/materials/categories/{category-id}:
+  /inventory/vendors:
+  /inventory/vendors/{vendor-id}:
+  /inventory/units:
+  /inventory/units/{unit-id}:
+  /orders:
+  /orders/{order-id}:
+components:
+  schemas:
+    Workorder:
+    Workorders:
+    WorkorderEstimate:
+    WorkorderEstimates:
+    WorkorderComment:
+    WorkorderComments:
+    WorkorderNote:
+    WorkoderNotes:
+    WorkorderMaterial:
+    WorkorderMaterials:
+    WorkorderAttachment:
+    WorkorderAttachments:
+    WorkorderTransition:
+    WorkorderTransitions:
+    Workflow:
+    Workflows:
+    WorkflowState:
+    WorkflowTransition:
+    WorkflowTransitionAction:
+    CalendarTimeEntry:
+    CalendarTimeEntries:
+    CalendarEvent:
+    CalendarEvents:
+    CalendarAvailabilityEntry:
+    CalendarAvailabilityEntries:
+    CalendarWorkorder:
+    CalendarWorkorders:
+    Material:
+    Materials:
+    MaterialType:
+    MaterialTypes:
+    MaterialCategory:
+    MaterialCategories:
+    Vendor:
+    Vendors:
+    Unit:
+    Units:
+    Order:
+    Orders:
+    OrderItem:
+    OrderItems:
