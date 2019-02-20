@@ -12,8 +12,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ERP.Repositories.Context;
+using ERP.Models;
 using Microsoft.AspNetCore.Identity;
-using OpenIddict.Validation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ERP.API
 {
@@ -29,41 +33,36 @@ namespace ERP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddAuthentication();
-
             services.AddCors();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                options.UseOpenIddict();
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddOpenIddict()
-                .AddCore(options =>
-                {
-                    options.UseEntityFrameworkCore()
-                        .UseDbContext<ApplicationDbContext>();
-                })
-                .AddServer(options =>
-                {
-                    options.UseMvc();
-                    options.EnableTokenEndpoint("/connect/token");
-                    options.AllowPasswordFlow();
-                    options.AcceptAnonymousClients(); // TODO: Remove this after development
-                    // options.DisableHttpsRequirement(); // TODO: Remove this after development
-                })
-                .AddValidation();
-
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = OpenIddictValidationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIddictValidationDefaults.AuthenticationScheme;
-            });
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(config =>
+                {
+                    config.RequireHttpsMetadata = false; // TODO: Remove this for production
+                    config.SaveToken = true;
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidAudience = Configuration["JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             // Is this line needed if we're not using RazorPages?
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
