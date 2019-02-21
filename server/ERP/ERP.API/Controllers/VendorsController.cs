@@ -14,9 +14,9 @@ namespace ERP.API.Controllers
     [ApiController]
     public class VendorsController : ControllerBase
     {
-        private readonly VendorContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public VendorsController(VendorContext context)
+        public VendorsController(ApplicationDbContext context)
         {
             _context = context;
         }

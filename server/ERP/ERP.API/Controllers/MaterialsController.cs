@@ -14,9 +14,9 @@ namespace ERP.API.Controllers
     [ApiController]
     public class MaterialsController : ControllerBase
     {
-        private readonly MaterialContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public MaterialsController(MaterialContext context)
+        public MaterialsController(ApplicationDbContext context)
         {
             _context = context;
         }
