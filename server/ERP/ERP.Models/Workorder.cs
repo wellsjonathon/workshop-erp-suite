@@ -9,9 +9,9 @@ namespace ERP.Models
     {
         public int ID { get; set; }
         public virtual WorkorderStatus Status { get; set; }
-        // public WorkorderUse Use { get; set; }
-        // public Faculty Faculty { get; set; }
-        // public Semester Semester { get; set; } // Enum? Is it even needed?
+        public Use Use { get; set; }
+        public Faculty Faculty { get; set; }
+        public Semester Semester { get; set; } // Enum? Is it even needed?
         public string Description { get; set; }
         public bool QuoteRequested { get; set; }
 
