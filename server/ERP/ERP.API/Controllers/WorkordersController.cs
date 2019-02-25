@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ERP.Models;
+using ERP.Models.Workorders;
 using ERP.Repositories.Context;
 using Microsoft.AspNetCore.Authorization;
+using ERP.Models.Workflows;
 
 // TODO: Delegate any calls that needs to build the object to the
 //         services - allows use of multiple contexts
@@ -15,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace ERP.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     [ApiController]
     public class WorkordersController : ControllerBase
     {
@@ -33,9 +35,9 @@ namespace ERP.API.Controllers
             //var workorders = _context.Workorders;
             //foreach (Workorder w in workorders)
             //{
-            //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.ID == w.Status.ID);
+            //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.Id == w.Status.Id);
             //}
-            return _context.Workorders.Include(w => w.Status);
+            return _context.Workorders.Include(w => w.State);
         }
 
         // GET: api/Workorders/5
@@ -47,7 +49,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.Include(w => w.Status).FirstOrDefaultAsync(w => w.ID == id);
+            var workorder = await _context.Workorders.Include(w => w.State).FirstOrDefaultAsync(w => w.Id == id);
 
             if (workorder == null)
             {
@@ -66,49 +68,11 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != workorder.ID)
+            if (id != workorder.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(workorder).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WorkorderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // PUT: api/Workorders/5/status
-        [HttpPut("{id}/status")]
-        public async Task<IActionResult> PutWorkorderStatus([FromRoute] int id, [FromBody] WorkorderStatus status)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.ID == id);
-
-            if (id != workorder.ID)
-            {
-                return BadRequest();
-            }
-
-            workorder.Status = await _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.ID == status.ID);
             _context.Entry(workorder).State = EntityState.Modified;
 
             try
@@ -139,13 +103,13 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            workorder.Status = await _context.WorkorderStatuses.FirstOrDefaultAsync(x => x.ID == 1);
+            workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
             workorder.DateCreated = DateTime.Now;
 
             _context.Workorders.Add(workorder);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkorder", new { id = workorder.ID }, workorder);
+            return CreatedAtAction("GetWorkorder", new { id = workorder.Id }, workorder);
         }
 
         // DELETE: api/Workorders/5
@@ -171,20 +135,96 @@ namespace ERP.API.Controllers
 
         private bool WorkorderExists(int id)
         {
-            return _context.Workorders.Any(e => e.ID == id);
+            return _context.Workorders.Any(e => e.Id == id);
         }
 
-        // Workorder Materials
+        // ===== TRANSITIONS =====
+
+        // GET: api/Workorders/5/transitions
+        [HttpGet("{id}/transitions")]
+        public IActionResult GetWorkorderTransitions([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = _context.Workorders.FirstOrDefault(w => w.Id == id);
+
+            if (id != workorder.Id)
+            {
+                return BadRequest();
+            }
+
+            // Determine possible transitions from current state of the workorder
+            var transitions = _context.Transitions
+                .Where(t => t.CurrentStateId == workorder.State.Id)
+                .OrderBy(t => t.NextStateId)
+                .ToList();
+
+            return Ok(transitions);
+        }
+
+        // POST: api/Workorders/5/transitions
+        [HttpPost("{id}/transitions")]
+        public async Task<IActionResult> PostWorkorderTransition([FromRoute] int id, [FromBody] Transition transition)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
+
+            if (id != workorder.Id)
+            {
+                return BadRequest();
+            }
+
+            // Determine possible transitions from current state of the workorder
+            var transitionObj = _context.Transitions.Where(t => t.CurrentStateId == workorder.State.Id);
+
+            // Return an error if the transition is not valid given the Current State
+            if (await _context.Transitions.SingleAsync(t => t.CurrentStateId == workorder.State.Id && t.NextStateId == transition.Id) == null)
+            {
+                // TODO: Create a better error object for situations like this
+                //  Perhaps include redirect url for GET Transitions
+                return Conflict(new { Error = "Invalid state transition" });
+            }
+
+            workorder.State = await _context.States.FirstOrDefaultAsync(s => s.Id == transition.Id);
+            _context.Entry(workorder).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkorderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // ===== MATERIALS =====
 
         // GET: api/Workorders/5/Materials
         [HttpGet("{id}/Materials")]
         public IEnumerable<WorkorderMaterial> GetWorkorderMaterials([FromRoute] int id)
         {
             return _context.WorkorderMaterials
-                .Include(m => m.Workorder.ID)
+                .Include(m => m.Workorder.Id)
                 .Include(m => m.Material)
                 .Include(m => m.Vendor)
-                .Where(m => m.Workorder.ID == id);
+                .Where(m => m.Workorder.Id == id);
         }
 
         // GET: api/Workorders/5/Materials/2
@@ -197,11 +237,11 @@ namespace ERP.API.Controllers
             }
 
             var material = await _context.WorkorderMaterials
-                .Include(m => m.Workorder.ID)
+                .Include(m => m.Workorder.Id)
                 .Include(m => m.Material)
                 .Include(m => m.Vendor)
-                .Where(m => m.Workorder.ID == id)
-                .FirstOrDefaultAsync(m => m.ID == materialId);
+                .Where(m => m.Workorder.Id == id)
+                .FirstOrDefaultAsync(m => m.Id == materialId);
 
             if (material == null)
             {
@@ -225,7 +265,7 @@ namespace ERP.API.Controllers
             _context.WorkorderMaterials.Add(material);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkorderMaterial", new { id = material.ID }, material);
+            return CreatedAtAction("GetWorkorderMaterial", new { id = material.Id }, material);
         }*/
     }
 }

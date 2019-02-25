@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.Models;
 using ERP.Models.Workflows;
+using ERP.Models.Workorders;
 using ERP.Repositories.Seeds;
 
 namespace ERP.Repositories.Context

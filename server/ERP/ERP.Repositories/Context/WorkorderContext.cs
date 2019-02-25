@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ERP.Models;
+using ERP.Models.Workorders;
 
 namespace ERP.Repositories.Context
 {
