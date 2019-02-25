@@ -13,9 +13,9 @@ namespace ERP.Models.Workflows
         public Workflow Workflow { get; set; }
 
         public int WorkflowActionId { get; set; }
-        public WorkflowAction WorkflowAction { get; set; }
+        // public WorkflowAction WorkflowAction { get; set; }
 
         public int TransitionId { get; set; }
-        public Transition Transition { get; set; }
+        // public Transition Transition { get; set; }
     }
 }

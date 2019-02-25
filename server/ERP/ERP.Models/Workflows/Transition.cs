@@ -14,9 +14,9 @@ namespace ERP.Models.Workflows
         public Workflow Workflow { get; set; }
 
         public int CurrentStateId { get; set; }
-        public State CurrentState { get; set; }
+        // public State CurrentState { get; set; }
 
         public int NextStateId { get; set; }
-        public State NextState { get; set; }
+        // public State NextState { get; set; }
     }
 }
