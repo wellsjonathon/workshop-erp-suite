@@ -10,7 +10,7 @@ namespace ERP.Models
         public int ID { get; set; }
         public Order Order { get; set; }
         public Material Material { get; set; }
-        public Unit Unit { get; set; }
+        public UnitOfMeasure UnitOfMeasure { get; set; }
         public float Quantity { get; set; }
         public decimal CostPerUnit { get; set; }
     }

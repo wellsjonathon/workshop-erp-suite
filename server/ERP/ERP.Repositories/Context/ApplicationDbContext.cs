@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.Models;
+using ERP.Models.Workflows;
+using ERP.Repositories.Seeds;
 
 namespace ERP.Repositories.Context
 {
@@ -21,6 +23,13 @@ namespace ERP.Repositories.Context
         public DbSet<WorkorderStatus> WorkorderStatuses { get; set; }
         public DbSet<WorkorderMaterial> WorkorderMaterials { get; set; }
 
+        // ===== Workflows =====
+        public DbSet<Workflow> Worflows { get; set; }
+        public DbSet<State> States { get; set; }
+        public DbSet<Transition> Transitions { get; set; }
+        public DbSet<WorkflowAction> Actions { get; set; }
+        public DbSet<TransitionAction> TransitionActions { get; set; }
+
         // ===== Materials =====
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialCategory> MaterialCategories { get; set; }
@@ -35,6 +44,8 @@ namespace ERP.Repositories.Context
             base.OnModelCreating(builder);
 
             // TODO: Create specific seed functions
+            WorkflowSeed.Seed(builder);
+
             // ===== Workorders =====
             builder.Entity<WorkorderStatus>().HasData(
                 new WorkorderStatus { ID = 1, Name = "New" },

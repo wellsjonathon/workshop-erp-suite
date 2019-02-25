@@ -11,7 +11,7 @@ namespace ERP.Models
         public string Name { get; set; }
         public virtual MaterialCategory Category { get; set; }
         public virtual MaterialType Type { get; set; }
-        public Unit Unit { get; set; }
+        public UnitOfMeasure UnitOfMeasure { get; set; }
         public float QuantityInStock { get; set; }
         public string Details { get; set; }
     }

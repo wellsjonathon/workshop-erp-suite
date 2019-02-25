@@ -11,7 +11,7 @@ namespace ERP.Models
         public Workorder Workorder { get; set; }
         public Material Material { get; set; }
         public Vendor Vendor { get; set; }
-        public Unit Unit { get; set; }
+        public UnitOfMeasure UnitOfMeasure { get; set; }
         public float QuantityUsed { get; set; }
         public decimal CostPerUnit { get; set; }
     }
