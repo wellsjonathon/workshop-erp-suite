@@ -38,6 +38,7 @@ namespace ERP.API
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging();
             });
 
             services.AddIdentity<IdentityUser, IdentityRole>()

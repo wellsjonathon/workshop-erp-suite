@@ -12,7 +12,7 @@ namespace ERP.Models.Workorders
         public int Id { get; set; }
 
         public virtual State State { get; set; }
-        public virtual List<TransitionHistory> TransitionHistory { get; set; }
+        public List<TransitionHistory> TransitionHistory { get; set; }
         public virtual List<WorkorderAttachment> Attachments { get; set; }
         public virtual List<WorkorderMaterial> Materials { get; set; }
         public virtual List<TimeEntry> TimeEntries { get; set; }

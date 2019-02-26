@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ERP.Models.Workflows;
+using Newtonsoft.Json;
 
 namespace ERP.Models.Workorders
 {
@@ -12,10 +13,12 @@ namespace ERP.Models.Workorders
         public string Comment { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public int WorkorderId { get; set; }
-        public Workorder Workorder { get; set; }
-
         public int TransitionId { get; set; }
         public Transition Transition { get; set; }
+
+        [JsonIgnore]
+        public int WorkorderId { get; set; }
+        [JsonIgnore]
+        public Workorder Workorder { get; set; }
     }
 }

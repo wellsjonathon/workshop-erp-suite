@@ -23,6 +23,7 @@ namespace ERP.Repositories.Context
         public DbSet<Workorder> Workorders { get; set; }
         public DbSet<WorkorderStatus> WorkorderStatuses { get; set; }
         public DbSet<WorkorderMaterial> WorkorderMaterials { get; set; }
+        public DbSet<TransitionHistory> TransitionHistory { get; set; }
 
         // ===== Workflows =====
         public DbSet<Workflow> Worflows { get; set; }
@@ -43,6 +44,16 @@ namespace ERP.Repositories.Context
         {
             // Call OnModelCreating of IdentityDbContext to create identity management tables
             base.OnModelCreating(builder);
+
+            builder.Entity<Transition>()
+                .HasOne(t => t.CurrentState)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Transition>()
+                .HasOne(t => t.NextState)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             // TODO: Create specific seed functions
             WorkflowSeed.Seed(builder);

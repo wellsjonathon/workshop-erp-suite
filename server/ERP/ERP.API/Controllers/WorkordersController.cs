@@ -103,9 +103,13 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            // TODO: Update this to ensure it pulls the first state of the active workflow
+            // TODO: Update workflows/states to determine first (and last?) state of workflow
             workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
             workorder.DateCreated = DateTime.Now;
 
+            // TODO: Potentially add a default state "Created" that always has a single transition to
+            //  the first state in a workflow, adding that transition to the TransitionHistory on workorder creation
             _context.Workorders.Add(workorder);
             await _context.SaveChangesAsync();
 
@@ -138,18 +142,98 @@ namespace ERP.API.Controllers
             return _context.Workorders.Any(e => e.Id == id);
         }
 
-        // ===== TRANSITIONS =====
+        // ===== STATE & TRANSITIONS =====
 
-        // GET: api/Workorders/5/transitions
-        [HttpGet("{id}/transitions")]
-        public IActionResult GetWorkorderTransitions([FromRoute] int id)
+        // GET: api/Workorders/5/state
+        [HttpGet("{id}/state")]
+        public IActionResult GetWorkorderState([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var workorder = _context.Workorders.FirstOrDefault(w => w.Id == id);
+            var workorder = _context.Workorders
+                .Include(w => w.State)
+                .FirstOrDefault(w => w.Id == id);
+
+            if (id != workorder.Id)
+            {
+                return BadRequest();
+            }
+
+            return Ok(workorder.State);
+        }
+
+        // POST: api/Workorders/5/state
+        [HttpPost("{id}/state")]
+        public async Task<IActionResult> UpdateWorkorderState([FromRoute] int id, [FromBody] UpdateStateDto newState)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = await _context.Workorders
+                .Include(w => w.State)
+                .FirstOrDefaultAsync(w => w.Id == id);
+
+            if (id != workorder.Id || workorder == null)
+            {
+                return NotFound(new { Error = "Workorder " + id + " not found" });
+            }
+            
+            // Get full state object
+            var state = await _context.States.FirstOrDefaultAsync(s => s.Id == newState.NewStateId);
+
+            if (newState.NewStateId != state.Id || state == null)
+            {
+                return NotFound(new { Error = "State " + newState.NewStateId + " not found" });
+            }
+
+            // TODO: Verify that it is a valid state for the active workflow
+
+            // Get transition object inferred from current state id and the new state id
+            var transition = await _context.Transitions.FirstOrDefaultAsync(t => t.CurrentStateId == workorder.State.Id && t.NextStateId == newState.NewStateId);
+            
+            // Verify that it is a valid transition
+            if (transition == null)
+            {
+                // TODO: Create a better error object for situations like this
+                //  Perhaps include redirect url for GET Transitions
+                return Conflict(new { Error = "Invalid state transition" });
+            }
+
+            // Update state
+            workorder.State = state;
+            _context.Entry(workorder).State = EntityState.Modified;
+
+            // Add transition
+            var transitionHistoryEntry = new TransitionHistory
+            {
+                Comment = newState.Comment,
+                Timestamp = DateTime.Now,
+                Workorder = workorder,
+                Transition = transition
+            };
+            _context.TransitionHistory.Add(transitionHistoryEntry);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // GET: api/Workorders/5/state/transitions
+        [HttpGet("{id}/state/transitions")]
+        public IActionResult GetPossibleWorkorderTransitions([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = _context.Workorders
+                .Include(w => w.State)
+                .FirstOrDefault(w => w.Id == id);
 
             if (id != workorder.Id)
             {
@@ -158,60 +242,53 @@ namespace ERP.API.Controllers
 
             // Determine possible transitions from current state of the workorder
             var transitions = _context.Transitions
+                .Include(t => t.NextState)
                 .Where(t => t.CurrentStateId == workorder.State.Id)
                 .OrderBy(t => t.NextStateId)
                 .ToList();
 
-            return Ok(transitions);
+            List<TransitionDto> simpleTransitions = new List<TransitionDto>();
+            foreach(var t in transitions)
+            {
+                simpleTransitions.Add(
+                    new TransitionDto {
+                        Id = t.Id,
+                        NextState = new StateDto {
+                            Id = t.NextState.Id,
+                            Name = t.NextState.Name,
+                            Description = t.NextState.Description
+                        }
+                    });
+            }
+
+            return Ok(simpleTransitions);
         }
 
-        // POST: api/Workorders/5/transitions
-        [HttpPost("{id}/transitions")]
-        public async Task<IActionResult> PostWorkorderTransition([FromRoute] int id, [FromBody] Transition transition)
+        // GET: api/Workorders/5/state/history
+        [HttpGet("{id}/state/history")]
+        public IActionResult GetWorkorderTransitionHistory([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
+            // TODO: Add DTO mappings so that only the state id, name, and desc. get sent
+            var workorder = _context.Workorders
+                .Include(w => w.TransitionHistory)
+                    .ThenInclude(th => th.Transition)
+                        .ThenInclude(t => t.CurrentState)
+                .Include(w => w.TransitionHistory)
+                    .ThenInclude(th => th.Transition)
+                        .ThenInclude(t => t.NextState)
+                .Single(w => w.Id == id);
 
             if (id != workorder.Id)
             {
                 return BadRequest();
             }
 
-            // Determine possible transitions from current state of the workorder
-            var transitionObj = _context.Transitions.Where(t => t.CurrentStateId == workorder.State.Id);
-
-            // Return an error if the transition is not valid given the Current State
-            if (await _context.Transitions.SingleAsync(t => t.CurrentStateId == workorder.State.Id && t.NextStateId == transition.Id) == null)
-            {
-                // TODO: Create a better error object for situations like this
-                //  Perhaps include redirect url for GET Transitions
-                return Conflict(new { Error = "Invalid state transition" });
-            }
-
-            workorder.State = await _context.States.FirstOrDefaultAsync(s => s.Id == transition.Id);
-            _context.Entry(workorder).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WorkorderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(workorder.TransitionHistory);
         }
 
         // ===== MATERIALS =====
