@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ERP.Models
+namespace ERP.Models.Workorders
 {
     public class WorkorderNote
     {
