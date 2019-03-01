@@ -7,7 +7,7 @@ namespace ERP.Models.Workorders
 {
     public class WorkorderSchedule
     {
-        public int ID { get; set }
+        public int ID { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
     }
