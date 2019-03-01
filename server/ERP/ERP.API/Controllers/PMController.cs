@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ERP.Models;
+using ERP.Models.ProjectManagement;
 using ERP.Repositories.Context;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,7 +24,7 @@ namespace ERP.API.Controllers
 
         private bool TimeEntryExists(int id)
         {
-            return _context.TimeEntries.Any(t => t.ID == id);
+            return _context.TimeEntries.Any(t => t.Id == id);
         }
 
         // ===== Time Entries ===== 
@@ -47,7 +47,7 @@ namespace ERP.API.Controllers
             _context.TimeEntries.Add(timeEntry);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTimeEntries", new { id = timeEntry.ID}, timeEntry);
+            return CreatedAtAction("GetTimeEntries", new { id = timeEntry.Id}, timeEntry);
         }
 
         // GET: api/calendar/time-entries/{time-entry-id}
@@ -59,7 +59,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var time_entry = await _context.TimeEntries.FirstOrDefaultAsync(t => t.ID == id);
+            var time_entry = await _context.TimeEntries.FirstOrDefaultAsync(t => t.Id == id);
 
             if (time_entry == null)
             {
@@ -76,7 +76,7 @@ namespace ERP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if(id != timeEntry.ID)
+            if(id != timeEntry.Id)
             {
                 return BadRequest();
             }

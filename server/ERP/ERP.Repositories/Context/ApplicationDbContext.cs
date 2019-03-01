@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.Models;
 using ERP.Models.Workflows;
 using ERP.Models.Workorders;
-using ERP.Models.Project_Management;
+using ERP.Models.ProjectManagement;
 using ERP.Repositories.Seeds;
 
 namespace ERP.Repositories.Context
@@ -63,6 +63,11 @@ namespace ERP.Repositories.Context
                 .HasOne(t => t.NextState)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TimeEntry>()
+                .HasOne(e => e.Workorder)
+                .WithMany(w => w.TimeEntries)
+                .IsRequired(false);
 
             // TODO: Create specific seed functions
             WorkflowSeed.Seed(builder);
