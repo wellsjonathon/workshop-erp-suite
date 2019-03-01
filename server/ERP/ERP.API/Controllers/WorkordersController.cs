@@ -137,11 +137,6 @@ namespace ERP.API.Controllers
             return Ok(workorder);
         }
 
-        private bool WorkorderExists(int id)
-        {
-            return _context.Workorders.Any(e => e.Id == id);
-        }
-
         // ===== STATE & TRANSITIONS =====
 
         // GET: api/Workorders/5/state
@@ -347,7 +342,11 @@ namespace ERP.API.Controllers
         }*/
 
         // ===== TIME ENTRIES =====
+
         // ===== ESTIMATES =====
+
+        // ===== COMMENTS =====
+
         [HttpGet("{id}/comments")]
         public IActionResult GetWorkorderComments(
             [FromRoute] int id)
@@ -390,9 +389,7 @@ namespace ERP.API.Controllers
 
             comment.Timestamp = DateTime.Now;
             comment.Workorder = workorder;
-
-            // TODO: Potentially add a default state "Created" that always has a single transition to
-            //  the first state in a workflow, adding that transition to the TransitionHistory on workorder creation
+            
             _context.WorkorderComments.Add(comment);
             await _context.SaveChangesAsync();
 
@@ -430,7 +427,31 @@ namespace ERP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return StatusCode(501);
+
+            if (commentId != newComment.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(newComment).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkorderExists(id) || !CommentExists(commentId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         [HttpDelete("{id}/comments/{commentId}")]
@@ -442,10 +463,167 @@ namespace ERP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return StatusCode(501);
+
+            var comment = await _context.WorkorderComments.SingleAsync(c => c.WorkorderId == id && c.Id == commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            _context.WorkorderComments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return Ok(comment);
         }
-        // ===== COMMENTS =====
+
         // ===== NOTES =====
+
+        [HttpGet("{id}/notes")]
+        public IActionResult GetWorkorderNote(
+            [FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = _context.Workorders
+                .Include(w => w.Notes)
+                .Single(w => w.Id == id);
+
+            if (workorder == null)
+            {
+                return NotFound();
+            }
+
+            var notes = workorder.Notes.OrderBy(n => n.Timestamp);
+
+            return Ok(notes);
+        }
+
+        [HttpPost("{id}/notes")]
+        public async Task<IActionResult> AddNewWorkorderNote(
+            [FromRoute] int id,
+            [FromBody] WorkorderNote note)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
+
+            if (workorder == null)
+            {
+                return NotFound();
+            }
+
+            note.Timestamp = DateTime.Now;
+            note.Workorder = workorder;
+
+            _context.WorkorderNotes.Add(note);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetWorkorderNote", new { id, noteId = note.Id }, note);
+        }
+
+        [HttpGet("{id}/notes/{noteId}")]
+        public async Task<IActionResult> GetWorkorderNote(
+            [FromRoute] int id,
+            [FromRoute] int noteId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var note = await _context.WorkorderNotes
+                .FirstOrDefaultAsync(c => c.WorkorderId == id && c.Id == noteId);
+
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(note);
+        }
+
+        [HttpPut("{id}/notes/{noteId}")]
+        public async Task<IActionResult> UpdateWorkorderNote(
+            [FromRoute] int id,
+            [FromRoute] int noteId,
+            [FromBody] WorkorderNote newNote)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (noteId != newNote.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(newNote).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkorderExists(id) || !NoteExists(noteId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/notes/{noteId}")]
+        public async Task<IActionResult> DeleteWorkorderNote(
+            [FromRoute] int id,
+            [FromRoute] int noteId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var note = await _context.WorkorderNotes.SingleAsync(n => n.WorkorderId == id && n.Id == noteId);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            _context.WorkorderNotes.Remove(note);
+            await _context.SaveChangesAsync();
+
+            return Ok(note);
+        }
+
         // ===== ATTACHMENTS =====
+
+        // ===== HELPERS =====
+
+        private bool WorkorderExists(int id)
+        {
+            return _context.Workorders.Any(e => e.Id == id);
+        }
+
+        private bool CommentExists(int id)
+        {
+            return _context.WorkorderComments.Any(c => c.Id == id);
+        }
+
+        private bool NoteExists(int id)
+        {
+            return _context.WorkorderNotes.Any(c => c.Id == id);
+        }
     }
 }
