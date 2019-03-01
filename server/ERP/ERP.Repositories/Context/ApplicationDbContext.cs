@@ -21,8 +21,9 @@ namespace ERP.Repositories.Context
 
         // ===== Workorders =====
         public DbSet<Workorder> Workorders { get; set; }
-        public DbSet<WorkorderStatus> WorkorderStatuses { get; set; }
         public DbSet<WorkorderMaterial> WorkorderMaterials { get; set; }
+        public DbSet<WorkorderComment> WorkorderComments { get; set; }
+        public DbSet<WorkorderNote> WorkorderNotes { get; set; }
         public DbSet<TransitionHistory> TransitionHistory { get; set; }
 
         // ===== Workflows =====
@@ -59,14 +60,6 @@ namespace ERP.Repositories.Context
             WorkflowSeed.Seed(builder);
 
             // ===== Workorders =====
-            builder.Entity<WorkorderStatus>().HasData(
-                new WorkorderStatus { ID = 1, Name = "New" },
-                new WorkorderStatus { ID = 2, Name = "Scheduled" },
-                new WorkorderStatus { ID = 3, Name = "In Progress" },
-                new WorkorderStatus { ID = 4, Name = "Completed" },
-                new WorkorderStatus { ID = 5, Name = "Rejected" },
-                new WorkorderStatus { ID = 6, Name = "Cancelled" }
-            );
 
             // ===== Materials =====
             builder.Entity<MaterialCategory>().HasData(

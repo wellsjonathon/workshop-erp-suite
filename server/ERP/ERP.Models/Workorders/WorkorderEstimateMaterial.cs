@@ -12,7 +12,7 @@ namespace ERP.Models.Workorders
         public decimal CostPerUnit { get; set; }
         public Material MaterialID { get; set; }
         public Vendor VendorID { get; set; }
-        public Unit UnitID { get; set; }
+        public UnitOfMeasure UnitOfMeasureID { get; set; }
         public WorkorderEstimate WorkorderEstimateID { get; set; }
 }
 }

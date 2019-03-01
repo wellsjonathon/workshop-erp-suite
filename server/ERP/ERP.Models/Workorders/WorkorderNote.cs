@@ -7,8 +7,8 @@ namespace ERP.Models.Workorders
 {
     public class WorkorderNote
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Note { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -11,14 +11,14 @@ namespace ERP.Models.Workorders
     {
         public int Id { get; set; }
 
-        public virtual State State { get; set; }
+        public State State { get; set; }
+        public WorkorderEstimate Estimate { get; set; }
         public List<TransitionHistory> TransitionHistory { get; set; }
-        public virtual List<WorkorderAttachment> Attachments { get; set; }
-        public virtual List<WorkorderMaterial> Materials { get; set; }
-        public virtual List<TimeEntry> TimeEntries { get; set; }
-        // public virtual List<WorkorderComment> Comments { get; set; }
-        // public virtual List<WorkorderNote> Notes { get; set; }
-        // public virtual WorkorderEstimate Estimate { get; set; }
+        public List<WorkorderAttachment> Attachments { get; set; }
+        public List<WorkorderMaterial> Materials { get; set; }
+        // public List<TimeEntry> TimeEntries { get; set; }
+        public List<WorkorderComment> Comments { get; set; }
+        public List<WorkorderNote> Notes { get; set; }
 
         // public Use Use { get; set; }
         // public Faculty Faculty { get; set; }
@@ -43,12 +43,6 @@ namespace ERP.Models.Workorders
         public string ClientPhoneNumber { get; set; }
         public string ClientEmail { get; set; }
         public string ClientName { get; set; }
-
-        public decimal EstMaterialCost { get; set; }
-        public decimal EstLabourCost { get; set; }
-        public decimal EstOtherCost { get; set; } // Needed?
-        public decimal EstTotalCost { get; set; }
-        public DateTime EstDeliveryDate { get; set; }
 
         // public TYPE ChargeAccount { get; set; }
         public string AuthorizedBy { get; set; }

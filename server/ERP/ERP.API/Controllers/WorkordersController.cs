@@ -219,6 +219,7 @@ namespace ERP.API.Controllers
             _context.TransitionHistory.Add(transitionHistoryEntry);
             await _context.SaveChangesAsync();
 
+            //return GetPossibleWorkorderTransitions(id);
             return NoContent();
         }
 
@@ -344,5 +345,107 @@ namespace ERP.API.Controllers
 
             return CreatedAtAction("GetWorkorderMaterial", new { id = material.Id }, material);
         }*/
+
+        // ===== TIME ENTRIES =====
+        // ===== ESTIMATES =====
+        [HttpGet("{id}/comments")]
+        public IActionResult GetWorkorderComments(
+            [FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var workorder = _context.Workorders
+                .Include(w => w.Comments)
+                .Single(w => w.Id == id);
+
+            if (workorder == null)
+            {
+                return NotFound();
+            }
+
+            var comments = workorder.Comments.OrderBy(c => c.Timestamp);
+
+            return Ok(comments);
+        }
+
+        [HttpPost("{id}/comments")]
+        public async Task<IActionResult> AddNewWorkorderComment(
+            [FromRoute] int id,
+            [FromBody] WorkorderComment comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
+
+            if (workorder == null)
+            {
+                return NotFound();
+            }
+
+            comment.Timestamp = DateTime.Now;
+            comment.Workorder = workorder;
+
+            // TODO: Potentially add a default state "Created" that always has a single transition to
+            //  the first state in a workflow, adding that transition to the TransitionHistory on workorder creation
+            _context.WorkorderComments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetWorkorderComment", new { id, commentId = comment.Id }, comment);
+        }
+
+        [HttpGet("{id}/comments/{commentId}")]
+        public async Task<IActionResult> GetWorkorderComment(
+            [FromRoute] int id,
+            [FromRoute] int commentId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var comment = await _context.WorkorderComments
+                .FirstOrDefaultAsync(c => c.WorkorderId == id && c.Id == commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(comment);
+        }
+
+        [HttpPut("{id}/comments/{commentId}")]
+        public async Task<IActionResult> UpdateWorkorderComment(
+            [FromRoute] int id,
+            [FromRoute] int commentId,
+            [FromBody] WorkorderComment newComment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return StatusCode(501);
+        }
+
+        [HttpDelete("{id}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteWorkorderComment(
+            [FromRoute] int id,
+            [FromRoute] int commentId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return StatusCode(501);
+        }
+        // ===== COMMENTS =====
+        // ===== NOTES =====
+        // ===== ATTACHMENTS =====
     }
 }
