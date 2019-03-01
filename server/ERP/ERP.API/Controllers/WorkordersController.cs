@@ -17,7 +17,7 @@ using ERP.Models.Workflows;
 namespace ERP.API.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize]
+    [Authorize]
     [ApiController]
     public class WorkordersController : ControllerBase
     {
@@ -426,11 +426,6 @@ namespace ERP.API.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            if (commentId != newComment.Id)
-            {
-                return BadRequest();
             }
 
             _context.Entry(newComment).State = EntityState.Modified;
