@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ERP.Models.Workorders;
 
-namespace ERP.Models
+namespace ERP.Models.Project_Management
 {
     public class TimeEntry
     {
