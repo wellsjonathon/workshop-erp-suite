@@ -7,7 +7,7 @@ namespace ERP.Models.Workorders
 {
     public class WorkorderAttachment
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string FileLocation { get; set; }
         
         public int WorkorderId { get; set; }
