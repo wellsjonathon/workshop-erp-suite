@@ -43,6 +43,10 @@ namespace ERP.Repositories.Context
         // ===== Vendors =====
         public DbSet<Vendor> Vendors { get; set; }
 
+        // ===== Orders =====
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+
         // ===== Project Management ====
         public DbSet<BillableOverrideType> BillableOverrideTypes { get; set; }
         public DbSet<Event> Events { get; set; }
