@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.Models;
+using ERP.Models.Inventory;
 using ERP.Models.Workflows;
 using ERP.Models.Workorders;
 using ERP.Models.ProjectManagement;

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ERP.Models
+namespace ERP.Models.Inventory
 {
     public class Material
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public virtual MaterialCategory Category { get; set; }
         public virtual MaterialType Type { get; set; }
