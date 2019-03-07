@@ -77,14 +77,14 @@ namespace ERP.Repositories.Context
 
             // ===== Materials =====
             builder.Entity<MaterialCategory>().HasData(
-                new MaterialCategory { ID = 1, Name = "Rod" },
-                new MaterialCategory { ID = 2, Name = "Plate" },
-                new MaterialCategory { ID = 3, Name = "Sheet" }
+                new MaterialCategory { Id = 1, Name = "Rod" },
+                new MaterialCategory { Id = 2, Name = "Plate" },
+                new MaterialCategory { Id = 3, Name = "Sheet" }
             );
             builder.Entity<MaterialType>().HasData(
-                new MaterialType { ID = 1, Name = "Aluminum" },
-                new MaterialType { ID = 2, Name = "Steel" },
-                new MaterialType { ID = 3, Name = "Nylon" }
+                new MaterialType { Id = 1, Name = "Aluminum" },
+                new MaterialType { Id = 2, Name = "Steel" },
+                new MaterialType { Id = 3, Name = "Nylon" }
             );
 
             // ===== Project Management =====

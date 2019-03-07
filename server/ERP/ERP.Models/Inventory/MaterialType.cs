@@ -7,7 +7,7 @@ namespace ERP.Models.Inventory
 {
     public class MaterialType
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

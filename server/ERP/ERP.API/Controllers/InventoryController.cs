@@ -37,7 +37,7 @@ namespace ERP.API.Controllers
         }
         // POST: api/inventory/materials
         [HttpPost("materials")]
-        public async Task<IActionResult> CreateNewMaterial([FromBody] Material material)
+        public async Task<IActionResult> CreateMaterial([FromBody] Material material)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace ERP.API.Controllers
             _context.Materials.Add(material);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMaterial", new { id = material.Id }, material)
+            return CreatedAtAction("GetMaterial", new { id = material.Id }, material);
         }
         // GET: api/inventory/materials/{id}
         [HttpGet("materials/{id}")]
@@ -98,15 +98,66 @@ namespace ERP.API.Controllers
         }
         // DELETE: api/inventory/materials/{id}
         [HttpDelete("materials/{id}")]
+        public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var material= await _context.Materials.FirstOrDefaultAsync(m => m.Id == id);
+            if (material == null)
+            {
+                return NotFound();
+            }
+
+            _context.Materials.Remove(material);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
 
         // ===== MATERIAL TYPES =====
 
         // GET: api/inventory/materials/types
         [HttpGet("materials/types")]
+        public IEnumerable<MaterialType> GetMaterialTypes()
+        {
+            return _context.MaterialTypes;
+        }
         // POST: api/inventory/materials/types
         [HttpPost("materials/types")]
+        public async Task<IActionResult> CreateMaterialType([FromBody] MaterialType type)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            _context.MaterialTypes.Add(type);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetMaterialType", new { id = type.Id }, type);
+        }
         // GET: api/inventory/materials/types/{id}
         [HttpGet("materials/types/{id}")]
+        public async Task<IActionResult> GetMaterialType([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var type = await _context.MaterialTypes.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (type == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(type);
+        }
         // PUT: api/inventory/materials/types/{id}
         [HttpPut("materials/types/{id}")]
         // DELETE: api/inventory/materials/types/{id}

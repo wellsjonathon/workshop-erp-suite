@@ -47,6 +47,7 @@ namespace ERP.API.Controllers
             if (result.Succeeded)
             {
                 var loggedInUser = _userManager.Users.SingleOrDefault(u => u.Email == user.Email);
+                // TODO: Look into SignInResult return type
                 return Ok(new
                 {
                     token = GenerateJwtToken(user.Email, loggedInUser)
