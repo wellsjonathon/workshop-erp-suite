@@ -11,8 +11,9 @@ namespace ERP.Models.Project_Management
         public string Name { get; set; }
         public string Colour { get; set; }
         public string Notes { get; set; }
+        public AvailabilityType AvailabilityTypeId { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public AvailabilityType AvailabilityTypeId { get; set; }
+        
     }
 }

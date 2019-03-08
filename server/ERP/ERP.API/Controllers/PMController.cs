@@ -45,7 +45,7 @@ namespace ERP.API.Controllers
         [HttpGet("calendar/time-entries")]
         public IEnumerable<TimeEntry> GetTimeEntries()
         {
-            return _context.TimeEntries;
+            return _context.TimeEntries.Include(t => t.TimeType);
         }
 
         // POST: api/calendar/time-entries
@@ -74,7 +74,9 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var time_entry = await _context.TimeEntries.FirstOrDefaultAsync(t => t.ID == id);
+            var time_entry = await _context.TimeEntries
+                .Include(t => t.TimeType)
+                .FirstOrDefaultAsync(t => t.ID == id);
 
             if (time_entry == null)
             {
@@ -95,7 +97,7 @@ namespace ERP.API.Controllers
             {
                 return BadRequest();
             }
-
+            timeEntry.DateTime = DateTime.Now;
             _context.Entry(timeEntry).State = EntityState.Modified;
             
             try
@@ -192,6 +194,8 @@ namespace ERP.API.Controllers
             {
                 return BadRequest();
             }
+
+            event_entry.Start = DateTime.Now;
             _context.Entry(event_entry).State = EntityState.Modified;
 
             try
@@ -222,7 +226,13 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var event_entry = await _context.Events.FindAsync();
+            var event_entry = await _context.Events.FindAsync(id);
+            if (event_entry == null)
+            {
+                return NotFound();
+            }
+
+            _context.Events.Remove(event_entry);
             await _context.SaveChangesAsync();
             return Ok(event_entry);
         }
@@ -232,7 +242,7 @@ namespace ERP.API.Controllers
         [HttpGet("calendar/availability")]
         public IEnumerable<Availability> GetAvailabilities()
         {
-            return _context.Availabilities;
+            return _context.Availabilities.Include(a => a.AvailabilityTypeId);
         }
 
         // POST: api/calendar/availability
@@ -243,10 +253,90 @@ namespace ERP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            availability.AvailabilityTypeId = _context.AvailabilityTypes.Single<AvailabilityType>(a => a.ID == availability.AvailabilityTypeId.ID);
+            
+            availability.AvailabilityTypeId = _context.AvailabilityTypes.SingleOrDefault<AvailabilityType>(a => a.ID == availability.AvailabilityTypeId.ID);
+            availability.Start = DateTime.Now;
             _context.Availabilities.Add(availability);
+  
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetAvailability", new { id = availability.ID }, availability);
+        }
+
+        //GET: api/calendar/availability/id
+        [HttpGet("calendar/availability/{id}")]
+        public async Task<IActionResult> GetAvailability([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var availability = await _context.Availabilities
+                .Include(a => a.AvailabilityTypeId)
+                .FirstOrDefaultAsync(a => a.ID == id);
+            if(availability == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(availability);
+        }
+
+        //PUT: api/calendar/availability/id
+        [HttpPut("calendar/availability/{id}")]
+        public async Task<IActionResult> PutAvailability([FromRoute] int id, [FromBody] Availability availability)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if(id != availability.ID)
+            {
+                return BadRequest();
+            }
+
+            availability.Start = DateTime.Now;
+            _context.Entry(availability).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AvailabilityExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        //DELETE: api/calendar/availability/id
+        [HttpDelete("api/calendar/availability/{id}")]
+        public async Task<IActionResult> DeleteAvailability([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var availability = await _context.Availabilities.FindAsync(id);
+            if(availability == null)
+            {
+                return NotFound();
+            }
+
+            _context.Availabilities.Remove(availability);
+            await _context.SaveChangesAsync();
+
+            return Ok(availability); 
         }
     }
 }
