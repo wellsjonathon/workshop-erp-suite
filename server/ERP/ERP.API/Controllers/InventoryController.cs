@@ -343,7 +343,7 @@ namespace ERP.API.Controllers
             return CreatedAtAction("GetVendor", new { id = vendor.Id }, vendor);
         }
         // GET: api/inventory/vendors/{id}
-        [HttpGet("vendors/{id]")]
+        [HttpGet("vendors/{id}")]
         public async Task<IActionResult> GetVendor([FromRoute] int id)
         {
             if (!ModelState.IsValid)

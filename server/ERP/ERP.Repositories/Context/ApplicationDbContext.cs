@@ -69,6 +69,16 @@ namespace ERP.Repositories.Context
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<WorkorderMaterial>()
+                .HasOne(m => m.UnitOfMeasure)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<OrderItem>()
+                .HasOne(m => m.UnitOfMeasure)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<TimeEntry>()
                 .HasOne(e => e.Workorder)
                 .WithMany(w => w.TimeEntries)
