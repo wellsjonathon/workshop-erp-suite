@@ -42,6 +42,7 @@ namespace ERP.Repositories.Context
 
         // ===== Vendors =====
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorMaterialList> VendorMaterialList { get; set; }
 
         // ===== Orders =====
         public DbSet<Order> Orders { get; set; }

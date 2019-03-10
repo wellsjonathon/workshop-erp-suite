@@ -409,6 +409,71 @@ namespace ERP.API.Controllers
 
             return Ok();
         }
+        
+        // ===== VENDOR MATERIALS =====
+
+        // GET: api/inventory/vendors/{id}/materials
+        [HttpGet("vendors/{id}/materials")]
+        public IEnumerable<VendorMaterialList> GetMaterialsFromVendor([FromRoute] int id)
+        {
+            return _context.VendorMaterialList
+                .Include(vm => vm.Material)
+                .Where(vm => vm.VendorId == id);
+        }
+        // POST: api/inventory/vendors/{id}/materials
+        [HttpPost("vendors/{id}/materials")]
+        public async Task<IActionResult> AddMaterialToVendor([FromRoute] int id, [FromBody] VendorMaterialList vendorMaterial)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Validate vendor exists and add to the object
+            var vendor = await _context.Vendors.FirstOrDefaultAsync(v => v.Id == id);
+            if (vendor == null)
+            {
+                return NotFound("Vendor " + id + " does not exist.");
+            }
+            vendorMaterial.VendorId = id;
+            vendorMaterial.Vendor = vendor;
+
+            // Validate material exists and add to the object
+            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Id == vendorMaterial.Id);
+            if (material == null)
+            {
+                return NotFound("Material " + vendorMaterial.Id + " does not exist.");
+            }
+            vendorMaterial.Material = material;
+
+            // Add relation
+            _context.VendorMaterialList.Add(vendorMaterial);
+            _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetVendorMaterial", new { id = vendorMaterial.VendorId, materialId = vendorMaterial.MaterialId }, vendorMaterial);
+        }
+        // GET: api/inventory/vendors/{id}/materials/{materialId}
+        [HttpGet("vendors/{id}/materials/{materialId}")]
+        public async Task<IActionResult> GetMaterialFromVendor([FromRoute] int id, [FromRoute] int materialId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Validate vendor-material relation exists
+            var vendorMaterial = await _context.VendorMaterialList
+                .Include(vm => vm.Material)
+                .FirstOrDefaultAsync(vm => vm.VendorId == id && vm.MaterialId == materialId);
+
+            if (vendorMaterial == null)
+            {
+                return NotFound("Material " + materialId + " does not exist with vendor " + id + ".");
+            }
+
+            return Ok(vendorMaterial);
+        }
+        // TODO: Add PUT and DELETE endpoints
 
         // ===== ORDERS =====
 
