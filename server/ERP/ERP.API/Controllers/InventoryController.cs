@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ERP.Models;
 using ERP.Models.Inventory;
 using ERP.Repositories.Context;
 using Microsoft.AspNetCore.Http;
@@ -64,8 +65,9 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // material.Category = await _context.MaterialCategories.FirstOrDefaultAsync(c => c.Id == material.Category.Id);
-            // material.Type = await _context.MaterialTypes.FirstOrDefaultAsync(c => c.Id == material.Type.Id);
+            material.Category = await _context.MaterialCategories.FirstOrDefaultAsync(c => c.Id == material.CategoryId);
+            material.Type = await _context.MaterialTypes.FirstOrDefaultAsync(c => c.Id == material.TypeId);
+            material.UnitOfMeasure = await _context.UnitsOfMeasure.FirstOrDefaultAsync(u => u.Id == material.UnitOfMeasureId);
 
             _context.Materials.Add(material);
             await _context.SaveChangesAsync();
@@ -657,6 +659,15 @@ namespace ERP.API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        // ===== UNITS OF MEASURE =====
+
+        // GET: api/inventory/units-of-measure
+        [HttpGet("units-of-measure")]
+        public IEnumerable<UnitOfMeasure> GetUnitsOfMeasure()
+        {
+            return _context.UnitsOfMeasure;
         }
     }
 }

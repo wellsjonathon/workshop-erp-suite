@@ -48,6 +48,9 @@ namespace ERP.Repositories.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
+        // ===== Units =====
+        public DbSet<UnitOfMeasure> UnitsOfMeasure { get; set; }
+
         // ===== Project Management ====
         public DbSet<BillableOverrideType> BillableOverrideTypes { get; set; }
         public DbSet<Event> Events { get; set; }
@@ -87,6 +90,7 @@ namespace ERP.Repositories.Context
 
             // TODO: Create specific seed functions
             WorkflowSeed.Seed(builder);
+            UnitOfMeasureSeed.Seed(builder);
 
             // ===== Workorders =====
 
