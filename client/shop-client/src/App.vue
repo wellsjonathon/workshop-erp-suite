@@ -23,6 +23,7 @@ export default {
 
 <style lang="scss">
 @import "./styles/variables.scss";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
   font-size: 62.5%;
@@ -221,17 +222,7 @@ h1 {
     }
   }
 }
-.status-row {
-  display: inline-flex;
-  flex-direction: row;
-  font-size: 1.2rem;
-  align-items: baseline;
-  & .status__indicator {
-    margin: 0 5px 0 0;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.5rem;
-    background-color: $green;
-  }
+.card-header {
+  background-color: $card-cap-bg;
 }
 </style>

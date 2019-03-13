@@ -22,8 +22,13 @@ namespace ERP.Models.Workorders
         public List<WorkorderNote> Notes { get; set; }
 
         // public Use Use { get; set; }
-        // public Faculty Faculty { get; set; }
+
+        public int FacultyId { get; set; }
+        public Faculty Faculty { get; set; }
+
         // public Semester Semester { get; set; } // Enum? Is it even needed?
+
+        public string Title { get; set; }
         public string Description { get; set; }
         public bool QuoteRequested { get; set; }
 

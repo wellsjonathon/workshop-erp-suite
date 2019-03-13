@@ -3,6 +3,22 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import App from './App.vue'
 import routes from './routes.js'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import {
+  Layout,
+  Card,
+  Table,
+  Form,
+  FormInput,
+  FormSelect,
+  InputGroup,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Dropdown,
+  Pagination } from 'bootstrap-vue/es/components'
+import BBreadcrumb from 'bootstrap-vue/es/components/breadcrumb/breadcrumb'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronCircleLeft, faChevronCircleRight,
@@ -15,10 +31,26 @@ import {
   faChartPie,
   faCog,
   faUser,
-  faSearch } from '@fortawesome/free-solid-svg-icons'
+  faSearch,
+  faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(VueRouter)
+Vue.use(Layout)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(Form)
+Vue.use(FormInput)
+Vue.use(FormSelect)
+Vue.use(InputGroup)
+Vue.use(Button)
+Vue.use(ButtonGroup)
+Vue.use(ButtonToolbar)
+Vue.use(Dropdown)
+Vue.use(Pagination)
+
+Vue.component('FaIcon', FontAwesomeIcon)
+Vue.component('b-breadcrumb', BBreadcrumb)
 
 // FontAwesome load ins
 library.add(faChevronCircleLeft)
@@ -35,8 +67,7 @@ library.add(faChartPie)
 library.add(faCog)
 library.add(faUser)
 library.add(faSearch)
-
-Vue.component('FaIcon', FontAwesomeIcon)
+library.add(faPlus)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

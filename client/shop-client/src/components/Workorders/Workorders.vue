@@ -1,92 +1,102 @@
 <template>
-  <!-- <div class="page">
-    <div class="page_header">
-      <h1 class="page_header__title">
-        Workorders
-      </h1>
-      <div class="page_header__search">
-        <input class="page_header__search__input" type="text" placeholder="Search...">
-        <button class="page_header__search__btn">
-          <FaIcon icon="search"/>
-        </button>
-        <button class="page_header__search__advanced-btn" @click="this.toggleAdvSearch">
-          <FaIcon class="btn-icon" icon="chevron-down"/>
-        </button>
-      </div>
-    </div>
-    <div :class="['adv-search', advSearchCollapsed ? 'collapsed' : 'extended']">
-    </div> -->
-    <div class="container">
-      <div class="container__row">
-        <div class="breadcrumbs">
-          <ul>
-            <li><router-link to="/home">Home</router-link></li>
-            <li><router-link to="/workorders">Workorders</router-link></li>
-          </ul>
-        </div>
-      </div>
-      <div class="container__row">
-        <div class="card">
-          <div class="card__row card__header">
-            <h1>Workorders</h1>
-          </div>
-          <div class="card__row">
-            <div class="filters floating-tab-group">
-              <div class="filters__tab">All</div>
-              <div class="filters__tab">New</div>
-              <div class="filters__tab">In Progress</div>
-              <div class="filters__tab">More</div>
-            </div>
-            <div class="pagination">
-              <span class="pagination__showing">1 - 20 of 1000</span>
-              <div class="pagination__btns btn-group">
-                <button id="pagination--back"><FaIcon icon="chevron-left"/></button>
-                <button id="pagination--forward"><FaIcon icon="chevron-right"/></button>
-              </div>
-            </div>
-          </div>
-          <div class="card__row data-table">
-            <table>
-              <thead>
-                <th scope="col">ID</th>
-                <th scope="col">Faculty</th>
-                <th scope="col">Client</th>
-                <th scope="col">Description</th>
-                <th scope="col">Date Created</th>
-                <th scope="col">Date Requested By</th>
-                <th scope="col">Status</th>
-                <th scope="col"></th>
-              </thead>
-              <tbody>
-                <tr v-for="workorder in workorders" :key="workorder.id">
-                  <td>{{workorder.id}}</td>
-                  <td>SSE</td> <!-- placeholder -->
-                  <td>{{workorder.clientName}}</td>
-                  <td>{{workorder.description}}</td>
-                  <td>{{displayDate(workorder.dateCreated)}}</td>
-                  <td>{{displayDate(workorder.dateRequiredBy)}}</td>
-                  <td class="status-row">
-                    <span class="status__indicator"></span>
-                    <span class="status__name">{{workorder.status.name}}</span>
-                  </td>
-                  <td>
-                    <router-link
-                      :to="{
-                        name: 'workorder_by_id',
-                        params: { workorderId: workorder.id }}">
-                      View
-                    </router-link> |
-                    <a href="">Edit</a> |
-                    <a href="">Delete</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  <!-- </div> -->
+  <b-container>
+    <b-row>
+      <b-col>
+        <b-breadcrumb :items="breadcrumbs" />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-card no-body>
+          <b-card-body class="border-bottom">
+            <b-row>
+              <b-col class="d-flex align-items-center">
+                <h2 class="my-0">Workorders</h2>
+              </b-col>
+              <b-col class="d-flex justify-content-end">
+                <b-button-toolbar>
+                  <b-dropdown class="mx-2" text="Export" size="lg">
+                    <b-dropdown-item>PDF</b-dropdown-item>
+                  </b-dropdown>
+                  <b-button size="lg">
+                    <FaIcon icon="plus" />
+                    New
+                  </b-button>
+                </b-button-toolbar>
+              </b-col>
+            </b-row>
+          </b-card-body>
+          <b-card-body>
+            <b-row>
+              <b-col cols="8">
+                <b-button-toolbar class="mb-3">
+                  <b-input-group size="lg">
+                    <b-form-select v-model="selectedFilters.states" :options="filters.states">
+                      <option slot="first" :value="null">State</option>
+                    </b-form-select>
+                    <b-form-select v-model="selectedFilters.faculties" :options="filters.faculties">
+                      <option slot="first" :value="null">Faculty</option>
+                    </b-form-select>
+                  </b-input-group>
+                  <b-button-group size="lg" class="mx-2">
+                    <b-button>Apply Filters</b-button>
+                    <b-button>Clear Filters</b-button>
+                  </b-button-group>
+                </b-button-toolbar>
+              </b-col>
+              <b-col cols="4">
+                <b-input-group size="lg">
+                  <b-form-input
+                    placeholder="Search..." />
+                  <b-input-group-append>
+                    <b-button>
+                      <FaIcon icon="search"/>
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+            </b-row>
+            <b-table striped hover outlined :items="workorders" :fields="workorderFields" :primary-key="id">
+              <template slot="title" slot-scope="data">
+                <router-link :to="{
+                  name: 'workorder_by_id',
+                  params: { workorderId: data.item.id }}">
+                  {{ data.value }}
+                </router-link>
+              </template>
+              <template slot="state" slot-scope="data">
+                <div class="state">
+                  {{ data.value.name }}
+                </div>
+              </template>
+              <template slot="dateRequiredBy" slot-scope="data">
+                {{ displayDate(data.value) }}
+              </template>
+              <template slot="dateCreated" slot-scope="data">
+                {{ displayDate(data.value) }}
+              </template>
+            </b-table>
+            <b-row>
+              <b-col>
+                Showing 1 of 1000
+              </b-col>
+              <b-col>
+                <b-pagination align="right"
+                  v-model="pagination.current"
+                  :total-rows="pagination.rows"
+                  :per-page="pagination.rowsPerPage"
+                  first-text="First"
+                  prev-text="Prev"
+                  next-text="Next"
+                  last-text="Last"
+                  size="lg" />
+              </b-col>
+            </b-row>
+          </b-card-body>
+        </b-card>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -97,7 +107,64 @@ export default {
   data: function () {
     return {
       workorders: null,
-      advSearchCollapsed: true
+      workorderFields: [
+        {
+          key: 'id',
+          sortable: true
+        },
+        {
+          key: 'title',
+          sortable: true
+        },
+        {
+          key: 'clientName',
+          sortable: true
+        },
+        {
+          key: 'faculty.name',
+          label: "Faculty",
+          sortable: true
+        },
+        {
+          key: 'dateRequiredBy',
+          sortable: true
+        },
+        {
+          key: 'dateCreated',
+          sortable: true
+        },
+        {
+          key: 'state',
+          label: 'State',
+          sortable: true
+          // Thoughts: Rather pass full state object and use a template to style that column
+          // And sort by state.id, not state.name
+        }
+      ],
+      pagination: {
+        current: 1,
+        rows: 100,
+        rowsPerPage: 10
+      },
+      filters: {
+        states: ['New', 'In Progress', 'Completed'],
+        faculties: ['ISE', 'ENSE', 'SSE', 'ESE', 'PSE'] // TODO: Get from server
+      },
+      selectedFilters: {
+        states: null,
+        faculties: null
+      },
+      advSearchCollapsed: true,
+      breadcrumbs: [
+        {
+          text: 'Home',
+          href: '/home'
+        },
+        {
+          text: 'Workorders',
+          href: '/workorders'
+        }
+      ]
     }
   },
   methods: {
@@ -110,16 +177,41 @@ export default {
   },
   mounted: function () {
     this.$http
-      .get('https://localhost:5001/api/Workorders')
+      .get('https://localhost:5001/api/workorders')
       .then(response => {
         this.workorders = response.data;
       })
+    //this.$http
+    //  .get('')
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
+
+.state {
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+  border: 2px solid $green;
+  border-radius: $radius;
+  color: $green;
+}
+
+.state-row {
+  display: inline-flex;
+  flex-direction: row;
+  font-size: 1.2rem;
+  align-items: baseline;
+  & .indicator {
+    margin: 0 5px 0 0;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+    background-color: $green;
+  }
+}
 
 .page_header {
   display: flex;

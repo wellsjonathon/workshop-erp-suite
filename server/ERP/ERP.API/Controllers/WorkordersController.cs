@@ -17,7 +17,7 @@ using ERP.Models.Workflows;
 namespace ERP.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     [ApiController]
     public class WorkordersController : ControllerBase
     {
@@ -37,7 +37,9 @@ namespace ERP.API.Controllers
             //{
             //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.Id == w.Status.Id);
             //}
-            return _context.Workorders.Include(w => w.State);
+            return _context.Workorders
+                .Include(w => w.State)
+                .Include(w => w.Faculty);
         }
 
         // GET: api/Workorders/5
@@ -49,7 +51,10 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workorder = await _context.Workorders.Include(w => w.State).FirstOrDefaultAsync(w => w.Id == id);
+            var workorder = await _context.Workorders
+                .Include(w => w.State)
+                .Include(w => w.Faculty)
+                .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workorder == null)
             {
@@ -106,6 +111,7 @@ namespace ERP.API.Controllers
             // TODO: Update this to ensure it pulls the first state of the active workflow
             // TODO: Update workflows/states to determine first (and last?) state of workflow
             workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
+            workorder.Faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == workorder.FacultyId);
             workorder.DateCreated = DateTime.Now;
 
             // TODO: Potentially add a default state "Created" that always has a single transition to

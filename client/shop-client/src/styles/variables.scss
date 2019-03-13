@@ -1,3 +1,7 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+
 // Fonts
 $heading-font-stack: 'Montserrat', sans-serif;
 $body-font-stack: 'Roboto', sans-serif;
@@ -20,6 +24,8 @@ $dark-grey: hsl(240, 5%, 60%);
 // Should these be called "success", "warning", etc.? Seems to be the standard
 $green: hsl(131, 30%, 41%);
 // $red: ;
+
+$card-cap-bg: rgba(0,0,0,0);
 
 // Side Menus
 $width-extended: 240px;

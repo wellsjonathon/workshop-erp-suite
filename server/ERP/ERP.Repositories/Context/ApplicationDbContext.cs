@@ -27,6 +27,7 @@ namespace ERP.Repositories.Context
         public DbSet<WorkorderComment> WorkorderComments { get; set; }
         public DbSet<WorkorderNote> WorkorderNotes { get; set; }
         public DbSet<TransitionHistory> TransitionHistory { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
 
         // ===== Workflows =====
         public DbSet<Workflow> Worflows { get; set; }
@@ -93,6 +94,13 @@ namespace ERP.Repositories.Context
             UnitOfMeasureSeed.Seed(builder);
 
             // ===== Workorders =====
+            builder.Entity<Faculty>().HasData(
+                new Faculty { Id = 1, Name = "ISE" },
+                new Faculty { Id = 2, Name = "ENSE" },
+                new Faculty { Id = 3, Name = "SSE" },
+                new Faculty { Id = 4, Name = "ESE" },
+                new Faculty { Id = 5, Name = "PSE" }
+            );
 
             // ===== Materials =====
             builder.Entity<MaterialCategory>().HasData(
