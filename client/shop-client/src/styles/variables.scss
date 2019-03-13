@@ -1,7 +1,3 @@
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
-
 // Fonts
 $heading-font-stack: 'Montserrat', sans-serif;
 $body-font-stack: 'Roboto', sans-serif;
@@ -25,8 +21,6 @@ $dark-grey: hsl(240, 5%, 60%);
 $green: hsl(131, 30%, 41%);
 // $red: ;
 
-$card-cap-bg: rgba(0,0,0,0);
-
 // Side Menus
 $width-extended: 240px;
 $width-collapsed: 54px;
@@ -38,3 +32,17 @@ $padding: 25px; // Might require more finesse than this
 
 // Animations
 $btn-transition-duration: 0.15s;
+
+// ===== Bootstrap Overrides =====
+$card-cap-bg: $white;
+$breadcrumb-bg: $offwhite;
+$pagination-bg: $primary;
+$pagination-active-bg: $primary;
+$pagination-color: $primary;
+
+// ===== Bootstrap Imports =====
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap-vue/src/index.scss";

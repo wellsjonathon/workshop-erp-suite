@@ -7,25 +7,23 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-card no-body>
-          <b-card-body class="border-bottom">
-            <b-row>
-              <b-col class="d-flex align-items-center">
-                <h2 class="my-0">Workorders</h2>
-              </b-col>
-              <b-col class="d-flex justify-content-end">
-                <b-button-toolbar>
-                  <b-dropdown class="mx-2" text="Export" size="lg">
-                    <b-dropdown-item>PDF</b-dropdown-item>
-                  </b-dropdown>
-                  <b-button size="lg">
-                    <FaIcon icon="plus" />
-                    New
-                  </b-button>
-                </b-button-toolbar>
-              </b-col>
-            </b-row>
-          </b-card-body>
+        <b-card no-body header-tag="header">
+          <b-row slot="header">
+            <b-col class="d-flex align-items-center">
+              <h2 class="my-0">Workorders</h2>
+            </b-col>
+            <b-col class="d-flex justify-content-end">
+              <b-button-toolbar>
+                <b-dropdown class="mx-2" right text="Export" size="lg" variant="primary">
+                  <b-dropdown-item>PDF</b-dropdown-item>
+                </b-dropdown>
+                <b-button size="lg" variant="primary">
+                  <FaIcon icon="plus" />
+                  <router-link :to="{ name: 'new_workorder' }">New</router-link>
+                </b-button>
+              </b-button-toolbar>
+            </b-col>
+          </b-row>
           <b-card-body>
             <b-row>
               <b-col cols="8">
@@ -39,8 +37,8 @@
                     </b-form-select>
                   </b-input-group>
                   <b-button-group size="lg" class="mx-2">
-                    <b-button>Apply Filters</b-button>
-                    <b-button>Clear Filters</b-button>
+                    <b-button variant="outline-primary">Apply Filters</b-button>
+                    <b-button variant="outline-primary">Clear Filters</b-button>
                   </b-button-group>
                 </b-button-toolbar>
               </b-col>
@@ -49,7 +47,7 @@
                   <b-form-input
                     placeholder="Search..." />
                   <b-input-group-append>
-                    <b-button>
+                    <b-button variant="primary">
                       <FaIcon icon="search"/>
                     </b-button>
                   </b-input-group-append>
@@ -89,6 +87,7 @@
                   prev-text="Prev"
                   next-text="Next"
                   last-text="Last"
+                  variant="primary"
                   size="lg" />
               </b-col>
             </b-row>
@@ -158,12 +157,12 @@ export default {
       breadcrumbs: [
         {
           text: 'Home',
-          href: '/home'
+          to: { name: 'home' }
         },
         {
           text: 'Workorders',
-          href: '/workorders'
-        }
+          to: { name: 'workorders' }
+        },
       ]
     }
   },

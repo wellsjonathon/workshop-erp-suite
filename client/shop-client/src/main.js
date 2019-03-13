@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import App from './App.vue'
 import routes from './routes.js'
+import './styles/variables.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import {
@@ -17,8 +18,8 @@ import {
   ButtonGroup,
   ButtonToolbar,
   Dropdown,
-  Pagination } from 'bootstrap-vue/es/components'
-import BBreadcrumb from 'bootstrap-vue/es/components/breadcrumb/breadcrumb'
+  Pagination, 
+  Breadcrumb} from 'bootstrap-vue/es/components'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronCircleLeft, faChevronCircleRight,
@@ -46,11 +47,11 @@ Vue.use(InputGroup)
 Vue.use(Button)
 Vue.use(ButtonGroup)
 Vue.use(ButtonToolbar)
+Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Pagination)
 
 Vue.component('FaIcon', FontAwesomeIcon)
-Vue.component('b-breadcrumb', BBreadcrumb)
 
 // FontAwesome load ins
 library.add(faChevronCircleLeft)

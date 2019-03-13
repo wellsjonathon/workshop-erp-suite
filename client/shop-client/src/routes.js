@@ -3,9 +3,14 @@
 // Associate proper components to routes
 import Workorders from './components/Workorders/Workorders.vue'
 import Workorder from './components/Workorders/Workorder.vue'
+import NewWorkorder from './components/Workorders/NewWorkorder.vue'
 
 export default [
-  { path: '/home', component: null },
+  {
+    name: 'home',
+    path: '/home',
+    component: null
+  },
   {
     name: 'workorders',
     path: '/workorders',
@@ -16,6 +21,11 @@ export default [
     path: '/workorders/:workorderId',
     component: Workorder,
     props: true
+  },
+  {
+    name: 'new_workorder',
+    path: '/workorders/new',
+    component: NewWorkorder
   },
   { path: '/inventory', component: null },
   { path: '/project-management', component: null },
