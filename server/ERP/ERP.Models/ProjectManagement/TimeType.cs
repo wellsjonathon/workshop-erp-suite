@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ERP.Models.ProjectManagement
+namespace ERP.Models.Project_Management
 {
     public class TimeType
     {

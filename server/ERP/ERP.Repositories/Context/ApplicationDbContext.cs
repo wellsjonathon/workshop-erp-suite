@@ -57,6 +57,8 @@ namespace ERP.Repositories.Context
         public DbSet<EventParticipants> EventParticipantss { get; set; } //Set for now
         public DbSet<TimeEntry> TimeEntries { get; set; }
         public DbSet<TimeType> TimeTypes { get; set; }
+        public DbSet<Availability> Availabilities { get; set; }
+        public DbSet<AvailabilityType> AvailabilityTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -108,9 +110,9 @@ namespace ERP.Repositories.Context
 
             // ===== Project Management =====
             builder.Entity<TimeType>().HasData(
-                new TimeType { ID = 1, Name = "Shop" },
-                new TimeType { ID = 2, Name = "Office" },
-                new TimeType { ID = 3, Name = "Meeting" }
+                new TimeType { ID = 1, Name = "Shop", CostPerHour = 10 },
+                new TimeType { ID = 2, Name = "Office", CostPerHour = 15 },
+                new TimeType { ID = 3, Name = "Meeting", CostPerHour = 20 }
             );
             builder.Entity<BillableOverrideType>().HasData(
                 new BillableOverrideType { ID = 1, Name = "Undergraduate" },
