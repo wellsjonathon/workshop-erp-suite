@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ERP.Models;
+using ERP.Models.Inventory;
 using ERP.Models.Workflows;
 using ERP.Models.Workorders;
-using ERP.Models.Project_Management;
+using ERP.Models.ProjectManagement;
 using ERP.Repositories.Seeds;
 
 namespace ERP.Repositories.Context
@@ -41,6 +42,14 @@ namespace ERP.Repositories.Context
 
         // ===== Vendors =====
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorMaterialList> VendorMaterialList { get; set; }
+
+        // ===== Orders =====
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+
+        // ===== Units =====
+        public DbSet<UnitOfMeasure> UnitsOfMeasure { get; set; }
 
         // ===== Project Management ====
         public DbSet<BillableOverrideType> BillableOverrideTypes { get; set; }
@@ -66,21 +75,37 @@ namespace ERP.Repositories.Context
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<WorkorderMaterial>()
+                .HasOne(m => m.UnitOfMeasure)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<OrderItem>()
+                .HasOne(m => m.UnitOfMeasure)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TimeEntry>()
+                .HasOne(e => e.Workorder)
+                .WithMany(w => w.TimeEntries)
+                .IsRequired(false);
+
             // TODO: Create specific seed functions
             WorkflowSeed.Seed(builder);
+            UnitOfMeasureSeed.Seed(builder);
 
             // ===== Workorders =====
 
             // ===== Materials =====
             builder.Entity<MaterialCategory>().HasData(
-                new MaterialCategory { ID = 1, Name = "Rod" },
-                new MaterialCategory { ID = 2, Name = "Plate" },
-                new MaterialCategory { ID = 3, Name = "Sheet" }
+                new MaterialCategory { Id = 1, Name = "Rod" },
+                new MaterialCategory { Id = 2, Name = "Plate" },
+                new MaterialCategory { Id = 3, Name = "Sheet" }
             );
             builder.Entity<MaterialType>().HasData(
-                new MaterialType { ID = 1, Name = "Aluminum" },
-                new MaterialType { ID = 2, Name = "Steel" },
-                new MaterialType { ID = 3, Name = "Nylon" }
+                new MaterialType { Id = 1, Name = "Aluminum" },
+                new MaterialType { Id = 2, Name = "Steel" },
+                new MaterialType { Id = 3, Name = "Nylon" }
             );
 
             // ===== Project Management =====

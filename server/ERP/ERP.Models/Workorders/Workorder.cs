@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ERP.Models.ProjectManagement;
 using ERP.Models.Workflows;
 
 namespace ERP.Models.Workorders
@@ -16,7 +17,7 @@ namespace ERP.Models.Workorders
         public List<TransitionHistory> TransitionHistory { get; set; }
         public List<WorkorderAttachment> Attachments { get; set; }
         public List<WorkorderMaterial> Materials { get; set; }
-        // public List<TimeEntry> TimeEntries { get; set; }
+        public List<TimeEntry> TimeEntries { get; set; }
         public List<WorkorderComment> Comments { get; set; }
         public List<WorkorderNote> Notes { get; set; }
 

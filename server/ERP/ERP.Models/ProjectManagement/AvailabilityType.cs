@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ERP.Models
+namespace ERP.Models.ProjectManagement
 {
-    public class BillableOverrideType
+    public class AvailabilityType
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public decimal CostPerHour { get; set; }
-        public decimal OverrideModValue { get; set; }
-        // More?
+        public string DefaultColour { get; set; }
     }
 }

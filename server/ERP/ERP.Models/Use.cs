@@ -7,7 +7,7 @@ namespace ERP.Models
 {
     public class Use
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string name { get; set; }
     }
 }

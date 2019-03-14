@@ -343,7 +343,11 @@ namespace ERP.API.Controllers
 
         // ===== TIME ENTRIES =====
 
+        // TODO: I don't think there will be any endpoints here. If there are, it'll just be redirections to PMController
+
         // ===== ESTIMATES =====
+
+        // TODO: Do we need estimate endpoints? Do we need to be able to add multiple estimates?
 
         // ===== COMMENTS =====
 

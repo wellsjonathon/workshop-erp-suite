@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ERP.Models
+namespace ERP.Models.ProjectManagement
 {
-    public class MaterialType
+    public class TimeType
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public decimal CostPerHour { get; set; }
     }
 }
