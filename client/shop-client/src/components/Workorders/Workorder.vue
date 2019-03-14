@@ -1,4 +1,65 @@
 <template>
+  <b-container>
+    <b-row>
+      <div class="content-header border-bottom w-100">
+        <b-breadcrumb :items="breadcrumbs" />
+        <h2>{{ workorder.title }}</h2>
+      </div>
+    </b-row>
+    <b-row>
+      <b-button-toolbar>
+        <b-button>
+          <FaIcon icon="edit"/>
+          Edit
+        </b-button>
+        <b-button-group>
+          <b-button>Add Comment</b-button>
+          <b-button>Add Note</b-button>
+        </b-button-group>
+        <b-dropdown right variant="primary" text="Other State Actions">
+          <b-dropdown-item v-for="transition in transitions" :key="transition.id">
+            {{ transition.nextState.name }}
+          </b-dropdown-item>
+        </b-dropdown>
+      </b-button-toolbar>
+    </b-row>
+    <b-row>
+      <b-col cols="8">
+        <b-row>
+          <h3>Description</h3>
+          <b-form-textarea></b-form-textarea>
+        </b-row>
+        <b-row>
+          <b-tabs class="w-100">
+            <b-tab title="Materials" active>
+              <b-table hover outlined :items="workorder.materials">
+
+              </b-table>
+            </b-tab>
+            <b-tab title="Time Entries">
+              <b-table hover outlined :items="workorder.timeEntries">
+
+              </b-table>
+            </b-tab>
+          </b-tabs>
+        </b-row>
+        <b-row>
+          <b-tabs class="w-100">
+            <b-tab title="Comments" active>
+
+            </b-tab>
+            <b-tab title="Notes">
+
+            </b-tab>
+          </b-tabs>
+        </b-row>
+      </b-col>
+      <b-col cols="4">
+
+      </b-col>
+    </b-row>
+  </b-container>
+  <!--
   <div class="container">
     <div class="container__row">
       <div class="breadcrumbs">
@@ -32,13 +93,11 @@
           </div>
         </div>
         <div class="card__row">
-          <!-- <div class="card__details"> -->
             <div>
               <p><strong>Client Name:</strong> {{this.workorder.clientName}}</p>
               <p><strong>Client Phone Number:</strong> {{this.workorder.clientPhoneNumber}}</p>
               <p><strong>Client Email:</strong> {{this.workorder.clientEmail}}</p>
             </div>
-          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -81,7 +140,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -96,6 +155,7 @@ export default {
   data: function () {
     return {
       workorder: null,
+      transitions: null,
       materials: [ // Hardcoded placeholder, will be in workorder from server
         {
           id: 1,
@@ -118,15 +178,33 @@ export default {
           units: "square feet",
           costPerUnit: 18
         }
+      ],
+      breadcrumbs: [
+        {
+          text: 'Home',
+          to: { name: 'home' }
+        },
+        {
+          text: 'Workorders',
+          to: { name: 'workorders' }
+        },
+        {
+          text: this.workorderId,
+          to: { name: 'workorder_by_id', params: { workorderId: this.workorderId } }
+        }
       ]
     }
   },
   mounted: function () {
     this.$http
-      .get('https://localhost:5001/api/Workorders/' + this.workorderId)
-      .then(response => {
-        this.workorder = response.data
-      })
+      .all([
+        this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId),
+        this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId + '/state/transitions')
+      ])
+      .then(this.$http.spread((workorder, transitions) => {
+        this.workorder = workorder.data
+        this.transitions = transitions.data
+      }))
   },
   methods: {
     calculateTotalMaterialCost() {
@@ -151,6 +229,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/variables.scss";
 .card__row {
   &.card__details {
     display: flex;

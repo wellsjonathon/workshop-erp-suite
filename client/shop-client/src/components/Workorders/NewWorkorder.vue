@@ -31,3 +31,8 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+@import "../../styles/variables.scss";
+
+</style>

@@ -18,7 +18,8 @@ import {
   ButtonGroup,
   ButtonToolbar,
   Dropdown,
-  Pagination, 
+  Pagination,
+  Tabs,
   Breadcrumb} from 'bootstrap-vue/es/components'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -33,7 +34,8 @@ import {
   faCog,
   faUser,
   faSearch,
-  faPlus } from '@fortawesome/free-solid-svg-icons'
+  faPlus,
+  faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(VueRouter)
@@ -50,6 +52,7 @@ Vue.use(ButtonToolbar)
 Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Pagination)
+Vue.use(Tabs)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 
@@ -69,6 +72,7 @@ library.add(faCog)
 library.add(faUser)
 library.add(faSearch)
 library.add(faPlus)
+library.add(faEdit)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

@@ -53,6 +53,14 @@ namespace ERP.API.Controllers
 
             var workorder = await _context.Workorders
                 .Include(w => w.State)
+                .Include(w => w.Estimate)
+                .Include(w => w.TransitionHistory)
+                    .ThenInclude(th => th.Transition)
+                .Include(w => w.Attachments)
+                .Include(w => w.Materials)
+                .Include(w => w.TimeEntries)
+                .Include(w => w.Comments)
+                .Include(w => w.Notes)
                 .Include(w => w.Faculty)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
@@ -295,7 +303,7 @@ namespace ERP.API.Controllers
 
         // ===== MATERIALS =====
 
-        // GET: api/Workorders/5/Materials
+        // GET: api/workorders/5/materials
         [HttpGet("{id}/Materials")]
         public IEnumerable<WorkorderMaterial> GetWorkorderMaterials([FromRoute] int id)
         {
@@ -306,7 +314,7 @@ namespace ERP.API.Controllers
                 .Where(m => m.Workorder.Id == id);
         }
 
-        // GET: api/Workorders/5/Materials/2
+        // GET: api/workorders/5/materials/2
         [HttpGet("{id}/Materials/{materialId}")]
         public async Task<IActionResult> GetWorkorderMaterial([FromRoute] int id, [FromRoute] int materialId)
         {
@@ -329,23 +337,42 @@ namespace ERP.API.Controllers
 
             return Ok(material);
         }
-        /*
-        // POST: api/Workorders/5/Materials
+
+        // POST: api/workorders/5/materials
         [HttpPost("{id}/Materials")]
-        public async Task<IActionResult> PostWorkorderMaterials([FromBody] WorkorderMaterial material)
+        public async Task<IActionResult> PostWorkorderMaterials([FromRoute] int id, [FromBody] WorkorderMaterial material)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            // TODO: Determine if we need to verify if a material-vendor relation exists here or not
+            var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
+            var mat = await _context.Materials.FirstOrDefaultAsync(m => m.Id == material.MaterialId);
+            var vendor = await _context.Vendors.FirstOrDefaultAsync(v => v.Id == material.VendorId);
 
-            material.Material = await 
-            
+            if (workorder == null)
+            {
+                return NotFound("Workorder with id " + id + " does not exist.");
+            }
+            if (mat == null)
+            {
+                return NotFound("Material with id " + material.MaterialId + " does not exist.");
+            }
+            if (vendor == null)
+            {
+                return NotFound("Vendor with id " + material.VendorId + " does not exist.");
+            }
+
+            material.Material = mat;
+            material.Workorder = workorder;
+            material.WorkorderId = id;
+
             _context.WorkorderMaterials.Add(material);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetWorkorderMaterial", new { id = material.Id }, material);
-        }*/
+        }
 
         // ===== TIME ENTRIES =====
 

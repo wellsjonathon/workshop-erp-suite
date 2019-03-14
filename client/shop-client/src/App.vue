@@ -222,7 +222,7 @@ h1 {
     }
   }
 }
-.card-header {
-  background-color: $card-cap-bg;
+.content-header {
+  
 }
 </style>
