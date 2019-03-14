@@ -305,13 +305,22 @@ namespace ERP.API.Controllers
 
         // GET: api/workorders/5/materials
         [HttpGet("{id}/Materials")]
-        public IEnumerable<WorkorderMaterial> GetWorkorderMaterials([FromRoute] int id)
+        public async Task<IActionResult> GetWorkorderMaterials([FromRoute] int id)
         {
-            return _context.WorkorderMaterials
-                .Include(m => m.Workorder.Id)
+            if (!WorkorderExists(id))
+            {
+                return NotFound("Workorder with id " + id + " does not exist.");
+            }
+
+            var materials = await _context.WorkorderMaterials
                 .Include(m => m.Material)
-                .Include(m => m.Vendor)
-                .Where(m => m.Workorder.Id == id);
+                .Include(m => m.VendorMaterial)
+                    .ThenInclude(vm => vm.Vendor)
+                .Include(m => m.UnitOfMeasure)
+                .Where(m => m.WorkorderId == id)
+                .ToListAsync();
+
+            return Ok(materials);
         }
 
         // GET: api/workorders/5/materials/2
@@ -323,16 +332,22 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (!WorkorderExists(id))
+            {
+                return NotFound("Workorder with id " + id + " does not exist.");
+            }
+
             var material = await _context.WorkorderMaterials
-                .Include(m => m.Workorder.Id)
                 .Include(m => m.Material)
-                .Include(m => m.Vendor)
-                .Where(m => m.Workorder.Id == id)
+                .Include(m => m.VendorMaterial)
+                    .ThenInclude(vm => vm.Vendor)
+                .Include(m => m.UnitOfMeasure)
+                .Where(m => m.WorkorderId == id) // Are there any circumstances where this matters?
                 .FirstOrDefaultAsync(m => m.Id == materialId);
 
             if (material == null)
             {
-                return NotFound();
+                return NotFound("Material with id " + material.MaterialId + " does not exist for workorder id " + id + ".");
             }
 
             return Ok(material);
@@ -340,35 +355,81 @@ namespace ERP.API.Controllers
 
         // POST: api/workorders/5/materials
         [HttpPost("{id}/Materials")]
-        public async Task<IActionResult> PostWorkorderMaterials([FromRoute] int id, [FromBody] WorkorderMaterial material)
+        public async Task<IActionResult> PostWorkorderMaterials([FromRoute] int id, [FromBody] WorkorderMaterialDto materialDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            // TODO: Determine if we need to verify if a material-vendor relation exists here or not
+
             var workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == id);
-            var mat = await _context.Materials.FirstOrDefaultAsync(m => m.Id == material.MaterialId);
-            var vendor = await _context.Vendors.FirstOrDefaultAsync(v => v.Id == material.VendorId);
+            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Id == materialDto.MaterialId);
 
             if (workorder == null)
             {
                 return NotFound("Workorder with id " + id + " does not exist.");
             }
-            if (mat == null)
+            if (material == null)
             {
-                return NotFound("Material with id " + material.MaterialId + " does not exist.");
-            }
-            if (vendor == null)
-            {
-                return NotFound("Vendor with id " + material.VendorId + " does not exist.");
+                return NotFound("Material with id " + materialDto.MaterialId + " does not exist.");
             }
 
-            material.Material = mat;
-            material.Workorder = workorder;
-            material.WorkorderId = id;
+            var workorderMaterial = new WorkorderMaterial {
+                WorkorderId = id,
+                Workorder = workorder,
+                QuantityUsed = materialDto.QuantityUsed,
+                MaterialId = materialDto.MaterialId,
+                Material = material
+            };
+            
+            if (materialDto.VendorId != null)
+            {
+                // TODO: Is it worth grabbing the whole vendor? Just do VendorExists()? Or just find VendorMaterial?
+                var vendor = await _context.Vendors.FirstOrDefaultAsync(v => v.Id == materialDto.VendorId);
+                var vendorMaterial = await _context.VendorMaterials
+                    .FirstOrDefaultAsync(vm => vm.VendorId == materialDto.VendorId && vm.MaterialId == materialDto.MaterialId);
 
-            _context.WorkorderMaterials.Add(material);
+                // Verify vendor exists and material exists at said vendor
+                if (vendor == null)
+                {
+                    return NotFound("Vendor with id " + materialDto.VendorId + " does not exist.");
+                }
+                if (vendorMaterial == null)
+                {
+                    return NotFound("Material with id " + materialDto.MaterialId + " does not exist at vendor id " + materialDto.VendorId + ".");
+                }
+                else
+                {
+                    workorderMaterial.VendorMaterialId = vendorMaterial.Id;
+                    workorderMaterial.VendorMaterial = vendorMaterial;
+                }
+
+                // If CostPerUnit or UnitOfMeasurement are specified, set those, otherwise use VendorMaterial's
+                if (materialDto.CostPerUnit == null)
+                {
+                    workorderMaterial.CostPerUnit = vendorMaterial.CostPerUnit;
+                }
+                if (materialDto.UnitOfMeasureId == null)
+                {
+                    workorderMaterial.UnitOfMeasureId = vendorMaterial.UnitOfMeasureId;
+                    workorderMaterial.UnitOfMeasure = vendorMaterial.UnitOfMeasure;
+                }
+                else
+                {
+                    workorderMaterial.UnitOfMeasure = await _context.UnitsOfMeasure.FirstOrDefaultAsync(u => u.Id == vendorMaterial.UnitOfMeasureId);
+                }
+            }
+            else
+            {
+                workorderMaterial.VendorMaterialId = null;
+                workorderMaterial.VendorMaterial = null;
+                workorderMaterial.CostPerUnit = materialDto.CostPerUnit;
+                workorderMaterial.UnitOfMeasureId = (int)materialDto.UnitOfMeasureId;
+                workorderMaterial.UnitOfMeasure = await _context.UnitsOfMeasure
+                    .FirstOrDefaultAsync(u => u.Id == (int)materialDto.UnitOfMeasureId);
+            }
+
+            _context.WorkorderMaterials.Add(workorderMaterial);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetWorkorderMaterial", new { id = material.Id }, material);

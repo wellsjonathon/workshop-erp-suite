@@ -416,43 +416,65 @@ namespace ERP.API.Controllers
 
         // GET: api/inventory/vendors/{id}/materials
         [HttpGet("vendors/{id}/materials")]
-        public IEnumerable<VendorMaterialList> GetMaterialsFromVendor([FromRoute] int id)
+        public IEnumerable<VendorMaterial> GetMaterialsFromVendor([FromRoute] int id)
         {
-            return _context.VendorMaterialList
+            return _context.VendorMaterials
                 .Include(vm => vm.Material)
                 .Where(vm => vm.VendorId == id);
         }
         // POST: api/inventory/vendors/{id}/materials
         [HttpPost("vendors/{id}/materials")]
-        public async Task<IActionResult> AddMaterialToVendor([FromRoute] int id, [FromBody] VendorMaterialList vendorMaterial)
+        public async Task<IActionResult> AddMaterialToVendor([FromRoute] int id, [FromBody] VendorMaterialDto vendorMaterialDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Validate vendor exists and add to the object
+            // Validate vendor exists
             var vendor = await _context.Vendors.FirstOrDefaultAsync(v => v.Id == id);
             if (vendor == null)
             {
                 return NotFound("Vendor " + id + " does not exist.");
             }
-            vendorMaterial.VendorId = id;
-            vendorMaterial.Vendor = vendor;
 
-            // Validate material exists and add to the object
-            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Id == vendorMaterial.Id);
+            // Validate material exists
+            var material = await _context.Materials
+                .Include(m => m.UnitOfMeasure)
+                .FirstOrDefaultAsync(m => m.Id == vendorMaterialDto.MaterialId);
             if (material == null)
             {
-                return NotFound("Material " + vendorMaterial.Id + " does not exist.");
+                return NotFound("Material " + vendorMaterialDto.MaterialId + " does not exist.");
             }
-            vendorMaterial.Material = material;
+
+            var vendorMaterial = new VendorMaterial
+            {
+                DateLastPurchased = null,
+                CostPerUnit = vendorMaterialDto.CostPerUnit,
+                VendorId = id,
+                Vendor = vendor,
+                MaterialId = vendorMaterialDto.MaterialId,
+                Material = material
+            };
+
+            // If UnitOfMeasureId isn't specified, utilize default from material, otherwise add specified
+            if (vendorMaterialDto.UnitOfMeasureId == null)
+            {
+                vendorMaterial.UnitOfMeasureId = material.UnitOfMeasureId;
+                vendorMaterial.UnitOfMeasure = material.UnitOfMeasure;
+            }
+            else
+            {
+                vendorMaterial.UnitOfMeasureId = (int)vendorMaterialDto.UnitOfMeasureId;
+                vendorMaterial.UnitOfMeasure = await _context.UnitsOfMeasure
+                    .FirstOrDefaultAsync(u => u.Id == vendorMaterialDto.UnitOfMeasureId);
+            }
 
             // Add relation
-            _context.VendorMaterialList.Add(vendorMaterial);
-            _context.SaveChangesAsync();
+            _context.VendorMaterials.Add(vendorMaterial);
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVendorMaterial", new { id = vendorMaterial.VendorId, materialId = vendorMaterial.MaterialId }, vendorMaterial);
+            return CreatedAtAction("GetMaterialFromVendor", new { id = vendorMaterial.VendorId, materialId = vendorMaterial.MaterialId }, vendorMaterial);
         }
         // GET: api/inventory/vendors/{id}/materials/{materialId}
         [HttpGet("vendors/{id}/materials/{materialId}")]
@@ -464,8 +486,14 @@ namespace ERP.API.Controllers
             }
 
             // Validate vendor-material relation exists
-            var vendorMaterial = await _context.VendorMaterialList
+            var vendorMaterial = await _context.VendorMaterials
+                .Include(vm => vm.Vendor)
                 .Include(vm => vm.Material)
+                    .ThenInclude(m => m.UnitOfMeasure)
+                .Include(vm => vm.Material)
+                    .ThenInclude(m => m.Type)
+                .Include(vm => vm.Material)
+                    .ThenInclude(m => m.Category)
                 .FirstOrDefaultAsync(vm => vm.VendorId == id && vm.MaterialId == materialId);
 
             if (vendorMaterial == null)

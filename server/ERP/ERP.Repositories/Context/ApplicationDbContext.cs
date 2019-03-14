@@ -43,7 +43,7 @@ namespace ERP.Repositories.Context
 
         // ===== Vendors =====
         public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<VendorMaterialList> VendorMaterialList { get; set; }
+        public DbSet<VendorMaterial> VendorMaterials { get; set; }
 
         // ===== Orders =====
         public DbSet<Order> Orders { get; set; }
@@ -75,6 +75,11 @@ namespace ERP.Repositories.Context
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<WorkorderMaterial>()
+                .HasOne(m => m.UnitOfMeasure)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<VendorMaterial>()
                 .HasOne(m => m.UnitOfMeasure)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
