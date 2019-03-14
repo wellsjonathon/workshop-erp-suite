@@ -7,7 +7,7 @@ namespace ERP.Models.ProjectManagement
 {
     public class BillableOverrideType
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal CostPerHour { get; set; }
         public decimal OverrideModValue { get; set; }

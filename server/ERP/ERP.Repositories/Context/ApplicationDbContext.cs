@@ -58,6 +58,8 @@ namespace ERP.Repositories.Context
         public DbSet<EventParticipants> EventParticipantss { get; set; } //Set for now
         public DbSet<TimeEntry> TimeEntries { get; set; }
         public DbSet<TimeType> TimeTypes { get; set; }
+        public DbSet<Availability> Availabilities { get; set; }
+        public DbSet<AvailabilityType> AvailabilityTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -121,19 +123,19 @@ namespace ERP.Repositories.Context
 
             // ===== Project Management =====
             builder.Entity<TimeType>().HasData(
-                new TimeType { ID = 1, Name = "Shop" },
-                new TimeType { ID = 2, Name = "Office" },
-                new TimeType { ID = 3, Name = "Meeting" }
+                new TimeType { Id = 1, Name = "Shop", CostPerHour = 10 },
+                new TimeType { Id = 2, Name = "Office", CostPerHour = 15 },
+                new TimeType { Id = 3, Name = "Meeting", CostPerHour = 20 }
             );
             builder.Entity<BillableOverrideType>().HasData(
-                new BillableOverrideType { ID = 1, Name = "Undergraduate" },
-                new BillableOverrideType { ID = 2, Name = "Graduate" }
+                new BillableOverrideType { Id = 1, Name = "Undergraduate" },
+                new BillableOverrideType { Id = 2, Name = "Graduate" }
                 // More if needed
             );
             builder.Entity<AvailabilityType>().HasData(
-                new AvailabilityType { ID = 1, Name = "Vacation" },
-                new AvailabilityType { ID = 2, Name = "Sick" },
-                new AvailabilityType { ID = 3, Name = "Shop Closed" }
+                new AvailabilityType { Id = 1, Name = "Vacation" },
+                new AvailabilityType { Id = 2, Name = "Sick" },
+                new AvailabilityType { Id = 3, Name = "Shop Closed" }
                 // More needed 
             );
         }

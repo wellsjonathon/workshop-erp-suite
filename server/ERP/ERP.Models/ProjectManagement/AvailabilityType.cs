@@ -7,7 +7,7 @@ namespace ERP.Models.ProjectManagement
 {
     public class AvailabilityType
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string DefaultColour { get; set; }
     }
