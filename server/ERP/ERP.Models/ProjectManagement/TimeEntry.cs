@@ -4,16 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using ERP.Models.Workorders;
 
-namespace ERP.Models.Project_Management
+namespace ERP.Models.ProjectManagement
 {
     public class TimeEntry
     {
-        public int ID { get; set; }
-        public TimeType TimeType { get; set; }
-        public Workorder Workorder { get; set; } // Optional
+        public int Id { get; set; }
         public bool Billable { get; set; }
         public float Duration { get; set; }
         public string Notes { get; set; }
         public DateTime DateTime { get; set; }
+        
+        public TimeType TimeType { get; set; }
+        // TODO: Determine if explicit foreign key is needed or not
+        public Workorder Workorder { get; set; } // Optional
     }
 }

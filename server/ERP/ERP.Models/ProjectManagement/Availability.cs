@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.ProjectManagement
 {
-    public class Event
+    public class Availability
     {
         public int Id { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; }
+        public string Colour { get; set; }
+        public string Notes { get; set; }
+        public AvailabilityType AvailabilityType { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+
     }
 }
