@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ERP.Models;
 using ERP.Models.Workorders;
-using ERP.Models.Project_Management;
+using ERP.Models.ProjectManagement;
 using ERP.Repositories.Context;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkId=397860
 
 namespace ERP.API.Controllers
 {
@@ -27,17 +27,17 @@ namespace ERP.API.Controllers
         //Check if entries exist
         private bool TimeEntryExists(int id)
         {
-            return _context.TimeEntries.Any(t => t.ID == id);
+            return _context.TimeEntries.Any(t => t.Id == id);
         }
 
         private bool EventExists(int id)
         {
-            return _context.Events.Any(e => e.ID == id);
+            return _context.Events.Any(e => e.Id == id);
         }
 
         private bool AvailabilityExists(int id)
         {
-            return _context.Availabilities.Any(a => a.ID == id);
+            return _context.Availabilities.Any(a => a.Id == id);
         }
         
         // ===== Time Entries ===== 
@@ -57,12 +57,12 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            timeEntry.TimeType =  _context.TimeTypes.Single<TimeType>(t => t.ID == timeEntry.TimeType.ID);
+            timeEntry.TimeType =  _context.TimeTypes.Single<TimeType>(t => t.Id == timeEntry.TimeType.Id);
             timeEntry.DateTime = DateTime.Now;
             _context.TimeEntries.Add(timeEntry);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTimeEntries", new { id = timeEntry.ID}, timeEntry);
+            return CreatedAtAction("GetTimeEntries", new { id = timeEntry.Id}, timeEntry);
         }
 
         // GET: api/calendar/time-entries/{time-entry-id}
@@ -76,7 +76,7 @@ namespace ERP.API.Controllers
 
             var time_entry = await _context.TimeEntries
                 .Include(t => t.TimeType)
-                .FirstOrDefaultAsync(t => t.ID == id);
+                .FirstOrDefaultAsync(t => t.Id == id);
 
             if (time_entry == null)
             {
@@ -93,7 +93,7 @@ namespace ERP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if(id != timeEntry.ID)
+            if(id != timeEntry.Id)
             {
                 return BadRequest();
             }
@@ -161,7 +161,7 @@ namespace ERP.API.Controllers
             event_entry.Start = DateTime.Now;
             _context.Events.Add(event_entry);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetEvent", new { id = event_entry.ID }, event_entry);
+            return CreatedAtAction("GetEvent", new { id = event_entry.Id }, event_entry);
         }
 
         //GET: api/calendar/events/id
@@ -173,7 +173,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var event_entry = await _context.Events.FirstOrDefaultAsync(e => e.ID == id);
+            var event_entry = await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
             if (event_entry == null)
             {
                 return NotFound();
@@ -190,7 +190,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(id != event_entry.ID)
+            if(id != event_entry.Id)
             {
                 return BadRequest();
             }
@@ -242,7 +242,7 @@ namespace ERP.API.Controllers
         [HttpGet("calendar/availability")]
         public IEnumerable<Availability> GetAvailabilities()
         {
-            return _context.Availabilities.Include(a => a.AvailabilityTypeId);
+            return _context.Availabilities.Include(a => a.AvailabilityType);
         }
 
         // POST: api/calendar/availability
@@ -254,12 +254,12 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
             
-            availability.AvailabilityTypeId = _context.AvailabilityTypes.SingleOrDefault<AvailabilityType>(a => a.ID == availability.AvailabilityTypeId.ID);
+            availability.AvailabilityType = _context.AvailabilityTypes.SingleOrDefault<AvailabilityType>(a => a.Id == availability.AvailabilityType.Id);
             availability.Start = DateTime.Now;
             _context.Availabilities.Add(availability);
   
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetAvailability", new { id = availability.ID }, availability);
+            return CreatedAtAction("GetAvailability", new { id = availability.Id }, availability);
         }
 
         //GET: api/calendar/availability/id
@@ -272,8 +272,8 @@ namespace ERP.API.Controllers
             }
 
             var availability = await _context.Availabilities
-                .Include(a => a.AvailabilityTypeId)
-                .FirstOrDefaultAsync(a => a.ID == id);
+                .Include(a => a.AvailabilityType)
+                .FirstOrDefaultAsync(a => a.Id == id);
             if(availability == null)
             {
                 return NotFound();
@@ -291,7 +291,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(id != availability.ID)
+            if(id != availability.Id)
             {
                 return BadRequest();
             }
