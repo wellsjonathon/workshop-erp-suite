@@ -420,6 +420,12 @@ namespace ERP.API.Controllers
         {
             return _context.VendorMaterials
                 .Include(vm => vm.Material)
+                    .ThenInclude(m => m.UnitOfMeasure)
+                .Include(vm => vm.Material)
+                    .ThenInclude(m => m.Type)
+                .Include(vm => vm.Material)
+                    .ThenInclude(m => m.Category)
+                .Include(vm => vm.UnitOfMeasure)
                 .Where(vm => vm.VendorId == id);
         }
         // POST: api/inventory/vendors/{id}/materials
@@ -494,6 +500,7 @@ namespace ERP.API.Controllers
                     .ThenInclude(m => m.Type)
                 .Include(vm => vm.Material)
                     .ThenInclude(m => m.Category)
+                .Include(vm => vm.UnitOfMeasure)
                 .FirstOrDefaultAsync(vm => vm.VendorId == id && vm.MaterialId == materialId);
 
             if (vendorMaterial == null)

@@ -432,7 +432,7 @@ namespace ERP.API.Controllers
             _context.WorkorderMaterials.Add(workorderMaterial);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkorderMaterial", new { id = material.Id }, material);
+            return CreatedAtAction("GetWorkorderMaterial", new { id, materialId = workorderMaterial.Id }, workorderMaterial);
         }
 
         // ===== TIME ENTRIES =====

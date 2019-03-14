@@ -1,4 +1,5 @@
 ﻿using ERP.Models.Inventory;
+using Newtonsoft.Json;
 
 namespace ERP.Models.Workorders
 {
@@ -17,7 +18,9 @@ namespace ERP.Models.Workorders
         public int UnitOfMeasureId { get; set; }
         public UnitOfMeasure UnitOfMeasure { get; set; }
 
+        [JsonIgnore]
         public int WorkorderId { get; set; }
+        [JsonIgnore]
         public Workorder Workorder { get; set; }
     }
 
