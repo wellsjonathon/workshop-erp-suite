@@ -11,6 +11,8 @@ import {
   Card,
   Table,
   Form,
+  FormTextarea,
+  FormGroup,
   FormInput,
   FormSelect,
   InputGroup,
@@ -43,6 +45,8 @@ Vue.use(Layout)
 Vue.use(Card)
 Vue.use(Table)
 Vue.use(Form)
+Vue.use(FormTextarea)
+Vue.use(FormGroup)
 Vue.use(FormInput)
 Vue.use(FormSelect)
 Vue.use(InputGroup)
