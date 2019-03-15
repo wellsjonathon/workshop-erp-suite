@@ -54,7 +54,10 @@ namespace ERP.API.Controllers
         [HttpGet("materials")]
         public IEnumerable<Material> GetMaterials()
         {
-            return _context.Materials;
+            return _context.Materials
+                .Include(m => m.Type)
+                .Include(m => m.Category)
+                .Include(m => m.UnitOfMeasure);
         }
         // POST: api/inventory/materials
         [HttpPost("materials")]
@@ -83,7 +86,11 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Id == id);
+            var material = await _context.Materials
+                .Include(m => m.Type)
+                .Include(m => m.Category)
+                .Include(m => m.UnitOfMeasure)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (material == null)
             {

@@ -16,8 +16,8 @@
                   linkName="Workorders"
                   linkIcon="file"/>
       <NavBarItem :collapsed="isCollapsed"
-                  link="/inventory"
-                  linkName="Inventory"
+                  link="/materials"
+                  linkName="Materials"
                   linkIcon="warehouse"/>
       <NavBarItem :collapsed="isCollapsed"
                   link="/project-management"
