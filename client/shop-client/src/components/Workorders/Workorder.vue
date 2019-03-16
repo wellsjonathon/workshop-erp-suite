@@ -1,7 +1,7 @@
 <template>
   <b-container>
-    <b-row>
-      <div class="content-header border-bottom w-100">
+    <b-row class="content-header">
+      <div class="border-bottom w-100">
         <b-breadcrumb :items="breadcrumbs" />
         <h2>{{ workorder.title }}</h2>
       </div>
@@ -196,5 +196,8 @@ export default {
       display: block;
     }
   }
+}
+.content-header {
+  background-color: white;
 }
 </style>

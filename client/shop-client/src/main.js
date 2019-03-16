@@ -28,6 +28,8 @@ import {
   faChevronCircleLeft, faChevronCircleRight,
   faChevronLeft, faChevronRight,
   faChevronDown, faChevronUp,
+  faBell,
+  faStopwatch,
   faHome,
   faFile,
   faWarehouse,
@@ -67,6 +69,8 @@ library.add(faChevronLeft)
 library.add(faChevronRight)
 library.add(faChevronDown)
 library.add(faChevronUp)
+library.add(faBell)
+library.add(faStopwatch)
 library.add(faHome)
 library.add(faFile)
 library.add(faWarehouse)

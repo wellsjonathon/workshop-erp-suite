@@ -1,6 +1,8 @@
 <template>
   <router-link :to="link" :class="['nav__item', !collapsed ? 'extended' : 'collapsed']">
-    <FaIcon class="nav__item__icon" :icon="linkIcon"/>
+    <div class="nav-icon-container">
+      <FaIcon class="icon" :icon="linkIcon"/>
+    </div>
     <div :class="['nav__item__link', !collapsed ? 'extended' : 'collapsed']">
       {{ linkName }}
     </div>
@@ -61,10 +63,9 @@ export default {
     border-radius: 0 4px 4px 0;
   }
 }
-.nav__item__icon {
-  width: $nav-icon-size;
-  height: $nav-icon-size;
-  padding: 12px;
+.nav-icon-container {
+  width: $width-collapsed;
+  text-align: center;
 }
 .nav__item__link {
   width: $width-extended - $width-collapsed - 20px;

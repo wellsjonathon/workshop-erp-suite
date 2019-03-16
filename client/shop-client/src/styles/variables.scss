@@ -21,6 +21,8 @@ $dark-grey: hsl(240, 5%, 60%);
 $green: hsl(131, 30%, 41%);
 // $red: ;
 
+$yiq-text-light: $offwhite;
+
 // Side Menus
 $width-extended: 240px;
 $width-collapsed: 54px;
@@ -35,7 +37,7 @@ $btn-transition-duration: 0.15s;
 
 // ===== Bootstrap Overrides =====
 $card-cap-bg: $white;
-$breadcrumb-bg: $offwhite;
+$breadcrumb-bg: rgba(0,0,0,0);
 $pagination-bg: $primary;
 $pagination-active-bg: $primary;
 $pagination-color: $primary;

@@ -78,9 +78,13 @@ export default {
               1px 0px 16px 1px rgba(1,1,1,0.075); */
   &.extended {
     width: $width-extended;
+    flex-basis: $width-extended;
+    min-width: $width-extended;
   }
   &.collapsed {
     width: $width-collapsed;
+    flex-basis: $width-collapsed;
+    min-width: $width-collapsed;
   }
 }
 .nav__links {
