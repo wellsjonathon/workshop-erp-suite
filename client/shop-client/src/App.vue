@@ -1,22 +1,26 @@
 <template>
   <div id="app" class="d-flex flex-column h-100">
-    <div id="top-nav" class="d-flex flex-row justify-content-between align-items-center px-3">
-      <h2>University of Regina</h2>
-      <div class="d-flex flex-row">
-        <div class="icon-button">
-          <FaIcon icon="bell" class="icon"/>
-        </div>
-        <div class="icon-button">
-          <FaIcon icon="stopwatch" class="icon"/>
-        </div>
-      </div>
-    </div>
     <div id="app-main" class="d-flex flex-row align-items-stretch flex-grow-1 w-100">
       <NavBar id="nav"/>
-      <div id="content" class="flex-grow-1">
+      <div id="content" class="d-flex flex-column flex-grow-1">
+        <div id="top-nav" class="d-flex flex-row justify-content-between align-items-center px-3">
+          <h2>University of Regina</h2>
+          <div class="d-flex flex-row align-items-center">
+            <div class="icon-button">
+              <FaIcon icon="bell" class="icon"/>
+            </div>
+            <div class="icon-button">
+              <FaIcon icon="stopwatch" class="icon"/>
+            </div>
+            <div class="mx-2 d-flex flex-row align-items-center">
+              <h4 class="mx-2">Chris Yung</h4>
+              <FaIcon class="icon border border-white rounded-circle" icon="user"/>
+            </div>
+          </div>
+        </div>
         <router-view></router-view>
+        <!-- <PMQuickAccess id="pmqa"/> -->
       </div>
-      <PMQuickAccess id="pmqa"/>
     </div>
   </div>
 </template>
