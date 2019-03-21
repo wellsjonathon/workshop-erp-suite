@@ -6,6 +6,7 @@
         <router-view></router-view>
         <!-- <PMQuickAccess id="pmqa"/> -->
       </div>
+      <PMQuickAccess id="pmqa"/>
     </div>
   </div>
 </template>

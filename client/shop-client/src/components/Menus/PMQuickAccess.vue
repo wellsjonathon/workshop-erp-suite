@@ -1,16 +1,19 @@
 <template>
-  <div :class="['pmqa', !isCollapsed ? 'extended' : 'collapsed']">
-    <div :class="['pmqa__notifications', !isCollapsed ? 'extended' : 'collapsed', !newNotifications ? 'no-new-notifications' : 'new-notifications']">
-      <div :class="['pmqa__notifications__text', !isCollapsed ? 'extended' : 'collapsed']">
-        Notifications
+  <div class="d-flex flex-column" :class="['pmqa', !isCollapsed ? 'extended' : 'collapsed']">
+    <div class="d-flex" :class="['pmqa__tabs', !isCollapsed ? 'extended' : 'collapsed']">
+      <div class="pmqa__tab__container" :class="[isNotificationsActive ? 'active' : '']"
+            @click="this.toggleNotifications">
+        <FaIcon icon="bell" class="icon pmqa__tab"/>
       </div>
-      <div :class="['pmqa__notifications__count', !newNotifications ? 'no-new-notifications' : 'new-notifications']">
-        <div class="pmqa__notifications__count__value">
-          {{ this.notifications.length }}
-        </div>
+      <div class="pmqa__tab__container" :class="[isPMActive ? 'active' : '']"
+            @click="this.togglePM">
+        <FaIcon icon="stopwatch" class="icon pmqa__tab"/>
       </div>
     </div>
-    <div :class="['pmqa__tools', !isCollapsed ? 'extended' : 'collapsed']">
+    <div class="d-flex flex-column flex-grow-1" :class="['pmqa__content-area', !isCollapsed ? 'extended' : 'collapsed']">
+
+    </div>
+    <!-- <div :class="['pmqa__tools', !isCollapsed ? 'extended' : 'collapsed']">
       <div class="pmqa__datepicker">
         <FaIcon class="pmqa__datepicker__decr"  @click="this.decrSelectedDate" icon="chevron-left"/>
         <div class="pmqa__datepicker__date">
@@ -23,10 +26,12 @@
         Stuff
         <span class="pmqa__times__separator"/>
       </div>
+    </div> -->
+    <div class="pmqa__toggle-area d-flex align-items-center justify-content-center">
+      <FaIcon :class="['pmqa__btn', !isCollapsed ? 'extended' : 'collapsed']"
+              @click="this.toggleCollapse"
+              icon="chevron-circle-right"/>
     </div>
-    <FaIcon :class="['pmqa__btn', !isCollapsed ? 'extended' : 'collapsed']"
-            @click="this.toggleCollapse"
-            icon="chevron-circle-right"/>
   </div>
 </template>
 
@@ -38,7 +43,7 @@ export default {
   props: {
     collapsed: {
       type: Boolean,
-      default: false
+      default: true
     },
     notifications: {
       type: Array,
@@ -48,6 +53,8 @@ export default {
   data: function () {
     return {
       isCollapsed: this.collapsed,
+      isNotificationsActive: false,
+      isPMActive: true,
       newNotifications: this.notifications.length > 0,
       date: {
         current: dayjs(Date()),
@@ -69,6 +76,20 @@ export default {
   methods: {
     toggleCollapse() {
       this.isCollapsed = !this.isCollapsed
+    },
+    toggleNotifications() {
+      if (this.isCollapsed) {
+        this.isCollapsed = !this.isCollapsed
+      }
+      this.isPMActive = false
+      this.isNotificationsActive = true
+    },
+    togglePM() {
+      if (this.isCollapsed) {
+        this.isCollapsed = !this.isCollapsed
+      }
+      this.isNotificationsActive = false
+      this.isPMActive = true
     },
     decrSelectedDate() {
       this.date.selected = this.date.selected.subtract(1, 'days')
@@ -96,6 +117,47 @@ export default {
   }
   &.collapsed {
     width: $width-collapsed;
+  }
+}
+.pmqa__tabs {
+  background-color: $primary-lighter;
+  flex-direction: row;
+  flex-wrap: wrap;
+  transition: border-color 0.49s ease 0.18s;
+  border-color: $primary;
+  &.collapsed {
+    border-bottom: 2px solid $offwhite;
+    transition: border-color 0.49s ease 0.18s;
+    &>.pmqa__tab__container.active {
+      transition-delay: 0.18s;
+      background-color: $primary-lighter;
+    }
+  }
+  &>.pmqa__tab__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $width-collapsed - 12px;
+    width: $width-collapsed;
+    transition: 0.2s;
+    color: $offwhite;
+    &.active {
+      background-color: $primary;
+      color: $offwhite;
+      &:hover {
+        color: $primary;
+      }
+    }
+    &:hover {
+      background-color: $primary-lightest;
+      cursor: pointer;
+    }
+    &:active {
+      padding: 2px 0;
+      transition-duration: 0s;
+      background-color: $primary-lightest;
+      // transform: translate(0, 2px);
+    }
   }
 }
 .pmqa__notifications {
@@ -185,26 +247,31 @@ export default {
   border: none;
   background-image: linear-gradient(90deg, rgba(0,0,0,0), #EFEFF4, rgba(0,0,0,0));
 }
+.pmqa__toggle-area {
+  height: $width-collapsed - 12px;
+  // background-color: $primary-lighter;
+  border-top: 2px solid $primary-lighter;
+}
 .pmqa__btn {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  left: -12px;
-  top: calc(50% - 15px);
+  // position: absolute;
+  width: $nav-icon-size - 4px;
+  height: $nav-icon-size - 4px;
+  // left: -12px;
+  // top: calc(50% - 15px);
   transition: transform 0.5s, color 0.2s;
-  color: $primary-dark;
-  background-color: $primary;
-  border: 2px solid $primary;
-  border-radius: 15px;
+  color: $primary-lighter;
+  // background-color: $primary;
+  // border: 2px solid $primary;
+  border-radius: $nav-icon-size / 2;
   &.collapsed {
     transform: rotate(-180deg);
   }
   &:hover {
-    color: $primary-darker;
+    color: $primary-lightest;
     cursor: pointer;
   }
   &:active {
-    color: $primary-darkest;
+    color: lighten($primary-lightest, 8%);
   }
 }
 </style>

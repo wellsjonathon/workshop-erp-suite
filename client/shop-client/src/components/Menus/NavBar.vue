@@ -32,16 +32,13 @@
                     linkName="Settings"
                     linkIcon="cog"/>
       </div>
-      <!-- <FaIcon :class="['nav__btn', !isCollapsed ? 'extended' : 'collapsed']"
-              @click="this.toggleCollapse"
-              icon="chevron-circle-left"/> -->
     </div>
     <div class="nav__account-area">
       <NavBarItem :collapsed="isCollapsed"
                   link="/account"
                   linkName="Chris Yung"
                   linkIcon="user"
-                  isAccount="true"/>
+                  :isAccount="true"/>
     </div>
     <div class="nav__toggle-area d-flex align-items-center justify-content-center">
       <FaIcon :class="['nav__btn', !isCollapsed ? 'extended' : 'collapsed']"
@@ -87,8 +84,6 @@ export default {
   font-size: 1.5rem;
   transition-duration: 0.5s;
   background-color: $primary;
-  /* box-shadow: 2px 0px 4px 1px rgba(1,1,1,0.175),
-              1px 0px 16px 1px rgba(1,1,1,0.075); */
   &.extended {
     width: $width-extended;
     flex-basis: $width-extended;
@@ -103,7 +98,6 @@ export default {
     height: 100px;
     background-color: $primary-lighter;
     border-bottom: 2px solid $offwhite;
-    // box-shadow: 0px -1px 2px 1px rgba(1,1,1,0.125) inset;
     & img {
       color: $white;
       height: 100%;
@@ -126,75 +120,25 @@ export default {
     }
   }
 }
-.nav__links {
-  margin: auto 0;
-  position: relative;
-}
-.nav__account {
-  position: absolute;
-  display: flex;
-  width: 100%;
-  margin: 0;
-  top: -2px;
-  color: $offwhite;
-  transition-duration: 0.2s;
-  background-color: $primary-lightest;
-  box-shadow: 0px -3px 4px -2px rgba(1,1,1,0.175) inset,
-              0px -2px 16px -2px rgba(1,1,1,0.075) inset;
-  &:hover {
-    background-color: $primary-lighter;
-    cursor: pointer;
-  }
-  &:active {
-    width: calc(100% + 2px);
-    transition-duration: 0s;
-    background-color: $primary-lightest;
-    transform: translate(-2px, 2px);
-  }
-}
-.nav__account__icon {
-  width: $nav-icon-size;
-  height: $nav-icon-size;
-  padding: 12px;
-}
-.nav__account__link {
-  width: $width-extended - $width-collapsed; /* Upgrade to Sass, use extended - collapsed */
-  margin: auto 0;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: width 0.49s;
-  &.extended {
-    display: block;
-  }
-  &.collapsed {
-    width: 0px;
-  }
-}
 .nav__toggle-area {
   height: $width-collapsed - 12px;
-  // background-color: $primary-lighter;
   border-top: 2px solid $primary-lighter;
 }
 .nav__btn {
-  // position: absolute;
   width: $nav-icon-size - 4px;
   height: $nav-icon-size - 4px;
-  // right: -12px;
-  // top: calc(50% - 15px);
   transition: transform 0.5s, color 0.2s;
   color: $primary-lighter;
-  // background-color: $primary;
-  // border: 2px solid $primary;
-  border-radius: 15px;
+  border-radius: $nav-icon-size / 2;
   &.collapsed {
     transform: rotate(180deg);
   }
   &:hover {
-    color: $primary-darker;
+    color: $primary-lightest;
     cursor: pointer;
   }
   &:active {
-    color: $primary-darkest;
+    color: lighten($primary-lightest, 8%);
   }
 }
 </style>

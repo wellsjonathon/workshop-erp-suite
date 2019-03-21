@@ -62,13 +62,9 @@ export default {
     cursor: pointer;
   }
   &:active {
-    width: calc(100% + 2px);
     transition-duration: 0s;
     background-color: $primary-lightest;
-    transform: translate(-2px, 2px);
-  }
-  &.extended {
-    // border-radius: 0 4px 4px 0;
+    transform: translate(0, 2px);
   }
 }
 .nav-icon-container {
