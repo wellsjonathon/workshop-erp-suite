@@ -1,7 +1,8 @@
 <template>
   <router-link :to="link" :class="['nav__item', !collapsed ? 'extended' : 'collapsed']">
     <div class="nav-icon-container">
-      <FaIcon class="icon" :icon="linkIcon"/>
+      <FaIcon class="icon" :icon="linkIcon" v-if="!isAccount"/>
+      <img src="https://placehold.it/32/efeff4" alt="" class="icon account-icon" v-if="isAccount">
     </div>
     <div :class="['nav__item__link', !collapsed ? 'extended' : 'collapsed']">
       {{ linkName }}
@@ -30,6 +31,11 @@ export default {
     linkIcon: {
       type: String,
       required: true
+    },
+    isAccount: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
   // computed: {
@@ -45,7 +51,9 @@ export default {
 
 .nav__item {
   display: flex;
+  align-items: center;
   width: 100%;
+  height: $width-collapsed - 12px;
   margin: 14px 0;
   color: $offwhite;
   transition: 0.2s, border-radius 0.5s;
@@ -60,12 +68,17 @@ export default {
     transform: translate(-2px, 2px);
   }
   &.extended {
-    border-radius: 0 4px 4px 0;
+    // border-radius: 0 4px 4px 0;
   }
 }
 .nav-icon-container {
   width: $width-collapsed;
   text-align: center;
+  & .account-icon {
+    width: $account-icon-size;
+    height: $account-icon-size;
+    border-radius: $account-icon-size / 2;
+  }
 }
 .nav__item__link {
   width: $width-extended - $width-collapsed - 20px;

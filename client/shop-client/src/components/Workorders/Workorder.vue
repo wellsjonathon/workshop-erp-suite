@@ -6,7 +6,7 @@
         <h2>{{ workorder.title }}</h2>
       </div>
     </b-row>
-    <b-row>
+    <b-row class="mt-3">
       <b-button-toolbar>
         <b-button>
           <FaIcon icon="edit"/>
