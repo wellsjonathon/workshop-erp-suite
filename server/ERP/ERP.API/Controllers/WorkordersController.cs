@@ -148,7 +148,7 @@ namespace ERP.API.Controllers
             _context.Workorders.Remove(workorder);
             await _context.SaveChangesAsync();
 
-            return Ok(workorder);
+            return NoContent();
         }
 
         // ===== STATE & TRANSITIONS =====
@@ -566,7 +566,7 @@ namespace ERP.API.Controllers
             _context.WorkorderComments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return Ok(comment);
+            return NoContent();
         }
 
         // ===== NOTES =====
@@ -697,10 +697,26 @@ namespace ERP.API.Controllers
             _context.WorkorderNotes.Remove(note);
             await _context.SaveChangesAsync();
 
-            return Ok(note);
+            return NoContent();
         }
 
         // ===== ATTACHMENTS =====
+
+        // ===== FACULTIES =====
+
+        [HttpGet("faculties")]
+        public IEnumerable<Faculty> GetFaculties()
+        {
+            return _context.Faculties;
+        }
+
+        // ===== USES =====
+
+        [HttpGet("uses")]
+        public IEnumerable<Use> GetUses()
+        {
+            return _context.Uses;
+        }
 
         // ===== HELPERS =====
 
