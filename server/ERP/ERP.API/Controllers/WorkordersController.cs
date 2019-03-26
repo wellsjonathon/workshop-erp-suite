@@ -28,18 +28,48 @@ namespace ERP.API.Controllers
             _context = context;
         }
 
+        // ===== HELPERS =====
+
+        private bool WorkorderExists(int id)
+        {
+            return _context.Workorders.Any(e => e.Id == id);
+        }
+        private bool CommentExists(int id)
+        {
+            return _context.WorkorderComments.Any(c => c.Id == id);
+        }
+        private bool NoteExists(int id)
+        {
+            return _context.WorkorderNotes.Any(c => c.Id == id);
+        }
+
+        // ===== QUERY PARAMS =====
+
+        public class WorkorderQueryParams
+        {
+            public int? Limit { get; set; }
+        }
+
         // GET: api/Workorders
         [HttpGet]
-        public IEnumerable<Workorder> GetWorkorders()
+        public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
         {
-            //var workorders = _context.Workorders;
-            //foreach (Workorder w in workorders)
-            //{
-            //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.Id == w.Status.Id);
-            //}
-            return _context.Workorders
-                .Include(w => w.State)
-                .Include(w => w.Faculty);
+            IEnumerable<Workorder> workorders;
+            if (queryParams.Limit != null)
+            {
+                workorders = _context.Workorders
+                    .Include(w => w.State)
+                    .Include(w => w.Faculty)
+                    .OrderByDescending(w => w.Id)
+                    .Take((int)queryParams.Limit).ToList();
+            }
+            else
+            {
+                workorders = _context.Workorders
+                    .Include(w => w.State)
+                    .Include(w => w.Faculty);
+            }
+            return workorders;
         }
 
         // GET: api/Workorders/5
@@ -716,23 +746,6 @@ namespace ERP.API.Controllers
         public IEnumerable<Use> GetUses()
         {
             return _context.Uses;
-        }
-
-        // ===== HELPERS =====
-
-        private bool WorkorderExists(int id)
-        {
-            return _context.Workorders.Any(e => e.Id == id);
-        }
-
-        private bool CommentExists(int id)
-        {
-            return _context.WorkorderComments.Any(c => c.Id == id);
-        }
-
-        private bool NoteExists(int id)
-        {
-            return _context.WorkorderNotes.Any(c => c.Id == id);
         }
     }
 }
