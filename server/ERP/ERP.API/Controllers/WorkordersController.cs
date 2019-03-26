@@ -10,6 +10,7 @@ using ERP.Models.Workorders;
 using ERP.Repositories.Context;
 using Microsoft.AspNetCore.Authorization;
 using ERP.Models.Workflows;
+using static ERP.Common.HalBuilder;
 
 // TODO: Delegate any calls that needs to build the object to the
 //         services - allows use of multiple contexts
@@ -52,7 +53,8 @@ namespace ERP.API.Controllers
 
         // GET: api/Workorders
         [HttpGet]
-        public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
+        //public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
+        public IActionResult GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
         {
             IEnumerable<Workorder> workorders;
             if (queryParams.Limit != null)
@@ -69,7 +71,13 @@ namespace ERP.API.Controllers
                     .Include(w => w.State)
                     .Include(w => w.Faculty);
             }
-            return workorders;
+
+            var hal = new HalRepresentation();
+            hal.AddEmbeddedResource("workorders", workorders);
+            hal.AddLink("self", "/api/workorders", HttpType.GET);
+            hal.AddLink("test", "/api/workorders/test", HttpType.GET);
+
+            return Ok(hal);
         }
 
         // GET: api/Workorders/5
