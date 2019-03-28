@@ -4,6 +4,7 @@
 import Workorders from './components/Workorders/Workorders.vue'
 import Workorder from './components/Workorders/Workorder.vue'
 import NewWorkorder from './components/Workorders/NewWorkorder.vue'
+import ProjectManagement from './components/Project Management/ProjectManagement.vue'
 
 export default [
   {
@@ -26,6 +27,11 @@ export default [
     name: 'new_workorder',
     path: '/workorders/new',
     component: NewWorkorder
+  },
+  {
+    name: 'project_management',
+    path: '/project-management',
+    component: ProjectManagement
   },
   { path: '/inventory', component: null },
   { path: '/project-management', component: null },

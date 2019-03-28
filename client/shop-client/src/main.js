@@ -37,6 +37,8 @@ import {
   faPlus,
   faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import FullCalendar from 'vue-full-calendar'
+import '@fullcalendar/core/main.css'
 
 Vue.use(VueRouter)
 Vue.use(Layout)
@@ -53,6 +55,7 @@ Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Pagination)
 Vue.use(Tabs)
+Vue.use(FullCalendar)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 
