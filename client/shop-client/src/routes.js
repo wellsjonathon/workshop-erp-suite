@@ -7,6 +7,7 @@ import NewWorkorder from './components/Workorders/NewWorkorder.vue'
 import Materials from './components/Inventory/Materials/Materials.vue'
 import Material from './components/Inventory/Materials/Material.vue'
 import NewMaterial from './components/Inventory/Materials/NewMaterial.vue'
+import ProjectManagement from './components/Project Management/ProjectManagement.vue'
 
 export default [
   {
@@ -46,6 +47,12 @@ export default [
     path: '/materials/new',
     component: NewMaterial
   },
+  {
+    name: 'project_management',
+    path: '/project-management',
+    component: ProjectManagement
+  },
+  { path: '/inventory', component: null },
   { path: '/project-management', component: null },
   { path: '/reports', component: null },
   { path: '/settings', component: null }

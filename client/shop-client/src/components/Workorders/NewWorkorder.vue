@@ -35,7 +35,9 @@
           </b-form-group>
         </b-col>
         <b-col cols="5">
-
+          <b-form-group>
+            <b-form-select v-model="workorder.use" :options=""/>
+          </b-form-group>
         </b-col>
       </b-form>
     </b-card>
@@ -49,8 +51,11 @@ export default {
     return {
       workorder: {
         title: '',
-        description: ''
+        description: '',
+        use: null
       },
+      faculties: null,
+      uses: null,
       breadcrumbs: [
         {
           text: 'Home',
@@ -66,6 +71,19 @@ export default {
         }
       ]
     }
+  },
+  mounted: function () {
+    this.$http
+      .all([
+        this.$http.get('https://localhost:5001/api/inventory/materials'),
+        this.$http.get('https://localhost:5001/api/inventory/materials/types'),
+        this.$http.get('https://localhost:5001/api/inventory/materials/categories')
+      ])
+      .then(this.$http.spread((materials, types, categories) => {
+        this.materials = materials.data,
+        this.filters.types = types.data,
+        this.filters.categories = categories.data
+      }))
   }
 }
 </script>

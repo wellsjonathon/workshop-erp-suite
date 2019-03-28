@@ -57,8 +57,7 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            timeEntry.TimeType =  _context.TimeTypes.Single<TimeType>(t => t.Id == timeEntry.TimeType.Id);
-            timeEntry.DateTime = DateTime.Now;
+            timeEntry.TimeType =  _context.TimeTypes.Single<TimeType>(t => t.Id == timeEntry.TimeTypeId);
             _context.TimeEntries.Add(timeEntry);
             await _context.SaveChangesAsync();
 
@@ -97,7 +96,6 @@ namespace ERP.API.Controllers
             {
                 return BadRequest();
             }
-            timeEntry.DateTime = DateTime.Now;
             _context.Entry(timeEntry).State = EntityState.Modified;
             
             try
