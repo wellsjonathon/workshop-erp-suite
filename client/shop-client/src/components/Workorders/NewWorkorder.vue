@@ -36,7 +36,7 @@
         </b-col>
         <b-col cols="5">
           <b-form-group>
-            <b-form-select v-model="workorder.use" :options=""/>
+            <!-- <b-form-select v-model="workorder.use" :options=""/> -->
           </b-form-group>
         </b-col>
       </b-form>
