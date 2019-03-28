@@ -72,12 +72,12 @@ namespace ERP.API.Controllers
                     .Include(w => w.Faculty);
             }
 
-            var hal = new HalRepresentation();
-            hal.AddEmbeddedResource("workorders", workorders);
-            hal.AddLink("self", "/api/workorders", HttpType.GET);
-            hal.AddLink("test", "/api/workorders/test", HttpType.GET);
+            var hal = new HalRepresentation()
+                .AddEmbeddedResource("workorders", workorders, this.Request.Path)
+                .AddLink("self", this.Request.Path, HttpType.GET);
 
-            return Ok(hal);
+            return Ok(workorders);
+            //return Ok(hal);
         }
 
         // GET: api/Workorders/5
