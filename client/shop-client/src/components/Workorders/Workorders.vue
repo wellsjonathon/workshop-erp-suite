@@ -222,8 +222,11 @@ export default {
     clearSearch() {
       this.searchQuery = null
       this.$http
-        .get('https://localhost:5001/api/workorders', {
+        .get('https://localhost:5001/api/workorders/filter', {
           params: {
+            state: this.selectedFilters.state,
+            faculty: this.selectedFilters.faculty,
+            use: this.selectedFilters.use,
             limit: this.showing
           }
         })
