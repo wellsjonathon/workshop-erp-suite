@@ -7,14 +7,6 @@
     </b-row>
     <b-row>
       <h2>Time Entries</h2>
-      <b-table striped hover outlined :items="timeEntries" :fields="timeEntryFields" :primary-key="id">
-        <template slot="startTime" slot-scope="data">
-          {{ displayDate(data.value) }}
-        </template>
-        <template slot="endTime" slot-scope="data">
-          {{ displayDate(data.value) }}
-        </template>
-      </b-table>
     </b-row>
     <b-col>
       <vue-cal defaultView='week'
@@ -118,9 +110,6 @@ export default {
       .then(this.$http.spread((timeEntries, events) => {
         this.timeEntries = timeEntries.data
         this.events = this.toTimeEntry(timeEntries.data)
-        //this.events = events.data
-        // console.log(timeEntries.data)
-        // this.toTimeEntry(timeEntries.data)
         console.log(this.events)
       }))
   },
