@@ -71,6 +71,7 @@ namespace ERP.API.Controllers
                 workorders = _context.Workorders
                     .Include(w => w.State)
                     .Include(w => w.Faculty)
+                    .Include(w => w.Use)
                     .OrderByDescending(w => w.Id)
                     .Take((int)filterParams.Limit).ToList();
             }
@@ -78,7 +79,8 @@ namespace ERP.API.Controllers
             {
                 workorders = _context.Workorders
                     .Include(w => w.State)
-                    .Include(w => w.Faculty);
+                    .Include(w => w.Faculty)
+                    .Include(w => w.Use);
             }
 
             var hal = new HalRepresentation()
@@ -243,7 +245,12 @@ namespace ERP.API.Controllers
         public IActionResult SearchWorkorders([FromQuery] WorkorderSearchParams searchParams)
         {
             var workorders = _context.Workorders
-                .Where(w => w.Title.Contains(searchParams.Q) || w.Description.Contains(searchParams.Q))
+                .Include(w => w.State)
+                .Include(w => w.Faculty)
+                .Include(w => w.Use)
+                .Where(w => w.Title.Contains(searchParams.Q)
+                    || w.Description.Contains(searchParams.Q)
+                    || w.ClientName.Contains(searchParams.Q))
                 .OrderByDescending(w => w.Id);
 
             if (searchParams.Limit != null)

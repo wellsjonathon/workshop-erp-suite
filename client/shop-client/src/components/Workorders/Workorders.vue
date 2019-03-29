@@ -40,21 +40,27 @@
                     </b-form-select>
                   </b-input-group>
                   <b-button-group size="lg" class="mx-2">
-                    <b-button variant="outline-primary" @click="this.applyFilters">Apply Filters</b-button>
-                    <b-button variant="outline-primary" @click="this.clearFilters">Clear Filters</b-button>
+                    <b-button variant="outline-primary" @click="applyFilters()">Apply Filters</b-button>
+                    <b-button variant="outline-primary" @click="clearFilters()">Clear Filters</b-button>
                   </b-button-group>
                 </b-button-toolbar>
               </b-col>
               <b-col cols="4">
-                <b-input-group size="lg">
-                  <b-form-input
-                    placeholder="Search..." />
-                  <b-input-group-append>
-                    <b-button variant="primary">
-                      <FaIcon icon="search"/>
-                    </b-button>
-                  </b-input-group-append>
-                </b-input-group>
+                <b-button-toolbar class="d-flex justify-content-end">
+                  <b-input-group size="lg" class="mr-2 flex-grow-1">
+                    <b-form-input
+                      placeholder="Search..."
+                      v-model="searchQuery" />
+                    <b-input-group-append>
+                      <b-button variant="primary" @click="search()">
+                        <FaIcon icon="search"/>
+                      </b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                  <b-button variant="primary" size="lg" @click="clearSearch()">
+                    Clear
+                  </b-button>
+                </b-button-toolbar>
               </b-col>
             </b-row>
             <b-table striped hover outlined :items="workorders" :fields="workorderFields" :primary-key="id">
@@ -79,7 +85,16 @@
             </b-table>
             <b-row>
               <b-col>
-                Showing 1 of 1000
+                <span class="row-count">
+                  Showing
+                  <b-form-select
+                    class="row-count-selector mx-2"
+                    v-model="showing"
+                    :options="showingOptions"
+                    @change="changeRowCount(showing)"
+                    variant="primary-outline"></b-form-select>
+                  of 1000
+                </span>
               </b-col>
               <b-col>
                 <b-pagination align="right"
@@ -158,6 +173,9 @@ export default {
         faculty: null,
         use: null
       },
+      showingOptions: [10, 25, 50],
+      showing: 10,
+      searchQuery: null,
       advSearchCollapsed: true,
       breadcrumbs: [
         {
@@ -178,13 +196,49 @@ export default {
     displayDate(date) {
       return dayjs(date).format('MMMM DD, YYYY');
     },
+    changeRowCount(count) {
+      this.$http
+        .get('https://localhost:5001/api/workorders', {
+          params: {
+            limit: this.showing
+          }
+        })
+        .then(response => {
+          this.workorders = response.data
+        })
+    },
+    search() {
+      this.$http
+        .get('https://localhost:5001/api/workorders/search', {
+          params: {
+            q: this.searchQuery,
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.workorders = response.data
+        })
+    },
+    clearSearch() {
+      this.searchQuery = null
+      this.$http
+        .get('https://localhost:5001/api/workorders', {
+          params: {
+            limit: this.showing
+          }
+        })
+        .then(response => {
+          this.workorders = response.data
+        })
+    },
     applyFilters() {
       this.$http
         .get('https://localhost:5001/api/workorders/filter', {
           params: {
             state: this.selectedFilters.state,
             faculty: this.selectedFilters.faculty,
-            use: this.selectedFilters.use
+            use: this.selectedFilters.use,
+            limit: this.showing
           }
         })
         .then(response => {
@@ -193,7 +247,11 @@ export default {
     },
     clearFilters() {
       this.$http
-        .get('https://localhost:5001/api/workorders')
+        .get('https://localhost:5001/api/workorders', {
+          params: {
+            limit: this.showing
+          }
+        })
         .then(response => {
           this.workorders = response.data
         })
@@ -215,7 +273,11 @@ export default {
   mounted: function () {
     this.$http
       .all([
-        this.$http.get('https://localhost:5001/api/workorders'),
+        this.$http.get('https://localhost:5001/api/workorders', {
+          params: {
+            limit: this.showing
+          }
+        }),
         this.$http.get('https://localhost:5001/api/workorders/faculties'),
         this.$http.get('https://localhost:5001/api/workorders/uses'),
         this.$http.get('https://localhost:5001/api/workflow/states')
@@ -319,6 +381,12 @@ export default {
     cursor: pointer;
     background-color: darken($offwhite, 5%);
   }
+}
+.row-count {
+  vertical-align: text-bottom;
+}
+.row-count-selector {
+  width: $width-collapsed - 12px;
 }
 .pagination {
   display: flex;
