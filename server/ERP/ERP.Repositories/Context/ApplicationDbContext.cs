@@ -31,7 +31,7 @@ namespace ERP.Repositories.Context
         public DbSet<Use> Uses { get; set; }
 
         // ===== Workflows =====
-        public DbSet<Workflow> Worflows { get; set; }
+        public DbSet<Workflow> Workflows { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<Transition> Transitions { get; set; }
         public DbSet<WorkflowAction> Actions { get; set; }

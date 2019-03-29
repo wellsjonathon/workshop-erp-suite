@@ -21,7 +21,8 @@ namespace ERP.Models.Workorders
         public List<WorkorderComment> Comments { get; set; }
         public List<WorkorderNote> Notes { get; set; }
 
-        // public Use Use { get; set; }
+        public int UseId { get; set; }
+        public Use Use { get; set; }
 
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; }

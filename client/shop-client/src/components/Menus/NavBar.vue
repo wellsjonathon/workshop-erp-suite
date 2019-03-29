@@ -17,7 +17,7 @@
                     linkIcon="file"/>
         <NavBarItem :collapsed="isCollapsed"
                     link="/materials"
-                    linkName="Materials"
+                    linkName="Inventory"
                     linkIcon="warehouse"/>
         <NavBarItem :collapsed="isCollapsed"
                     link="/project-management"
@@ -81,7 +81,7 @@ export default {
 .nav {
   display: flex;
   position: relative;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   transition-duration: 0.5s;
   background-color: $primary;
   &.extended {

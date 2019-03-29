@@ -46,24 +46,33 @@ namespace ERP.API.Controllers
 
         // ===== QUERY PARAMS =====
 
-        public class WorkorderQueryParams
+        public class WorkorderFilterParams
         {
             public int? Limit { get; set; }
+            public int? State { get; set; }
+            public int? Faculty { get; set; }
+            public int? Use { get; set; }
+        }
+
+        public class WorkorderSearchParams
+        {
+            public int? Limit { get; set; }
+            public string Q { get; set; }
         }
 
         // GET: api/Workorders
         [HttpGet]
         //public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
-        public IActionResult GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
+        public IActionResult GetWorkorders([FromQuery] WorkorderFilterParams filterParams)
         {
             IEnumerable<Workorder> workorders;
-            if (queryParams.Limit != null)
+            if (filterParams.Limit != null)
             {
                 workorders = _context.Workorders
                     .Include(w => w.State)
                     .Include(w => w.Faculty)
                     .OrderByDescending(w => w.Id)
-                    .Take((int)queryParams.Limit).ToList();
+                    .Take((int)filterParams.Limit).ToList();
             }
             else
             {
@@ -158,6 +167,7 @@ namespace ERP.API.Controllers
             // TODO: Update workflows/states to determine first (and last?) state of workflow
             workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
             workorder.Faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == workorder.FacultyId);
+            workorder.Use = await _context.Uses.FirstOrDefaultAsync(u => u.Id == workorder.UseId);
             workorder.DateCreated = DateTime.Now;
 
             // TODO: Potentially add a default state "Created" that always has a single transition to
@@ -187,6 +197,64 @@ namespace ERP.API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // ===== FILTERS =====
+
+        // GET: api/workorders/filter
+        [HttpGet("filter")]
+        public IActionResult GetFilteredWorkorders([FromQuery] WorkorderFilterParams filters)
+        {
+            var workorders = _context.Workorders
+                .Include(w => w.State)
+                .Include(w => w.Faculty)
+                .Include(w => w.Use)
+                .Select(w => w);
+
+            if (filters.State != null)
+            {
+                workorders = workorders.Where(w => w.State.Id == filters.State);
+            }
+            if (filters.Faculty != null)
+            {
+                workorders = workorders.Where(w => w.Faculty.Id == filters.Faculty);
+            }
+            if (filters.Use != null)
+            {
+                workorders = workorders.Where(w => w.Use.Id == filters.Use);
+            }
+
+            if (filters.Limit != null)
+            {
+                return Ok(workorders
+                    .OrderByDescending(w => w.Id)
+                    .Take((int)filters.Limit).ToList());
+            }
+            else
+            {
+                return Ok(workorders);
+            }
+        }
+
+        // ===== SEARCH =====
+
+        // GET: api/workorders/search
+        [HttpGet("search")]
+        public IActionResult SearchWorkorders([FromQuery] WorkorderSearchParams searchParams)
+        {
+            var workorders = _context.Workorders
+                .Where(w => w.Title.Contains(searchParams.Q) || w.Description.Contains(searchParams.Q))
+                .OrderByDescending(w => w.Id);
+
+            if (searchParams.Limit != null)
+            {
+                return Ok(workorders.Take((int)searchParams.Limit).ToList());
+            }
+            else
+            {
+                return Ok(workorders.ToList());
+            }
+
         }
 
         // ===== STATE & TRANSITIONS =====

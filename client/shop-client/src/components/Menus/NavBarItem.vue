@@ -54,7 +54,7 @@ export default {
   align-items: center;
   width: 100%;
   height: $width-collapsed - 12px;
-  margin: 14px 0;
+  margin: 7px 0;
   color: $offwhite;
   transition: 0.2s, border-radius 0.5s;
   &:hover {

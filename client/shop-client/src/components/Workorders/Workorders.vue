@@ -29,16 +29,19 @@
               <b-col cols="8">
                 <b-button-toolbar class="mb-3">
                   <b-input-group size="lg">
-                    <b-form-select v-model="selectedFilters.states" :options="filters.states">
+                    <b-form-select v-model="selectedFilters.state" :options="filters.states">
                       <option slot="first" :value="null">State</option>
                     </b-form-select>
-                    <b-form-select v-model="selectedFilters.faculties" :options="filters.faculties">
+                    <b-form-select v-model="selectedFilters.faculty" :options="filters.faculties">
                       <option slot="first" :value="null">Faculty</option>
+                    </b-form-select>
+                    <b-form-select v-model="selectedFilters.use" :options="filters.uses">
+                      <option slot="first" :value="null">Use</option>
                     </b-form-select>
                   </b-input-group>
                   <b-button-group size="lg" class="mx-2">
-                    <b-button variant="outline-primary">Apply Filters</b-button>
-                    <b-button variant="outline-primary">Clear Filters</b-button>
+                    <b-button variant="outline-primary" @click="this.applyFilters">Apply Filters</b-button>
+                    <b-button variant="outline-primary" @click="this.clearFilters">Clear Filters</b-button>
                   </b-button-group>
                 </b-button-toolbar>
               </b-col>
@@ -146,12 +149,14 @@ export default {
         rowsPerPage: 10
       },
       filters: {
-        states: ['New', 'In Progress', 'Completed'],
-        faculties: ['ISE', 'ENSE', 'SSE', 'ESE', 'PSE'] // TODO: Get from server
+        states: null,
+        faculties: null,
+        uses: null
       },
       selectedFilters: {
-        states: null,
-        faculties: null
+        state: null,
+        faculty: null,
+        use: null
       },
       advSearchCollapsed: true,
       breadcrumbs: [
@@ -172,14 +177,55 @@ export default {
     },
     displayDate(date) {
       return dayjs(date).format('MMMM DD, YYYY');
+    },
+    applyFilters() {
+      this.$http
+        .get('https://localhost:5001/api/workorders/filter', {
+          params: {
+            state: this.selectedFilters.state,
+            faculty: this.selectedFilters.faculty,
+            use: this.selectedFilters.use
+          }
+        })
+        .then(response => {
+          this.workorders = response.data
+        })
+    },
+    clearFilters() {
+      this.$http
+        .get('https://localhost:5001/api/workorders')
+        .then(response => {
+          this.workorders = response.data
+        })
+      this.selectedFilters = {
+        state: null,
+        faculty: null,
+        use: null
+      }
+    },
+    formatFilters(data) {
+      return data.map(item => {
+        return {
+          value: item.id,
+          text: item.name
+        }
+      })
     }
   },
   mounted: function () {
     this.$http
-      .get('https://localhost:5001/api/workorders')
-      .then(response => {
-        this.workorders = response.data;
-      })
+      .all([
+        this.$http.get('https://localhost:5001/api/workorders'),
+        this.$http.get('https://localhost:5001/api/workorders/faculties'),
+        this.$http.get('https://localhost:5001/api/workorders/uses'),
+        this.$http.get('https://localhost:5001/api/workflow/states')
+      ])
+      .then(this.$http.spread((workorders, faculties, uses, states) => {
+        this.workorders = workorders.data;
+        this.filters.faculties = this.formatFilters(faculties.data);
+        this.filters.uses = this.formatFilters(uses.data);
+        this.filters.states = this.formatFilters(states.data);
+      }))
     //this.$http
     //  .get('')
   }
