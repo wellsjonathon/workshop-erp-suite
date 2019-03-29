@@ -10,6 +10,7 @@ using ERP.Models.Workorders;
 using ERP.Repositories.Context;
 using Microsoft.AspNetCore.Authorization;
 using ERP.Models.Workflows;
+using static ERP.Common.HalBuilder;
 
 // TODO: Delegate any calls that needs to build the object to the
 //         services - allows use of multiple contexts
@@ -28,18 +29,55 @@ namespace ERP.API.Controllers
             _context = context;
         }
 
+        // ===== HELPERS =====
+
+        private bool WorkorderExists(int id)
+        {
+            return _context.Workorders.Any(e => e.Id == id);
+        }
+        private bool CommentExists(int id)
+        {
+            return _context.WorkorderComments.Any(c => c.Id == id);
+        }
+        private bool NoteExists(int id)
+        {
+            return _context.WorkorderNotes.Any(c => c.Id == id);
+        }
+
+        // ===== QUERY PARAMS =====
+
+        public class WorkorderQueryParams
+        {
+            public int? Limit { get; set; }
+        }
+
         // GET: api/Workorders
         [HttpGet]
-        public IEnumerable<Workorder> GetWorkorders()
+        //public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
+        public IActionResult GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
         {
-            //var workorders = _context.Workorders;
-            //foreach (Workorder w in workorders)
-            //{
-            //    w.Status = _context.WorkorderStatuses.FirstOrDefaultAsync(s => s.Id == w.Status.Id);
-            //}
-            return _context.Workorders
-                .Include(w => w.State)
-                .Include(w => w.Faculty);
+            IEnumerable<Workorder> workorders;
+            if (queryParams.Limit != null)
+            {
+                workorders = _context.Workorders
+                    .Include(w => w.State)
+                    .Include(w => w.Faculty)
+                    .OrderByDescending(w => w.Id)
+                    .Take((int)queryParams.Limit).ToList();
+            }
+            else
+            {
+                workorders = _context.Workorders
+                    .Include(w => w.State)
+                    .Include(w => w.Faculty);
+            }
+
+            var hal = new HalRepresentation()
+                .AddEmbeddedResource("workorders", workorders, this.Request.Path)
+                .AddLink("self", this.Request.Path, HttpType.GET);
+
+            return Ok(workorders);
+            //return Ok(hal);
         }
 
         // GET: api/Workorders/5
@@ -148,7 +186,7 @@ namespace ERP.API.Controllers
             _context.Workorders.Remove(workorder);
             await _context.SaveChangesAsync();
 
-            return Ok(workorder);
+            return NoContent();
         }
 
         // ===== STATE & TRANSITIONS =====
@@ -566,7 +604,7 @@ namespace ERP.API.Controllers
             _context.WorkorderComments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return Ok(comment);
+            return NoContent();
         }
 
         // ===== NOTES =====
@@ -697,26 +735,25 @@ namespace ERP.API.Controllers
             _context.WorkorderNotes.Remove(note);
             await _context.SaveChangesAsync();
 
-            return Ok(note);
+            return NoContent();
         }
 
         // ===== ATTACHMENTS =====
 
-        // ===== HELPERS =====
+        // ===== FACULTIES =====
 
-        private bool WorkorderExists(int id)
+        [HttpGet("faculties")]
+        public IEnumerable<Faculty> GetFaculties()
         {
-            return _context.Workorders.Any(e => e.Id == id);
+            return _context.Faculties;
         }
 
-        private bool CommentExists(int id)
-        {
-            return _context.WorkorderComments.Any(c => c.Id == id);
-        }
+        // ===== USES =====
 
-        private bool NoteExists(int id)
+        [HttpGet("uses")]
+        public IEnumerable<Use> GetUses()
         {
-            return _context.WorkorderNotes.Any(c => c.Id == id);
+            return _context.Uses;
         }
     }
 }

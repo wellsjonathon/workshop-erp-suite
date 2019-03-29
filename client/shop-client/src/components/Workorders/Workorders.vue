@@ -14,9 +14,9 @@
             </b-col>
             <b-col class="d-flex justify-content-end">
               <b-button-toolbar>
-                <b-dropdown class="mx-2" right text="Export" size="lg" variant="primary">
+                <!-- <b-dropdown class="mx-2" right text="Export" size="lg" variant="primary">
                   <b-dropdown-item>PDF</b-dropdown-item>
-                </b-dropdown>
+                </b-dropdown> -->
                 <b-button size="lg" variant="primary">
                   <FaIcon icon="plus" />
                   <router-link :to="{ name: 'new_workorder' }">New</router-link>

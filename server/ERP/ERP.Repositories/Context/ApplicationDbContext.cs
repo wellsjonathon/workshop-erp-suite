@@ -28,6 +28,7 @@ namespace ERP.Repositories.Context
         public DbSet<WorkorderNote> WorkorderNotes { get; set; }
         public DbSet<TransitionHistory> TransitionHistory { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Use> Uses { get; set; }
 
         // ===== Workflows =====
         public DbSet<Workflow> Worflows { get; set; }
@@ -107,6 +108,12 @@ namespace ERP.Repositories.Context
                 new Faculty { Id = 3, Name = "SSE" },
                 new Faculty { Id = 4, Name = "ESE" },
                 new Faculty { Id = 5, Name = "PSE" }
+            );
+
+            builder.Entity<Use>().HasData(
+                new Use { Id = 1, Name = "Research" },
+                new Use { Id = 2, Name = "Class/Lab" },
+                new Use { Id = 3, Name = "Other" }
             );
 
             // ===== Materials =====

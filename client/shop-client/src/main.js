@@ -11,6 +11,8 @@ import {
   Card,
   Table,
   Form,
+  FormTextarea,
+  FormGroup,
   FormInput,
   FormSelect,
   InputGroup,
@@ -20,12 +22,15 @@ import {
   Dropdown,
   Pagination,
   Tabs,
+  Spinner,
   Breadcrumb} from 'bootstrap-vue/es/components'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronCircleLeft, faChevronCircleRight,
   faChevronLeft, faChevronRight,
   faChevronDown, faChevronUp,
+  faBell,
+  faStopwatch,
   faHome,
   faFile,
   faWarehouse,
@@ -45,6 +50,8 @@ Vue.use(Layout)
 Vue.use(Card)
 Vue.use(Table)
 Vue.use(Form)
+Vue.use(FormTextarea)
+Vue.use(FormGroup)
 Vue.use(FormInput)
 Vue.use(FormSelect)
 Vue.use(InputGroup)
@@ -55,6 +62,7 @@ Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Pagination)
 Vue.use(Tabs)
+Vue.use(Spinner)
 Vue.use(FullCalendar)
 
 Vue.component('FaIcon', FontAwesomeIcon)
@@ -66,6 +74,8 @@ library.add(faChevronLeft)
 library.add(faChevronRight)
 library.add(faChevronDown)
 library.add(faChevronUp)
+library.add(faBell)
+library.add(faStopwatch)
 library.add(faHome)
 library.add(faFile)
 library.add(faWarehouse)

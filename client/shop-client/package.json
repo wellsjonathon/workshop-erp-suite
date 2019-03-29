@@ -22,6 +22,7 @@
     "vue": "^2.5.17",
     "vue-bootstrap-calendar": "^1.3.6",
     "vue-cal": "^1.43.1",
+    "vue-full-calendar": "^2.7.0",
     "vue-router": "^3.0.2"
   },
   "devDependencies": {
