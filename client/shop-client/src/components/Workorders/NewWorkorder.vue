@@ -1,61 +1,238 @@
 <template>
-  <b-container>
-    <b-row>
+  <b-container fluid>
+    <b-row align-h="start">
       <b-col>
         <b-breadcrumb :items="breadcrumbs" />
       </b-col>
     </b-row>
-    <b-row class="ml-3">
-      <h2>New Workorder</h2>
+    <b-row align-h="center">
+      <b-col sm="10" lg="8">
+        <b-card no-body header-tag="header">
+          <b-row slot="header">
+            <b-col class="d-flex align-items-center">
+              <h2 class="my-0">New Workorder</h2>
+            </b-col>
+            <b-col class="d-flex justify-content-end">
+              <b-button-toolbar>
+                <b-button size="lg" class="mx-2" variant="outline-danger">
+                  Cancel
+                </b-button>
+                <b-button size="lg" variant="primary">
+                  <!-- <FaIcon icon="plus" class="mr-2"/> -->
+                  Create workorder
+                  <!-- <router-link :to="{ name: 'new_workorder' }">Create</router-link> -->
+                </b-button>
+              </b-button-toolbar>
+            </b-col>
+          </b-row>
+          <b-card-body>
+            <b-form>
+              <b-form-group
+                id="workorder-details-group"
+                class="mb-2"
+                label="Workorder Details"
+                label-size="lg"
+                label-cols-sm="4"
+                label-cols-lg="3"
+                label-class="font-weight-bold pt-0">
+
+                <b-form-group
+                  id="title-group"
+                  label="Title:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="title-input">
+                  <b-form-input
+                    id="title-input"
+                    type="text"
+                    size="lg"
+                    v-model="workorder.title"
+                    required
+                    placeholder="Project title..."/>
+                </b-form-group>
+
+                <b-form-group
+                  id="purpose-group"
+                  label="Purpose:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="purpose-input">
+                  <b-form-select
+                    id="purpose-input"
+                    size="lg"
+                    v-model="workorder.useId"
+                    :options="options.purposes">
+                    <option slot="first" :value="null">Select one...</option>
+                  </b-form-select>
+                </b-form-group>
+
+                <b-form-group
+                  id="faculty-group"
+                  label="Faculty:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="faculty-input">
+                  <b-form-select
+                    id="faculty-input"
+                    size="lg"
+                    v-model="workorder.facultyId"
+                      :options="options.faculties">
+                      <option slot="first" :value="null">Select one...</option>
+                  </b-form-select>
+                </b-form-group>
+
+                <b-form-group
+                  id="date-required-group"
+                  label="Date Required:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="date-required-input">
+                  <vue-cal
+                    xsmall
+                    class="datepicker vuecal--rounded-theme vuecal--green-theme"
+                    :selected-date="workorder.dateRequiredBy"
+                    @day-focus="workorder.dateRequiredBy = $event"
+                    hide-view-selector
+                    :time="false"
+                    default-view="month"
+                    :disable-views="['week', 'day']">
+                  </vue-cal>
+                </b-form-group>
+
+                <b-form-group
+                  id="description-group"
+                  label="Description:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="description-input">
+                  <b-form-textarea
+                    id="description-input"
+                    type="text"
+                    size="lg"
+                    v-model="workorder.description"
+                    required
+                    placeholder="Describe the project requirements..."/>
+                </b-form-group>
+
+                <b-form-group
+                  id="attachments-group"
+                  label="Attachments:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="attachments-input">
+                  <b-form-file
+                    id="attachments-input"
+                    multiple
+                    :model="workorder.attachments"
+                    placeholder="Choose or drop drawings and attachments here..."
+                    drop-placeholder="Drop drawings and attachments here..."/>
+                </b-form-group>
+
+              </b-form-group>
+              <b-form-group
+                id="client-info-group"
+                class="border-top pt-4"
+                label="Client Contact Information"
+                label-size="lg"
+                label-cols-sm="4"
+                label-cols-lg="3"
+                label-class="font-weight-bold pt-0">
+
+                <b-form-group
+                  id="client-name-group"
+                  label="Name:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="client-name-input">
+                  <b-form-input
+                    id="client-name-input"
+                    type="text"
+                    size="lg"
+                    v-model="workorder.clientName"
+                    required/>
+                </b-form-group>
+
+                <b-form-group
+                  id="client-phone-group"
+                  label="Phone Number:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="client-phone-input">
+                  <b-form-input
+                    id="client-phone-input"
+                    type="text"
+                    size="lg"
+                    v-model="workorder.clientPhoneNumber"
+                    required/>
+                </b-form-group>
+
+                <b-form-group
+                  id="client-email-group"
+                  label="Email:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="client-email-input">
+                  <b-form-input
+                    id="client-email-input"
+                    type="text"
+                    size="lg"
+                    v-model="workorder.clientEmail"
+                    required/>
+                </b-form-group>
+
+              </b-form-group>
+            </b-form>
+          </b-card-body>
+        </b-card>
+      </b-col>
     </b-row>
-    <b-card>
-      <b-form>
-        <b-col cols="7">
-          <b-form-group
-            id="titleGroup"
-            label="Title:"
-            label-for="titleInput">
-            <b-form-input
-              id="titleInput"
-              type="text"
-              v-model="workorder.title"
-              required
-              placeholder="Short workorder title"/>
-          </b-form-group>
-          <b-form-group
-            id="descriptionGroup"
-            label="Description:"
-            label-for="descriptionInput">
-            <b-form-textarea
-              id="descriptionInput"
-              type="text"
-              v-model="workorder.description"
-              required
-              placeholder="Describe the project requirements"/>
-          </b-form-group>
-        </b-col>
-        <b-col cols="5">
-          <b-form-group>
-            <!-- <b-form-select v-model="workorder.use" :options=""/> -->
-          </b-form-group>
-        </b-col>
-      </b-form>
-    </b-card>
   </b-container>
 </template>
 
 <script>
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
+
 export default {
   name: "NewWorkorder",
+  components: {
+    VueCal
+  },
   data: function () {
     return {
       workorder: {
         title: '',
         description: '',
-        use: null
+        attachments: [],
+        dateRequiredBy: null,
+        useId: null,
+        facultyId: null,
+        clientName: '',
+        clientPhoneNumber: '',
+        clientEmail: ''
       },
-      faculties: null,
-      uses: null,
+      options: {
+        faculties: null,
+        purposes: null,
+      },
       breadcrumbs: [
         {
           text: 'Home',
@@ -72,23 +249,63 @@ export default {
       ]
     }
   },
+  methods: {
+    formatOptions(data) {
+      return data.map(item => {
+        return {
+          value: item.id,
+          text: item.name
+        }
+      })
+    }
+  },
   mounted: function () {
     this.$http
       .all([
-        this.$http.get('https://localhost:5001/api/inventory/materials'),
-        this.$http.get('https://localhost:5001/api/inventory/materials/types'),
-        this.$http.get('https://localhost:5001/api/inventory/materials/categories')
+        this.$http.get('https://localhost:5001/api/workorders/uses'),
+        this.$http.get('https://localhost:5001/api/workorders/faculties')
       ])
-      .then(this.$http.spread((materials, types, categories) => {
-        this.materials = materials.data,
-        this.filters.types = types.data,
-        this.filters.categories = categories.data
+      .then(this.$http.spread((purposes, faculties) => {
+        this.options.purposes = this.formatOptions(purposes.data),
+        this.options.faculties = this.formatOptions(faculties.data)
       }))
   }
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss">
 @import "../../styles/variables.scss";
 
+label {
+  font-size: 1.2rem;
+  // width: 80px;
+}
+.form-row {
+  // margin: 0.75rem 0 0;
+}
+.datepicker {
+  width: 100%;
+  // width: 200px;
+  height: 300px;
+}
+
+#client-info-group {
+  border-style: dashed !important;
+}
+#description, #description-input {
+  height: 100px;
+}
+#attachments-input {
+  height: $input-height-lg;
+  line-height: $input-line-height-lg;
+}
+/*
+.vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
+.vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+.vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+.vuecal__title {background-color: $primary-lighter;}
+.vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+.vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+.vuecal__cell.selected:before {border-color: $success; background-color: fade-out($success, 0.7)}
+*/
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <b-row>
       <b-col>
         <b-breadcrumb :items="breadcrumbs" />
@@ -7,6 +7,11 @@
     </b-row>
     <b-row>
       <b-col>
+        <b-alert variant="success" dismissable>Workorder deleted</b-alert>
+      </b-col>
+    </b-row>
+    <b-row align-h="center">
+      <b-col sm="12" lg="10">
         <b-card no-body header-tag="header">
           <b-row slot="header">
             <b-col class="d-flex align-items-center">
@@ -14,12 +19,9 @@
             </b-col>
             <b-col class="d-flex justify-content-end">
               <b-button-toolbar>
-                <!-- <b-dropdown class="mx-2" right text="Export" size="lg" variant="primary">
-                  <b-dropdown-item>PDF</b-dropdown-item>
-                </b-dropdown> -->
                 <b-button size="lg" variant="primary">
-                  <FaIcon icon="plus" />
-                  <router-link :to="{ name: 'new_workorder' }">New</router-link>
+                  <FaIcon icon="plus" class="mr-3"/>
+                  <router-link :to="{ name: 'new_workorder' }">New workorder</router-link>
                 </b-button>
               </b-button-toolbar>
             </b-col>
@@ -57,7 +59,7 @@
                       </b-button>
                     </b-input-group-append>
                   </b-input-group>
-                  <b-button variant="primary" size="lg" @click="clearSearch()">
+                  <b-button variant="outline-primary" size="lg" @click="clearSearch()">
                     Clear
                   </b-button>
                 </b-button-toolbar>
@@ -89,9 +91,9 @@
                   Showing
                   <b-form-select
                     class="row-count-selector mx-2"
-                    v-model="showing"
-                    :options="showingOptions"
-                    @change="changeRowCount(showing)"
+                    v-model="limit"
+                    :options="limitOptions"
+                    @change="changeRowCount(limit)"
                     variant="primary-outline"></b-form-select>
                   of 1000
                 </span>
@@ -105,7 +107,7 @@
                   prev-text="Prev"
                   next-text="Next"
                   last-text="Last"
-                  variant="primary"
+                  variant="outline-primary"
                   size="lg" />
               </b-col>
             </b-row>
@@ -160,7 +162,7 @@ export default {
       ],
       pagination: {
         current: 1,
-        rows: 100,
+        rows: 9,
         rowsPerPage: 10
       },
       filters: {
@@ -173,10 +175,9 @@ export default {
         faculty: null,
         use: null
       },
-      showingOptions: [10, 25, 50],
-      showing: 10,
+      limitOptions: [10, 25, 50],
+      limit: 10,
       searchQuery: null,
-      advSearchCollapsed: true,
       breadcrumbs: [
         {
           text: 'Home',
@@ -200,7 +201,7 @@ export default {
       this.$http
         .get('https://localhost:5001/api/workorders', {
           params: {
-            limit: this.showing
+            limit: this.limit
           }
         })
         .then(response => {
@@ -227,7 +228,7 @@ export default {
             state: this.selectedFilters.state,
             faculty: this.selectedFilters.faculty,
             use: this.selectedFilters.use,
-            limit: this.showing
+            limit: this.limit
           }
         })
         .then(response => {
@@ -241,7 +242,7 @@ export default {
             state: this.selectedFilters.state,
             faculty: this.selectedFilters.faculty,
             use: this.selectedFilters.use,
-            limit: this.showing
+            limit: this.limit
           }
         })
         .then(response => {
@@ -252,7 +253,7 @@ export default {
       this.$http
         .get('https://localhost:5001/api/workorders', {
           params: {
-            limit: this.showing
+            limit: this.limit
           }
         })
         .then(response => {
@@ -278,7 +279,7 @@ export default {
       .all([
         this.$http.get('https://localhost:5001/api/workorders', {
           params: {
-            limit: this.showing
+            limit: this.limit
           }
         }),
         this.$http.get('https://localhost:5001/api/workorders/faculties'),
@@ -297,7 +298,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../styles/variables.scss";
 
 .state {
@@ -321,6 +322,10 @@ export default {
     border-radius: 0.5rem;
     background-color: $green;
   }
+}
+
+.page-header {
+  padding: $card-spacer-y $card-spacer-x;
 }
 
 .page_header {
@@ -389,21 +394,6 @@ export default {
   vertical-align: text-bottom;
 }
 .row-count-selector {
-  width: $width-collapsed - 12px;
-}
-.pagination {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  & .pagination__showing {
-    margin: 0 25px;
-  }
-  & .pagination__btns button {
-    background-color: $offwhite;
-    color: $dark-grey;
-    &:hover {
-      background-color: darken($offwhite, 5%);
-    }
-  }
+  width: $width-collapsed - 12px !important;
 }
 </style>

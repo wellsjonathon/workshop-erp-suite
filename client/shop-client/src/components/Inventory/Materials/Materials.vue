@@ -1,12 +1,12 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <b-row>
       <b-col>
         <b-breadcrumb :items="breadcrumbs" />
       </b-col>
     </b-row>
-    <b-row>
-      <b-col>
+    <b-row align-h="center">
+      <b-col sm="12" lg="10">
         <b-card no-body header-tag="header">
           <b-row slot="header">
             <b-col class="d-flex align-items-center">
@@ -15,8 +15,8 @@
             <b-col class="d-flex justify-content-end">
               <b-button-toolbar>
                 <b-button size="lg" variant="primary">
-                  <FaIcon icon="plus" />
-                  <router-link :to="{ name: 'new_material' }">New</router-link>
+                  <FaIcon icon="plus" class="mr-3"/>
+                  <router-link :to="{ name: 'new_material' }">New material</router-link>
                 </b-button>
               </b-button-toolbar>
             </b-col>
@@ -28,16 +28,12 @@
                   <b-input-group size="lg">
                     <b-form-select
                       v-model="selectedFilters.type"
-                      :options="filters.types"
-                      text-field="name"
-                      value-field="id">
+                      :options="filters.types">
                       <option slot="first" :value="null">Type</option>
                     </b-form-select>
                     <b-form-select
                       v-model="selectedFilters.category"
-                      :options="filters.categories"
-                      text-field="name"
-                      value-field="id">
+                      :options="filters.categories">
                       <option slot="first" :value="null">Category</option>
                     </b-form-select>
                   </b-input-group>
@@ -48,15 +44,21 @@
                 </b-button-toolbar>
               </b-col>
               <b-col cols="4">
-                <b-input-group size="lg">
-                  <b-form-input
-                    placeholder="Search..." />
-                  <b-input-group-append>
-                    <b-button variant="primary">
-                      <FaIcon icon="search"/>
-                    </b-button>
-                  </b-input-group-append>
-                </b-input-group>
+                <b-button-toolbar class="d-flex justify-content-end">
+                  <b-input-group size="lg" class="mr-2 flex-grow-1">
+                    <b-form-input
+                      placeholder="Search..."
+                      v-model="searchQuery" />
+                    <b-input-group-append>
+                      <b-button variant="primary" @click="search()">
+                        <FaIcon icon="search"/>
+                      </b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                  <b-button variant="outline-primary" size="lg" @click="clearSearch()">
+                    Clear
+                  </b-button>
+                </b-button-toolbar>
               </b-col>
             </b-row>
             <b-table striped hover outlined :items="materials" :fields="materialsFields" :primary-key="id">
@@ -135,6 +137,14 @@ export default {
         type: null,
         category: null
       },
+      limitOptions: [10, 25, 50],
+      limit: 10,
+      searchQuery: null,
+      pagination: {
+        current: 1,
+        rows: 100,
+        rowsPerPage: 10
+      },
       breadcrumbs: [
         {
           text: 'Home',
@@ -144,12 +154,82 @@ export default {
           text: 'Materials',
           to: { name: 'materials' }
         },
-      ],
-      pagination: {
-        current: 1,
-        rows: 100,
-        rowsPerPage: 10
+      ]
+    }
+  },
+  methods: {
+    changeRowCount(count) {
+      this.$http
+        .get('https://localhost:5001/api/inventory/materials', {
+          params: {
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.materials = response.data
+        })
+    },
+    search() {
+      this.$http
+        .get('https://localhost:5001/api/inventory/materials/search', {
+          params: {
+            q: this.searchQuery,
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.materials = response.data
+        })
+    },
+    clearSearch() {
+      this.searchQuery = null
+      this.$http
+        .get('https://localhost:5001/api/inventory/materials/filter', {
+          params: {
+            type: this.selectedFilters.type,
+            category: this.selectedFilters.category,
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.materials = response.data
+        })
+    },
+    applyFilters() {
+      this.$http
+        .get('https://localhost:5001/api/inventory/materials/filter', {
+          params: {
+            type: this.selectedFilters.type,
+            category: this.selectedFilters.category,
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.materials = response.data
+        })
+    },
+    clearFilters() {
+      this.$http
+        .get('https://localhost:5001/api/inventory/materials', {
+          params: {
+            limit: this.limit
+          }
+        })
+        .then(response => {
+          this.materials = response.data
+        })
+      this.selectedFilters = {
+        type: null,
+        category: null
       }
+    },
+    formatFilters(data) {
+      return data.map(item => {
+        return {
+          value: item.id,
+          text: item.name
+        }
+      })
     }
   },
   mounted: function () {
@@ -161,14 +241,14 @@ export default {
       ])
       .then(this.$http.spread((materials, types, categories) => {
         this.materials = materials.data,
-        this.filters.types = types.data,
-        this.filters.categories = categories.data
+        this.filters.types = this.formatFilters(types.data),
+        this.filters.categories = this.formatFilters(categories.data)
       }))
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../../styles/variables.scss";
 
 </style>

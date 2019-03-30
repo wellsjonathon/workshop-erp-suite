@@ -21,15 +21,15 @@ export default [
     component: Workorders
   },
   {
+    name: 'new_workorder',
+    path: '/workorders/new',
+    component: NewWorkorder
+  },
+  {
     name: 'workorder_by_id',
     path: '/workorders/:workorderId',
     component: Workorder,
     props: true
-  },
-  {
-    name: 'new_workorder',
-    path: '/workorders/new',
-    component: NewWorkorder
   },
   {
     name: 'materials',
@@ -37,15 +37,15 @@ export default [
     component: Materials
   },
   {
+    name: 'new_material',
+    path: '/materials/new',
+    component: NewMaterial
+  },
+  {
     name: 'material_by_id',
     path: '/materials/:materialId',
     component: Material,
     props: true
-  },
-  {
-    name: 'new_material',
-    path: '/materials/new',
-    component: NewMaterial
   },
   {
     name: 'project_management',

@@ -4,17 +4,21 @@ import axios from 'axios'
 import App from './App.vue'
 import routes from './routes.js'
 import './styles/variables.scss'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 import {
   Layout,
   Card,
   Table,
+  Alert,
   Form,
   FormTextarea,
   FormGroup,
   FormInput,
   FormSelect,
+  FormFile,
+  FormCheckbox,
+  ListGroup,
   InputGroup,
   Button,
   ButtonGroup,
@@ -23,7 +27,7 @@ import {
   Pagination,
   Tabs,
   Spinner,
-  Breadcrumb} from 'bootstrap-vue/es/components'
+  Breadcrumb } from 'bootstrap-vue/es/components'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronCircleLeft, faChevronCircleRight,
@@ -42,18 +46,21 @@ import {
   faPlus,
   faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import FullCalendar from 'vue-full-calendar'
-import '@fullcalendar/core/main.css'
+// import Datepicker from 'vuejs-datepicker'
 
 Vue.use(VueRouter)
 Vue.use(Layout)
 Vue.use(Card)
 Vue.use(Table)
+Vue.use(Alert)
 Vue.use(Form)
+Vue.use(FormFile)
 Vue.use(FormTextarea)
 Vue.use(FormGroup)
 Vue.use(FormInput)
 Vue.use(FormSelect)
+Vue.use(FormCheckbox)
+Vue.use(ListGroup)
 Vue.use(InputGroup)
 Vue.use(Button)
 Vue.use(ButtonGroup)
@@ -63,7 +70,8 @@ Vue.use(Dropdown)
 Vue.use(Pagination)
 Vue.use(Tabs)
 Vue.use(Spinner)
-Vue.use(FullCalendar)
+
+// Vue.component('datepicker', Datepicker)
 
 Vue.component('FaIcon', FontAwesomeIcon)
 

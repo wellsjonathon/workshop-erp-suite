@@ -1,89 +1,109 @@
 <template>
-  <b-container>
-    <b-row class="content-header">
-      <div class="border-bottom w-100">
+  <b-container fluid>
+    <b-row>
+      <b-col>
         <b-breadcrumb :items="breadcrumbs" />
         <h2>{{ workorder.title }}</h2>
-      </div>
+      </b-col>
     </b-row>
     <b-row class="mt-3">
-      <b-button-toolbar>
-        <b-button>
-          <FaIcon icon="edit"/>
-          Edit
-        </b-button>
-        <b-button-group>
-          <b-button>Add Comment</b-button>
-          <b-button>Add Note</b-button>
-        </b-button-group>
-        <b-dropdown right variant="primary" text="Other State Actions">
-          <b-dropdown-item v-for="transition in transitions" :key="transition.id">
-            {{ transition.nextState.name }}
-          </b-dropdown-item>
-        </b-dropdown>
-      </b-button-toolbar>
+      <b-col>
+        <b-button-toolbar>
+          <b-button>
+            <FaIcon icon="edit"/>
+            Edit
+          </b-button>
+          <b-button-group>
+            <b-button>Add Comment</b-button>
+            <b-button>Add Note</b-button>
+          </b-button-group>
+          <b-dropdown right variant="primary" text="Other State Actions">
+            <b-dropdown-item v-for="transition in transitions" :key="transition.id">
+              {{ transition.nextState.name }}
+            </b-dropdown-item>
+          </b-dropdown>
+        </b-button-toolbar>
+      </b-col>
     </b-row>
     <b-row>
       <b-col cols="8">
         <b-row class="my-3">
-          <b-card class="w-100">
-            <h3>Description</h3>
-            <p>{{ workorder.description }}</p>
-          </b-card>
+          <b-col>
+            <b-card>
+              <h3>Description</h3>
+              <p>{{ workorder.description }}</p>
+            </b-card>
+          </b-col>
         </b-row>
         <b-row class="my-3">
-          <b-card no-body class="w-100">
-            <b-tabs card class="w-100">
-              <b-tab title="Materials" active>
-                <b-table hover outlined :items="materials" :fields="materialsFields">
-                  <template slot="vendorMaterial" slot-scope="data">
-                    {{ (data.value.vendor != null) ? data.value.vendor.name : 'No vendor specified' }}
-                  </template>
-                  <template slot="costPerUnit" slot-scope="data">
-                    ${{ data.value }}
-                  </template>
-                  <template slot="total" slot-scope="data">
-                    ${{ data.item.quantityUsed * data.item.costPerUnit }}
-                  </template>
-                </b-table>
-              </b-tab>
-              <b-tab title="Time Entries">
-                <b-table hover outlined :items="workorder.timeEntries">
+          <b-col>
+            <b-card no-body>
+              <b-tabs card>
 
-                </b-table>
-              </b-tab>
-            </b-tabs>
-          </b-card>
+                <b-tab title="Materials" active>
+                  <b-table hover outlined :items="materials" :fields="materialsFields">
+                    <template slot="vendorMaterial" slot-scope="data">
+                      {{ (data.value.vendor != null) ? data.value.vendor.name : 'No vendor specified' }}
+                    </template>
+                    <template slot="costPerUnit" slot-scope="data">
+                      ${{ data.value }}
+                    </template>
+                    <template slot="total" slot-scope="data">
+                      ${{ data.item.quantityUsed * data.item.costPerUnit }}
+                    </template>
+                  </b-table>
+                </b-tab>
+
+                <b-tab title="Time Entries">
+                  <b-table hover outlined :items="workorder.timeEntries">
+
+                  </b-table>
+                </b-tab>
+
+              </b-tabs>
+            </b-card>
+          </b-col>
         </b-row>
         <b-row class="my-3">
-          <b-card no-body class="w-100">
-            <b-tabs card class="w-100">
-              <b-tab title="Comments" active>
+          <b-col>
+            <b-card no-body>
+              <b-tabs card>
 
-              </b-tab>
-              <b-tab title="Notes">
+                <b-tab title="Comments" active>
 
-              </b-tab>
-            </b-tabs>
-          </b-card>
+                </b-tab>
+
+                <b-tab title="Notes">
+
+                </b-tab>
+
+              </b-tabs>
+            </b-card>
+          </b-col>
         </b-row>
       </b-col>
       <b-col cols="4">
-        <b-row class="my-3 ml-1">
-          <b-card class="w-100">
-            <h3>Details</h3>
-            Purpose: Research
-          </b-card>
+        <b-row class="my-3">
+          <b-col>
+            <b-card>
+              <h3>Details</h3>
+              Purpose: Research
+            </b-card>
+          </b-col>
         </b-row>
-        <b-row class="my-3 ml-1">
-          <b-card class="w-100">
-            <h3>Total</h3>
-          </b-card>
+        <b-row class="my-3">
+          <b-col>
+            <b-card>
+              <h3>Total</h3>
+            </b-card>
+          </b-col>
         </b-row>
-        <b-row class="my-3 ml-1">
-          <b-card class="w-100">
-            <h3>Estimate</h3>
-          </b-card>
+        <b-row class="my-3">
+          <b-col>
+            <b-card>
+              <h3>Estimate</h3>
+            </b-card>
+          </b-col>
         </b-row>
       </b-col>
     </b-row>
@@ -186,18 +206,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../styles/variables.scss";
-.card__row {
-  &.card__details {
-    display: flex;
-    flex-direction: column;
-    & span {
-      display: block;
-    }
-  }
-}
-.content-header {
-  background-color: white;
-}
 </style>

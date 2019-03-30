@@ -3,11 +3,15 @@ $heading-font-stack: 'Montserrat', sans-serif;
 $body-font-stack: 'Roboto', sans-serif;
 
 // Colors
+$theme-colors: (
+  "primary": hsl(209, 27%, 35%)
+);
+
 $primary: hsl(209, 27%, 35%);
 $primary-lighter: hsl(209, 18%, 46%);
 $primary-lightest: hsl(210, 14%, 59%);
 $primary-dark: hsl(208, 50%, 20%);
-$primary-darker: hsl(208, 34%, 18%);
+$primary-darker: hsl(209, 34%, 18%);
 $primary-darkest: hsl(209, 33%, 16%);
 
 $white: hsl(0, 0%, 100%);
@@ -38,14 +42,11 @@ $btn-transition-duration: 0.15s;
 
 // ===== Bootstrap Overrides =====
 $card-cap-bg: $white;
-$breadcrumb-bg: rgba(0,0,0,0);
-$pagination-bg: $primary;
-$pagination-active-bg: $primary;
-$pagination-color: $primary;
+$breadcrumb-bg: rgba(0,0,0,0) !important;
 
 // ===== Bootstrap Imports =====
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
+// @import "../../node_modules/bootstrap/scss/functions";
+// @import "../../node_modules/bootstrap/scss/variables";
+// @import "../../node_modules/bootstrap/scss/mixins";
 @import "../../node_modules/bootstrap-vue/src/index.scss";

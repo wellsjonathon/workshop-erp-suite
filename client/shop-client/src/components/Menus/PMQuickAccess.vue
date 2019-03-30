@@ -121,7 +121,7 @@ export default {
   border-bottom: 2px solid $offwhite;
   background-color: $primary-lighter;
   &>.pmqa__tab {
-    height: $width-collapsed - 12px;
+    height: $width-collapsed - 11px;
     transition: 0.2s;
     & .pmqa__tab__icon-container {
       width: $width-collapsed;
