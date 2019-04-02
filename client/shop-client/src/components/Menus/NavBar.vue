@@ -40,9 +40,9 @@
                   linkIcon="user"
                   :isAccount="true"/>
     </div>
-    <div class="nav__toggle-area d-flex align-items-center justify-content-center">
+    <div class="nav__toggle-area d-flex align-items-center justify-content-center"
+        @click="this.toggleCollapse">
       <FaIcon :class="['nav__btn', !isCollapsed ? 'extended' : 'collapsed']"
-              @click="this.toggleCollapse"
               icon="chevron-circle-left"/>
     </div>
   </div>
@@ -123,22 +123,28 @@ export default {
 .nav__toggle-area {
   height: $width-collapsed - 12px;
   border-top: 2px solid $primary-lighter;
-}
-.nav__btn {
-  width: $nav-icon-size - 4px;
-  height: $nav-icon-size - 4px;
-  transition: transform 0.5s, color 0.2s;
-  color: $primary-lighter;
-  border-radius: $nav-icon-size / 2;
-  &.collapsed {
-    transform: rotate(180deg);
-  }
   &:hover {
-    color: $primary-lightest;
+    background-color: $primary-lighter;
     cursor: pointer;
+    & .nav__btn {
+      color: $primary-lightest;
+    }
   }
   &:active {
-    color: lighten($primary-lightest, 8%);
+    background-color: $primary-lightest;
+    & .nav__btn {
+      color: lighten($primary-lightest, 8%);
+    }
+  }
+  & .nav__btn {
+    width: $nav-icon-size - 4px;
+    height: $nav-icon-size - 4px;
+    transition: transform 0.5s;
+    color: $primary-lighter;
+    border-radius: $nav-icon-size / 2;
+    &.collapsed {
+      transform: rotate(180deg);
+    }
   }
 }
 </style>

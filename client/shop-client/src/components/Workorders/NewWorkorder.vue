@@ -7,6 +7,7 @@
     </b-row>
     <b-row align-h="center">
       <b-col sm="10" lg="8">
+        <b-form id="workorder-form">
         <b-card no-body header-tag="header">
           <b-row slot="header">
             <b-col class="d-flex align-items-center">
@@ -17,7 +18,7 @@
                 <b-button size="lg" class="mx-2" variant="outline-danger">
                   Cancel
                 </b-button>
-                <b-button size="lg" variant="primary">
+                <b-button type="submit" size="lg" variant="primary">
                   <!-- <FaIcon icon="plus" class="mr-2"/> -->
                   Create workorder
                   <!-- <router-link :to="{ name: 'new_workorder' }">Create</router-link> -->
@@ -26,7 +27,7 @@
             </b-col>
           </b-row>
           <b-card-body>
-            <b-form>
+            <!-- <b-form id="workorder-form"> -->
               <b-form-group
                 id="workorder-details-group"
                 class="mb-2"
@@ -64,6 +65,7 @@
                   <b-form-select
                     id="purpose-input"
                     size="lg"
+                    required
                     v-model="workorder.useId"
                     :options="options.purposes">
                     <option slot="first" :value="null">Select one...</option>
@@ -81,6 +83,7 @@
                   <b-form-select
                     id="faculty-input"
                     size="lg"
+                    required
                     v-model="workorder.facultyId"
                       :options="options.faculties">
                       <option slot="first" :value="null">Select one...</option>
@@ -199,9 +202,10 @@
                 </b-form-group>
 
               </b-form-group>
-            </b-form>
+            <!-- </b-form> -->
           </b-card-body>
         </b-card>
+        </b-form>
       </b-col>
     </b-row>
   </b-container>
@@ -250,6 +254,11 @@ export default {
     }
   },
   methods: {
+    onSubmit(event) {
+      event.preventDefault()
+      console.log(event)
+      alert(JSON.stringify(this.workorder))
+    },
     formatOptions(data) {
       return data.map(item => {
         return {

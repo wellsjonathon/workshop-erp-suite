@@ -1,33 +1,37 @@
 <template>
   <div class="d-flex flex-column" :class="['pmqa__tools', !isCollapsed ? 'extended' : 'collapsed']">
-    <div class="pmqa__datepicker d-flex flex-direction-row align-items-center">
+    <!-- <div class="pmqa__datepicker d-flex flex-direction-row align-items-center">
       <FaIcon class="pmqa__datepicker__decr"  @click="this.decrSelectedDate" icon="chevron-left"/>
       <div class="pmqa__datepicker__date">
         {{ this.selectedDateString }}
       </div>
       <FaIcon class="pmqa__datepicker__incr" @click="this.incrSelectedDate" icon="chevron-right"/>
-    </div>
+    </div> -->
     <div class="pmqa__times d-flex flex-direction-column align-items-center">
-      <!-- <span class="pmqa__times__separator"/> -->
-      <div class="pmqa__time">
-        <div>8:00am</div>
-      </div>
-      <div class="pmqa__time">
-        <div>9:00am</div>
-      </div>
-      <div class="pmqa__time">
-        <div>10:00am</div>
-      </div>
-      <!-- <span class="pmqa__times__separator"/> -->
+      <vue-cal
+        class="pmqa__day-view w-100 mt-2"
+        xsmall
+        hide-view-selector
+        :selected-date="date.current"
+        :time-from="7 * 60"
+        :time-to="23 * 60"
+        default-view="day"
+        :disable-views="['years', 'year', 'month', 'week']">
+      </vue-cal>
     </div>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
 
 export default {
   name: 'ProjectManagementDrawer',
+  components: {
+    VueCal
+  },
   props: {
     collapsed: {
       type: Boolean,
@@ -39,7 +43,8 @@ export default {
     return {
       isCollapsed: this.collapsed,
       date: {
-        current: dayjs(Date()),
+        // current: dayjs(Date()),
+        current: new Date(),
         selected: dayjs(Date())
       }
     }
@@ -120,5 +125,19 @@ export default {
   height: 1px;
   border: none;
   background-image: linear-gradient(90deg, rgba(0,0,0,0), #EFEFF4, rgba(0,0,0,0));
+}
+.pmqa__day-view {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $offwhite;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $primary-dark;
+    &:hover {
+      background: $primary-darker;
+    }
+  }
 }
 </style>

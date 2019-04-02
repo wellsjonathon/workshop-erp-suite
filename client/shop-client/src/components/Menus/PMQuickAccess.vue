@@ -32,9 +32,10 @@
         <b-spinner class="pmqa__spinner"/>
       </div>
     </div>
-    <div class="pmqa__toggle-area d-flex align-items-center justify-content-center">
+    <div
+      class="pmqa__toggle-area d-flex align-items-center justify-content-center"
+              @click="this.toggleCollapse">
       <FaIcon :class="['pmqa__btn', !isCollapsed ? 'extended' : 'collapsed']"
-              @click="this.toggleCollapse"
               icon="chevron-circle-right"/>
     </div>
   </div>
@@ -79,20 +80,24 @@ export default {
       setTimeout(() => { this.isBusy = false }, 500)
     },
     toggleNotifications() {
-      if (this.isCollapsed) {
-        this.isCollapsed = !this.isCollapsed
+      if (this.isNotificationsActive && !this.isCollapsed) {
+        this.toggleCollapse()
       }
-      this.isPMActive = false
-      this.isNotificationsActive = true
-      this.toggleContent()
+      else {
+        this.isCollapsed ? this.toggleCollapse() : this.toggleContent()
+        this.isPMActive = false
+        this.isNotificationsActive = true
+      }
     },
     togglePM() {
-      if (this.isCollapsed) {
-        this.isCollapsed = !this.isCollapsed
+      if (this.isPMActive && !this.isCollapsed) {
+        this.toggleCollapse()
       }
-      this.isNotificationsActive = false
-      this.isPMActive = true
-      this.toggleContent()
+      else {
+        this.isCollapsed ? this.toggleCollapse() : this.toggleContent()
+        this.isPMActive = true
+        this.isNotificationsActive = false
+      }
     }
   }
 }
@@ -176,27 +181,28 @@ export default {
   height: $width-collapsed - 12px;
   // background-color: $primary-lighter;
   border-top: 2px solid $primary-lighter;
-}
-.pmqa__btn {
-  // position: absolute;
-  width: $nav-icon-size - 4px;
-  height: $nav-icon-size - 4px;
-  // left: -12px;
-  // top: calc(50% - 15px);
-  transition: transform 0.5s, color 0.2s;
-  color: $primary-lighter;
-  // background-color: $primary;
-  // border: 2px solid $primary;
-  border-radius: $nav-icon-size / 2;
-  &.collapsed {
-    transform: rotate(-180deg);
-  }
   &:hover {
-    color: $primary-lightest;
+    background-color: $primary-lighter;
     cursor: pointer;
+    & .pmqa__btn {
+      color: $primary-lightest;
+    }
   }
   &:active {
-    color: lighten($primary-lightest, 8%);
+    background-color: $primary-lightest;
+    & .pmqa__btn {
+      color: lighten($primary-lightest, 8%);
+    }
+  }
+  & .pmqa__btn {
+    width: $nav-icon-size - 4px;
+    height: $nav-icon-size - 4px;
+    transition: transform 0.5s;
+    color: $primary-lighter;
+    border-radius: $nav-icon-size / 2;
+    &.collapsed {
+      transform: rotate(-180deg);
+    }
   }
 }
 </style>
