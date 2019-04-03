@@ -12,6 +12,8 @@ namespace ERP.Models.Workorders
         public int Id { get; set; }
         public string Comment { get; set; }
         public DateTime Timestamp { get; set; }
+        // TODO: Rework when proper user management is added
+        public string Username { get; set; }
 
         public int TransitionId { get; set; }
         public Transition Transition { get; set; }

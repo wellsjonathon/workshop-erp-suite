@@ -43,6 +43,20 @@ namespace ERP.API.Controllers
         {
             return _context.WorkorderNotes.Any(c => c.Id == id);
         }
+        private string CreateReadableId(DateTime date)
+        {
+            int month = date.Month;
+            int year = date.Year;
+            Semester semester = _context.Semesters.FirstOrDefault(s => s.StartMonth <= month && s.EndMonth >= month);
+            // Get the number of workorders created this current semester and add 1 for this workorder's Id
+            int scopedId = _context.Workorders
+                .Count(w => 
+                    w.DateCreated.Year == year &&
+                    w.DateCreated.Month >= semester.StartMonth &&
+                    w.DateCreated.Month <= semester.EndMonth) + 1;
+            // Returns an Id that looks like: "WO-2019-S1-001"
+            return $"WO-{year.ToString()}-S{semester.Id}-{scopedId.ToString("D3")}";
+        }
 
         // ===== QUERY PARAMS =====
 
@@ -171,6 +185,11 @@ namespace ERP.API.Controllers
             workorder.Faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == workorder.FacultyId);
             workorder.Use = await _context.Uses.FirstOrDefaultAsync(u => u.Id == workorder.UseId);
             workorder.DateCreated = DateTime.Now;
+            workorder.Semester = await _context.Semesters
+                .FirstOrDefaultAsync(s => 
+                    s.StartMonth <= workorder.DateCreated.Month &&
+                    s.EndMonth <= workorder.DateCreated.Month);
+            workorder.ReadableId = CreateReadableId(workorder.DateCreated);
 
             // TODO: Potentially add a default state "Created" that always has a single transition to
             //  the first state in a workflow, adding that transition to the TransitionHistory on workorder creation
@@ -547,10 +566,6 @@ namespace ERP.API.Controllers
 
             return CreatedAtAction("GetWorkorderMaterial", new { id, materialId = workorderMaterial.Id }, workorderMaterial);
         }
-
-        // ===== TIME ENTRIES =====
-
-        // TODO: I don't think there will be any endpoints here. If there are, it'll just be redirections to PMController
 
         // ===== ESTIMATES =====
 

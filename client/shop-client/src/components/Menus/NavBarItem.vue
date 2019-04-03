@@ -2,7 +2,8 @@
   <router-link :to="link" :class="['nav__item', !collapsed ? 'extended' : 'collapsed']">
     <div class="nav-icon-container">
       <FaIcon class="icon" :icon="linkIcon" v-if="!isAccount"/>
-      <img src="https://placehold.it/32/efeff4" alt="" class="icon account-icon" v-if="isAccount">
+      <div class="icon account-icon" v-if="isAccount">{{ getInitials(linkName) }}</div>
+      <!-- <img src="https://placehold.it/32/efeff4" alt="" class="icon account-icon" v-if="isAccount"> -->
     </div>
     <div :class="['nav__item__link', !collapsed ? 'extended' : 'collapsed']">
       {{ linkName }}
@@ -37,12 +38,18 @@ export default {
       required: false,
       default: false
     }
+  },
+  methods: {
+    getInitials(name) {
+      var names = name.split(' ')
+      var initials = names[0].substring(0, 1).toUpperCase()
+
+      if (names.length > 1) {
+        initials += names[names.length - 1].substring(0, 1).toUpperCase()
+      }
+      return initials
+    }
   }
-  // computed: {
-  //   activeLink: function() {
-  //     return this.$router.
-  //   }
-  // }
 }
 </script>
 
@@ -73,7 +80,15 @@ export default {
   & .account-icon {
     width: $account-icon-size;
     height: $account-icon-size;
+    line-height: $account-icon-size;
+    padding: 0;
+    margin: 0 auto;
+    font-size: 1.75rem;
+    // font-weight: 700;
+    text-align: center;
     border-radius: $account-icon-size / 2;
+    background-color: $offwhite;
+    color: $primary;
   }
 }
 .nav__item__link {
@@ -92,5 +107,9 @@ export default {
 .router-link-active {
   background-color: $offwhite;
   color: $primary;
+  & .account-icon {
+    color: $offwhite;
+    background-color: $primary;
+  }
 }
 </style>

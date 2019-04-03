@@ -3,38 +3,57 @@
     <b-row>
       <b-col>
         <b-breadcrumb :items="breadcrumbs" />
-        <h2>{{ workorder.title }}</h2>
       </b-col>
     </b-row>
-    <b-row class="mt-3">
-      <b-col>
-        <b-button-toolbar>
-          <b-button>
-            <FaIcon icon="edit"/>
-            Edit
-          </b-button>
-          <b-button-group>
-            <b-button>Add Comment</b-button>
-            <b-button>Add Note</b-button>
-          </b-button-group>
-          <b-dropdown right variant="primary" text="Other State Actions">
-            <b-dropdown-item v-for="transition in transitions" :key="transition.id">
-              {{ transition.nextState.name }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-button-toolbar>
+    <b-row align-h="center" class="mt-3">
+      <b-col sm="12" lg="10">
+        <b-card no-body header-tag="header">
+          <b-row slot="header">
+            <b-col class="d-flex align-items-center">
+              <h2 class="my-0">{{ workorder.readableId }}: {{ workorder.title }}</h2>
+            </b-col>
+            <b-col class="d-flex justify-content-end">
+              <b-button-toolbar>
+                <b-button-group size="lg" class="mr-2">
+                  <b-button variant="outline-primary">Add Comment</b-button>
+                  <b-button variant="outline-primary">Add Note</b-button>
+                </b-button-group>
+                <b-button v-b-modal.change-status variant="primary" size="lg" class="mr-2">Update Status</b-button>
+                <b-button size="lg" variant="primary">
+                  <FaIcon icon="edit"/>
+                  Edit
+                </b-button>
+              </b-button-toolbar>
+            </b-col>
+          </b-row>
+          <b-card-body>
+            <b-row>
+              <b-col sm="7" lg="8">
+                <div class="d-flex flex-column">
+                  <div>
+                    <h3>Description</h3>
+                    <p>{{ workorder.description }}</p>
+                  </div>
+                  <div>
+                  </div>
+                </div>
+              </b-col>
+              <b-col sm="5" lg="4">
+                <div class="d-flex flex-column">
+                  <h3>Details</h3>
+                  <h3>Client Info</h3>
+                  <p>Name: {{ workorder.clientName }}</p>
+                  <p>Phone Number: {{ workorder.clientNumber }}</p>
+                  <p>Email: {{ workorder.clientEmail }}</p>
+                </div>
+              </b-col>
+            </b-row>
+          </b-card-body>
+        </b-card>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col cols="8">
-        <b-row class="my-3">
-          <b-col>
-            <b-card>
-              <h3>Description</h3>
-              <p>{{ workorder.description }}</p>
-            </b-card>
-          </b-col>
-        </b-row>
+    <b-row class="justify-content-center">
+      <b-col sm="12" lg="10">
         <b-row class="my-3">
           <b-col>
             <b-card no-body>
@@ -70,10 +89,14 @@
               <b-tabs card>
 
                 <b-tab title="Comments" active>
-
+                  <b-list-group>
+                    <b-list-group-item v-for="comment in commentsAscendingAge" :key="comment.timestamp">
+                      <Comment :comment="comment" />
+                    </b-list-group-item>
+                  </b-list-group>
                 </b-tab>
 
-                <b-tab title="Notes">
+                <b-tab title="Working Notes">
 
                 </b-tab>
 
@@ -82,35 +105,57 @@
           </b-col>
         </b-row>
       </b-col>
-      <b-col cols="4">
+      <!-- <b-col sm="5" lg="4">
         <b-row class="my-3">
-          <b-col>
-            <b-card>
-              <h3>Details</h3>
-              Purpose: Research
-            </b-card>
-          </b-col>
         </b-row>
-        <b-row class="my-3">
-          <b-col>
-            <b-card>
-              <h3>Total</h3>
-            </b-card>
-          </b-col>
-        </b-row>
-        <b-row class="my-3">
-          <b-col>
-            <b-card>
-              <h3>Estimate</h3>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-col>
+      </b-col> -->
     </b-row>
+    <b-modal id="add-comment">
+
+    </b-modal>
+    <b-modal id="change-status" title="Change Status">
+      <b-form>
+        <b-form-group
+          id="state-group"
+          label="Next State:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right"
+          label-for="state-select">
+          <b-form-select
+            id="state-select"
+            size="lg"
+            required
+            v-model="stateChange.selectedTransition"
+              :options="formattedTransitions">
+              <option slot="first" :value="null">Select one...</option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group
+          id="state-comment-group"
+          label="Comment:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right"
+          label-for="state-comment-input">
+          <b-form-textarea
+            id="state-comment-input"
+            type="text"
+            size="lg"
+            v-model="stateChange.comment"
+            required
+            placeholder="Add a comment on the status update..."/>
+        </b-form-group>
+      </b-form>
+    </b-modal>
   </b-container>
 </template>
 
 <script>
+import Comment from './../Activities/Comment.vue'
+
 export default {
   name: "Workorder",
   props: {
@@ -119,11 +164,18 @@ export default {
       required: true
     }
   },
+  components: {
+    Comment
+  },
   data: function () {
     return {
       workorder: null,
-      transitions: null,
       materials: null,
+      transitions: null,
+      stateChange: {
+        selectedTransition: null,
+        comment: ''
+      },
       materialsFields: [
         {
           key: 'material.name',
@@ -165,10 +217,18 @@ export default {
           to: { name: 'workorders' }
         },
         {
-          text: this.workorderId,
+          text: this.workorderReadableId,
           to: { name: 'workorder_by_id', params: { workorderId: this.workorderId } }
         }
       ]
+    }
+  },
+  computed: {
+    commentsAscendingAge: function () {
+      return this.workorder.comments.reverse()
+    },
+    formattedTransitions: function () {
+      return this.formatTransitions(this.transitions)
     }
   },
   mounted: function () {
@@ -181,7 +241,8 @@ export default {
       .then(this.$http.spread((workorder, transitions, materials) => {
         this.workorder = workorder.data
         this.transitions = transitions.data,
-        this.materials = materials.data
+        this.materials = materials.data,
+        this.breadcrumbs[this.breadcrumbs.length - 1] = workorder.data.readableId
       }))
   },
   methods: {
@@ -193,14 +254,20 @@ export default {
       return totalCost
     },
     changeStatus() {
-      console.log("Update status from: " + this.workorder.status.id)
       this.$http
         .put('https://localhost:5001/api/Workorders/' + this.workorderId + '/status',
           { ID: this.workorder.status.id + 1 })
         .then(response => {
           this.workorder = response.data
-          console.log("New status: " + this.workorder.status.id)
         })
+    },
+    formatTransitions(transitions) {
+      return transitions.map(t => {
+        return {
+          value: t.nextState.id,
+          text: t.nextState.name
+        }
+      })
     }
   }
 }

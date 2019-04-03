@@ -11,6 +11,7 @@ namespace ERP.Models.Workorders
     public class Workorder
     {
         public int Id { get; set; }
+        public string ReadableId { get; set; }
 
         public State State { get; set; }
         public WorkorderEstimate Estimate { get; set; }
@@ -26,8 +27,9 @@ namespace ERP.Models.Workorders
 
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; }
-
-        // public Semester Semester { get; set; } // Enum? Is it even needed?
+        
+        public int SemesterId { get; set; }
+        public Semester Semester { get; set; }
 
         public string Title { get; set; }
         public string Description { get; set; }

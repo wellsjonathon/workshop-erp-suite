@@ -80,7 +80,9 @@ export default {
 
 .nav {
   display: flex;
-  position: relative;
+  // position: relative;
+  position: sticky;
+  top: 0;
   font-size: 1.4rem;
   transition-duration: 0.5s;
   background-color: $primary;

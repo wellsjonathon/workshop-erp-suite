@@ -128,6 +128,20 @@
                 </b-form-group>
 
                 <b-form-group
+                  id="quote-requested-group"
+                  label="Quote Requested:"
+                  label-cols-sm="3"
+                  label-cols-xl="2"
+                  label-size="lg"
+                  label-align="right"
+                  label-for="quote-requested-input">
+                  <b-form-checkbox
+                    id="quote-requested-input"
+                    size="lg"
+                    v-model="workorder.quoteRequested"/>
+                </b-form-group>
+
+                <b-form-group
                   id="attachments-group"
                   label="Attachments:"
                   label-cols-sm="3"
@@ -229,6 +243,7 @@ export default {
         dateRequiredBy: null,
         useId: null,
         facultyId: null,
+        quoteRequested: false,
         clientName: '',
         clientPhoneNumber: '',
         clientEmail: ''
@@ -256,7 +271,6 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault()
-      console.log(event)
       alert(JSON.stringify(this.workorder))
     },
     formatOptions(data) {
@@ -291,6 +305,9 @@ label {
 }
 .form-row {
   // margin: 0.75rem 0 0;
+}
+.form-group {
+  margin-bottom: 1.5rem !important;
 }
 .datepicker {
   width: 100%;

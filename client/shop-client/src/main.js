@@ -27,6 +27,7 @@ import {
   Pagination,
   Tabs,
   Spinner,
+  Modal,
   Breadcrumb } from 'bootstrap-vue/es/components'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -69,6 +70,7 @@ Vue.use(Breadcrumb)
 Vue.use(Dropdown)
 Vue.use(Pagination)
 Vue.use(Tabs)
+Vue.use(Modal)
 Vue.use(Spinner)
 
 // Vue.component('datepicker', Datepicker)

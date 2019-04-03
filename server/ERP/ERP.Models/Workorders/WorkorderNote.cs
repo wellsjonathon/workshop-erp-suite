@@ -11,6 +11,8 @@ namespace ERP.Models.Workorders
         public int Id { get; set; }
         public string Note { get; set; }
         public DateTime Timestamp { get; set; }
+        // TODO: Rework when proper user management is added
+        public string Username { get; set; }
 
         [JsonIgnore]
         public int WorkorderId { get; set; }

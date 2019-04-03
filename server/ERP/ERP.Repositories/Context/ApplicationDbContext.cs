@@ -29,6 +29,7 @@ namespace ERP.Repositories.Context
         public DbSet<TransitionHistory> TransitionHistory { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Use> Uses { get; set; }
+        public DbSet<Semester> Semesters { get; set; }
 
         // ===== Workflows =====
         public DbSet<Workflow> Workflows { get; set; }
@@ -114,6 +115,12 @@ namespace ERP.Repositories.Context
                 new Use { Id = 1, Name = "Research" },
                 new Use { Id = 2, Name = "Class/Lab" },
                 new Use { Id = 3, Name = "Other" }
+            );
+
+            builder.Entity<Semester>().HasData(
+                new Semester { Id = 1, Name = "Winter", Code = "W", StartMonth = 1, EndMonth = 4 },
+                new Semester { Id = 2, Name = "Spring/Summer", Code = "S", StartMonth = 5, EndMonth = 8 },
+                new Semester { Id = 3, Name = "Fall", Code = "F", StartMonth = 9, EndMonth = 12 }
             );
 
             // ===== Materials =====

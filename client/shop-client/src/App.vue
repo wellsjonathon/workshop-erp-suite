@@ -72,6 +72,7 @@ body {
   padding: 0;
   margin: 0;
   height: 100%;
+  overflow: hidden;
 }
 a {
   text-decoration: none !important;
@@ -88,13 +89,16 @@ h1 {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
   width: 100%;
 }
 #app-main {
   // height: 100%;
 }
 #nav, #pmqa {
+  // position: -webkit-sticky;
+  // position: sticky;
+  // top: 0;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -110,7 +114,19 @@ h1 {
     margin: 0 0 10px;
   }
 }
-
+.content-area {
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 0.75em;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.325rem;
+    background-color: $primary-lightest
+  }
+  &::-webkit-scrollbar-track {
+    background: $offwhite;
+  }
+}
 .breadcrumb {
   font-size: 1.3rem;
   color: $gray-700;

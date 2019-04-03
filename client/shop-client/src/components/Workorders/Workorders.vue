@@ -128,7 +128,8 @@ export default {
       workorders: null,
       workorderFields: [
         {
-          key: 'id',
+          key: 'readableId',
+          label: 'Id',
           sortable: true
         },
         {
