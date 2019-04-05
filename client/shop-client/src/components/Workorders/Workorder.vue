@@ -60,6 +60,12 @@
               <b-tabs card>
 
                 <b-tab title="Materials" active>
+                  <div class="d-flex flex-row justify-content-end w-100">
+                    <b-button v-b-modal.add-material size="lg" variant="primary" class="mb-3">
+                      <FaIcon icon="plus" class="mr-3"/>
+                      Add material
+                    </b-button>
+                  </div>
                   <b-table hover outlined :items="materials" :fields="materialsFields">
                     <template slot="vendorMaterial" slot-scope="data">
                       {{ (data.value.vendor != null) ? data.value.vendor.name : 'No vendor specified' }}
@@ -150,6 +156,70 @@
         </b-form-group>
       </b-form>
     </b-modal>
+    <b-modal id="add-material" title="Add Material" v-model="showAddMaterial" size="md">
+      <b-form>
+        <b-form-group
+          id="material-group"
+          label="Material:"
+          label-cols-sm="4"
+          label-cols-xl="3"
+          label-size="lg"
+          label-align="right"
+          label-for="material-select">
+          <b-form-select
+            id="material-select"
+            size="lg"
+            required
+            text-field="name"
+            value-field="id"
+            v-model="addMaterialModal.material"
+            :options="allMaterials">
+              <option slot="first" :value="null">Select one...</option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group
+          id="quantity-group"
+          label="Quantity:"
+          label-cols-sm="4"
+          label-cols-xl="3"
+          label-size="lg"
+          label-align="right"
+          label-for="quantity-input">
+          <b-form-input
+            id="quantity-input"
+            type="text"
+            size="lg"
+            v-model="addMaterialModal.quantity"
+            required/>
+        </b-form-group>
+        <b-form-group
+          id="cost-group"
+          label="Cost Per Unit:"
+          label-cols-sm="4"
+          label-cols-xl="3"
+          label-size="lg"
+          label-align="right"
+          label-for="cost-input">
+          <b-input-group size="lg" prepend="$">
+            <b-form-input
+              id="cost-input"
+              type="text"
+              size="lg"
+              v-model="addMaterialModal.costPerUnit"
+              required/>
+            <b-input-group-append class="cost-append d-flex justify-content-center align-items-center">
+              <span>
+                Per {{ (selectedMaterial != null) ? selectedMaterial.unitOfMeasure.name : "-"}}
+              </span>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="this.cancelAddMaterial">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="addMaterial()">Add Material</b-button>
+      </div>
+    </b-modal>
   </b-container>
 </template>
 
@@ -176,6 +246,13 @@ export default {
         selectedTransition: null,
         comment: ''
       },
+      addMaterialModal: {
+        material: null,
+        quantity: 0,
+        costPerUnit: 0
+      },
+      allMaterials: null,
+      showAddMaterial: false,
       materialsFields: [
         {
           key: 'material.name',
@@ -229,6 +306,9 @@ export default {
     },
     formattedTransitions: function () {
       return this.formatTransitions(this.transitions)
+    },
+    selectedMaterial: function () {
+      return this.allMaterials.find(mat => { return mat.id === this.addMaterialModal.material })
     }
   },
   mounted: function () {
@@ -236,13 +316,15 @@ export default {
       .all([
         this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId),
         this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId + '/state/transitions'),
-        this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId + '/materials')
+        this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId + '/materials'),
+        this.$http.get('https://localhost:5001/api/inventory/materials')
       ])
-      .then(this.$http.spread((workorder, transitions, materials) => {
+      .then(this.$http.spread((workorder, transitions, materials, allMaterials) => {
         this.workorder = workorder.data
         this.transitions = transitions.data,
         this.materials = materials.data,
-        this.breadcrumbs[this.breadcrumbs.length - 1] = workorder.data.readableId
+        this.breadcrumbs[this.breadcrumbs.length - 1] = workorder.data.readableId,
+        this.allMaterials = allMaterials.data
       }))
   },
   methods: {
@@ -268,6 +350,29 @@ export default {
           text: t.nextState.name
         }
       })
+    },
+    addMaterial() {
+      console.log("In addMaterial()")
+      this.$http
+        .post('https://localhost:5001/api/workorders/' + this.workorderId + "/materials",
+          {
+            MaterialId: this.selectedMaterial.id,
+            UnitOfMeasureId: this.selectedMaterial.UnitOfMeasureId,
+            CostPerUnit: this.addMaterialModal.costPerUnit,
+            QuantityUsed: this.addMaterialModal.quantity
+          })
+        .then(response => {
+          this.materials.push(response.data)
+        })
+      this.showAddMaterial = false
+    },
+    cancelAddMaterial() {
+      this.addMaterialModal = {
+        material: null,
+        quantity: 0,
+        costPerUnit: 0
+      }
+      this.showAddMaterial = false
     }
   }
 }
@@ -275,4 +380,13 @@ export default {
 
 <style lang="scss">
 @import "../../styles/variables.scss";
+
+.cost-append {
+  // width: 3rem;
+  padding: 0 4px;
+  height: inherit;
+  font-size: 1.3rem;
+  border: 1px solid $gray-400;
+  background-color: $gray-300;
+}
 </style>

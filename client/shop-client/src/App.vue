@@ -3,23 +3,8 @@
     <div id="app-main" class="d-flex flex-row align-items-stretch flex-grow-1 w-100">
       <NavBar id="nav"/>
       <div class="content-area d-flex flex-column flex-grow-1">
-        <!-- <div id="header">
-          <b-container fluid class="d-flex flex-column h-100">
-            <b-row>
-              <b-col>
-                <b-breadcrumb :items="breadcrumbs" />
-              </b-col>
-            </b-row>
-            <b-row class="flex-grow-1 mb-4" align-v="end">
-              <b-col>
-                <h1>New Workorder</h1>
-              </b-col>
-            </b-row>
-          </b-container>
-        </div> -->
         <div id="content" class="d-flex flex-column flex-grow-1">
           <router-view></router-view>
-          <!-- <PMQuickAccess id="pmqa"/> -->
         </div>
       </div>
       <PMQuickAccess id="pmqa"/>

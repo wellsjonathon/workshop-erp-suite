@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Models
 {
-    public class Use
+    public class Purpose
     {
         public int Id { get; set; }
         public string Name { get; set; }

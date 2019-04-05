@@ -37,8 +37,8 @@
                     <b-form-select v-model="selectedFilters.faculty" :options="filters.faculties">
                       <option slot="first" :value="null">Faculty</option>
                     </b-form-select>
-                    <b-form-select v-model="selectedFilters.use" :options="filters.uses">
-                      <option slot="first" :value="null">Use</option>
+                    <b-form-select v-model="selectedFilters.purpose" :options="filters.purposes">
+                      <option slot="first" :value="null">Purpose</option>
                     </b-form-select>
                   </b-input-group>
                   <b-button-group size="lg" class="mx-2">
@@ -157,8 +157,6 @@ export default {
           key: 'state',
           label: 'State',
           sortable: true
-          // Thoughts: Rather pass full state object and use a template to style that column
-          // And sort by state.id, not state.name
         }
       ],
       pagination: {
@@ -169,12 +167,12 @@ export default {
       filters: {
         states: null,
         faculties: null,
-        uses: null
+        purposes: null
       },
       selectedFilters: {
         state: null,
         faculty: null,
-        use: null
+        purpose: null
       },
       limitOptions: [10, 25, 50],
       limit: 10,
@@ -192,9 +190,6 @@ export default {
     }
   },
   methods: {
-    toggleAdvSearch() {
-      this.advSearchCollapsed = !this.advSearchCollapsed
-    },
     displayDate(date) {
       return dayjs(date).format('MMMM DD, YYYY');
     },
@@ -284,17 +279,15 @@ export default {
           }
         }),
         this.$http.get('https://localhost:5001/api/workorders/faculties'),
-        this.$http.get('https://localhost:5001/api/workorders/uses'),
+        this.$http.get('https://localhost:5001/api/workorders/purposes'),
         this.$http.get('https://localhost:5001/api/workflow/states')
       ])
-      .then(this.$http.spread((workorders, faculties, uses, states) => {
+      .then(this.$http.spread((workorders, faculties, purposes, states) => {
         this.workorders = workorders.data;
         this.filters.faculties = this.formatFilters(faculties.data);
-        this.filters.uses = this.formatFilters(uses.data);
+        this.filters.purposes = this.formatFilters(purposes.data);
         this.filters.states = this.formatFilters(states.data);
       }))
-    //this.$http
-    //  .get('')
   }
 }
 </script>

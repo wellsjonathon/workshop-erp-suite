@@ -28,7 +28,7 @@ namespace ERP.Repositories.Context
         public DbSet<WorkorderNote> WorkorderNotes { get; set; }
         public DbSet<TransitionHistory> TransitionHistory { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
-        public DbSet<Use> Uses { get; set; }
+        public DbSet<Purpose> Purposes { get; set; }
         public DbSet<Semester> Semesters { get; set; }
 
         // ===== Workflows =====
@@ -57,7 +57,7 @@ namespace ERP.Repositories.Context
         // ===== Project Management ====
         public DbSet<BillableOverrideType> BillableOverrideTypes { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<EventParticipants> EventParticipantss { get; set; } //Set for now
+        public DbSet<EventParticipants> EventParticipants { get; set; }
         public DbSet<TimeEntry> TimeEntries { get; set; }
         public DbSet<TimeType> TimeTypes { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
@@ -111,10 +111,10 @@ namespace ERP.Repositories.Context
                 new Faculty { Id = 5, Name = "PSE" }
             );
 
-            builder.Entity<Use>().HasData(
-                new Use { Id = 1, Name = "Research" },
-                new Use { Id = 2, Name = "Class/Lab" },
-                new Use { Id = 3, Name = "Other" }
+            builder.Entity<Purpose>().HasData(
+                new Purpose { Id = 1, Name = "Research" },
+                new Purpose { Id = 2, Name = "Class/Lab" },
+                new Purpose { Id = 3, Name = "Other" }
             );
 
             builder.Entity<Semester>().HasData(

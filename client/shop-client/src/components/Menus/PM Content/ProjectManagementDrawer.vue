@@ -71,7 +71,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../../styles/variables.scss";
 
 .pmqa__tools {
@@ -103,7 +103,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 6px;
+  padding: 0 0.5rem;
 }
 .pmqa__time {
   width: 100%;
@@ -127,6 +127,9 @@ export default {
   background-image: linear-gradient(90deg, rgba(0,0,0,0), #EFEFF4, rgba(0,0,0,0));
 }
 .pmqa__day-view {
+  color: $offwhite;
+  background-color: rgba(0,0,0,0);
+  box-shadow: none;
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -139,5 +142,28 @@ export default {
       background: $primary-darker;
     }
   }
+}
+.vuecal__title {
+  background-color: rgba(0,0,0,0) !important;
+  margin: 0.5rem 0 1rem;
+}
+.vuecal__time-column {
+  color: $offwhite;
+  border: 1px solid $offwhite;
+  border-right: none;
+  border-left: none;
+  border-top: none;
+  > .vuecal__time-cell {
+    color: $offwhite;
+    margin: 0 4px;
+  }
+}
+.vuecal__cell::before {
+  border-right: none;
+  border-left: none;
+  border-top: none;
+}
+.vuecal__body {
+  margin: 0 1rem;
 }
 </style>

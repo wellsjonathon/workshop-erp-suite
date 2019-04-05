@@ -7,7 +7,6 @@ using ERP.Models.Workflows;
 
 namespace ERP.Models.Workorders
 {
-    // TODO: Clean this mess up...
     public class Workorder
     {
         public int Id { get; set; }
@@ -22,8 +21,8 @@ namespace ERP.Models.Workorders
         public List<WorkorderComment> Comments { get; set; }
         public List<WorkorderNote> Notes { get; set; }
 
-        public int UseId { get; set; }
-        public Use Use { get; set; }
+        public int PurposeId { get; set; }
+        public Purpose Purpose { get; set; }
 
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; }

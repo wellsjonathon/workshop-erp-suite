@@ -67,16 +67,16 @@ namespace ERP.API.Controllers
             public int? Faculty { get; set; }
             public int? Use { get; set; }
         }
-
         public class WorkorderSearchParams
         {
             public int? Limit { get; set; }
             public string Q { get; set; }
         }
 
+        // ===== WORKORDERS =====
+
         // GET: api/Workorders
         [HttpGet]
-        //public IEnumerable<Workorder> GetWorkorders([FromQuery] WorkorderQueryParams queryParams)
         public IActionResult GetWorkorders([FromQuery] WorkorderFilterParams filterParams)
         {
             IEnumerable<Workorder> workorders;
@@ -85,7 +85,7 @@ namespace ERP.API.Controllers
                 workorders = _context.Workorders
                     .Include(w => w.State)
                     .Include(w => w.Faculty)
-                    .Include(w => w.Use)
+                    .Include(w => w.Purpose)
                     .OrderByDescending(w => w.Id)
                     .Take((int)filterParams.Limit).ToList();
             }
@@ -94,7 +94,7 @@ namespace ERP.API.Controllers
                 workorders = _context.Workorders
                     .Include(w => w.State)
                     .Include(w => w.Faculty)
-                    .Include(w => w.Use);
+                    .Include(w => w.Purpose);
             }
 
             var hal = new HalRepresentation()
@@ -102,7 +102,7 @@ namespace ERP.API.Controllers
                 .AddLink("self", this.Request.Path, HttpType.GET);
 
             return Ok(workorders);
-            //return Ok(hal);
+            //return Ok(hal.GetRepresentation());
         }
 
         // GET: api/Workorders/5
@@ -183,7 +183,7 @@ namespace ERP.API.Controllers
             // TODO: Update workflows/states to determine first (and last?) state of workflow
             workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
             workorder.Faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == workorder.FacultyId);
-            workorder.Use = await _context.Uses.FirstOrDefaultAsync(u => u.Id == workorder.UseId);
+            workorder.Purpose = await _context.Purposes.FirstOrDefaultAsync(u => u.Id == workorder.PurposeId);
             workorder.DateCreated = DateTime.Now;
             workorder.Semester = await _context.Semesters
                 .FirstOrDefaultAsync(s => 
@@ -229,7 +229,7 @@ namespace ERP.API.Controllers
             var workorders = _context.Workorders
                 .Include(w => w.State)
                 .Include(w => w.Faculty)
-                .Include(w => w.Use)
+                .Include(w => w.Purpose)
                 .Select(w => w);
 
             if (filters.State != null)
@@ -242,7 +242,7 @@ namespace ERP.API.Controllers
             }
             if (filters.Use != null)
             {
-                workorders = workorders.Where(w => w.Use.Id == filters.Use);
+                workorders = workorders.Where(w => w.Purpose.Id == filters.Use);
             }
 
             if (filters.Limit != null)
@@ -266,7 +266,7 @@ namespace ERP.API.Controllers
             var workorders = _context.Workorders
                 .Include(w => w.State)
                 .Include(w => w.Faculty)
-                .Include(w => w.Use)
+                .Include(w => w.Purpose)
                 .Where(w => w.Title.Contains(searchParams.Q)
                     || w.Description.Contains(searchParams.Q)
                     || w.ClientName.Contains(searchParams.Q))
@@ -838,12 +838,12 @@ namespace ERP.API.Controllers
             return _context.Faculties;
         }
 
-        // ===== USES =====
+        // ===== PURPOSES =====
 
-        [HttpGet("uses")]
-        public IEnumerable<Use> GetUses()
+        [HttpGet("purposes")]
+        public IEnumerable<Purpose> GetPurposes()
         {
-            return _context.Uses;
+            return _context.Purposes;
         }
     }
 }
