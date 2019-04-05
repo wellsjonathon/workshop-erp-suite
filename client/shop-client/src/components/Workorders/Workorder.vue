@@ -74,7 +74,7 @@
                       ${{ data.value }}
                     </template>
                     <template slot="total" slot-scope="data">
-                      ${{ data.item.quantityUsed * data.item.costPerUnit }}
+                      ${{ (data.item.quantityUsed * data.item.costPerUnit).toFixed(2) }}
                     </template>
                   </b-table>
                 </b-tab>
@@ -185,12 +185,19 @@
           label-size="lg"
           label-align="right"
           label-for="quantity-input">
-          <b-form-input
-            id="quantity-input"
-            type="text"
-            size="lg"
-            v-model="addMaterialModal.quantity"
-            required/>
+          <b-input-group size="lg">
+            <b-form-input
+              id="quantity-input"
+              type="text"
+              size="lg"
+              v-model="addMaterialModal.quantity"
+              required/>
+            <b-input-group-append class="cost-append d-flex justify-content-center align-items-center">
+              <span>
+                {{ (selectedMaterial != null) ? selectedMaterial.unitOfMeasure.name : "-"}}
+              </span>
+            </b-input-group-append>
+          </b-input-group>
         </b-form-group>
         <b-form-group
           id="cost-group"
@@ -333,7 +340,7 @@ export default {
       this.materials.forEach(material => {
         totalCost += material.quantityUsed * material.costPerUnit
       })
-      return totalCost
+      return totalCost.toFixed(2)
     },
     changeStatus() {
       this.$http
@@ -357,9 +364,9 @@ export default {
         .post('https://localhost:5001/api/workorders/' + this.workorderId + "/materials",
           {
             MaterialId: this.selectedMaterial.id,
-            UnitOfMeasureId: this.selectedMaterial.UnitOfMeasureId,
-            CostPerUnit: this.addMaterialModal.costPerUnit,
-            QuantityUsed: this.addMaterialModal.quantity
+            UnitOfMeasureId: this.selectedMaterial.unitOfMeasureId,
+            CostPerUnit: Number(this.addMaterialModal.costPerUnit),
+            QuantityUsed: Number(this.addMaterialModal.quantity)
           })
         .then(response => {
           this.materials.push(response.data)
