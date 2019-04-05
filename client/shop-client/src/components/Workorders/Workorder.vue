@@ -60,13 +60,23 @@
               <b-tabs card>
 
                 <b-tab title="Materials" active>
-                  <div class="d-flex flex-row justify-content-end w-100">
-                    <b-button v-b-modal.add-material size="lg" variant="primary" class="mb-3">
-                      <FaIcon icon="plus" class="mr-3"/>
-                      Add material
-                    </b-button>
-                  </div>
-                  <b-table hover outlined :items="materials" :fields="materialsFields">
+                  <!-- <div class="d-flex flex-row justify-content-end w-100">
+                  </div> -->
+                  <b-table hover outlined :items="materials" :fields="materialsFields" :busy="isMaterialsBusy">
+                    <template slot="thead-top" slot-scope="data">
+                      <tr>
+                        <!-- <th colspan="5">&nbsp;</th> -->
+                        <th colspan="6">
+                          <b-button v-b-modal.add-material size="lg" variant="primary" class="float-right">
+                            <FaIcon icon="plus" class="mr-3"/>
+                            Add material
+                          </b-button>
+                        </th>
+                      </tr>
+                    </template>
+                    <div slot="table-busy" class="text-center text-danger my-2">
+                      <b-spinner class="align-middle"></b-spinner>
+                    </div>
                     <template slot="vendorMaterial" slot-scope="data">
                       {{ (data.value.vendor != null) ? data.value.vendor.name : 'No vendor specified' }}
                     </template>
@@ -260,6 +270,7 @@ export default {
       },
       allMaterials: null,
       showAddMaterial: false,
+      isMaterialsBusy: false,
       materialsFields: [
         {
           key: 'material.name',
@@ -318,7 +329,8 @@ export default {
       return this.allMaterials.find(mat => { return mat.id === this.addMaterialModal.material })
     }
   },
-  mounted: function () {
+  created: function () {
+    this.isMaterialsBusy = true
     this.$http
       .all([
         this.$http.get('https://localhost:5001/api/workorders/' + this.workorderId),
@@ -332,6 +344,7 @@ export default {
         this.materials = materials.data,
         this.breadcrumbs[this.breadcrumbs.length - 1] = workorder.data.readableId,
         this.allMaterials = allMaterials.data
+        this.isMaterialsBusy = false
       }))
   },
   methods: {

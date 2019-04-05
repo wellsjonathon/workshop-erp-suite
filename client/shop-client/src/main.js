@@ -98,6 +98,9 @@ library.add(faPlus)
 library.add(faEdit)
 
 Vue.config.productionTip = false
+
+axios.defaults.headers.post['Content-type'] = 'application/json'
+
 Vue.prototype.$http = axios
 
 const router = new VueRouter({
