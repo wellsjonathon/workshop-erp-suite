@@ -223,7 +223,7 @@ export default {
           params: {
             state: this.selectedFilters.state,
             faculty: this.selectedFilters.faculty,
-            use: this.selectedFilters.use,
+            purpose: this.selectedFilters.purpose,
             limit: this.limit
           }
         })
@@ -237,7 +237,7 @@ export default {
           params: {
             state: this.selectedFilters.state,
             faculty: this.selectedFilters.faculty,
-            use: this.selectedFilters.use,
+            purpose: this.selectedFilters.purpose,
             limit: this.limit
           }
         })
@@ -258,7 +258,7 @@ export default {
       this.selectedFilters = {
         state: null,
         faculty: null,
-        use: null
+        purpose: null
       }
     },
     formatFilters(data) {

@@ -30,21 +30,57 @@
             <b-row>
               <b-col sm="7" lg="8">
                 <div class="d-flex flex-column">
-                  <div>
-                    <h3>Description</h3>
-                    <p>{{ workorder.description }}</p>
+                  <div class="mb-4">
+                    <h3 class="mb-2">Description</h3>
+                    <b-card>
+                      <p class="my-0">{{ workorder.description }}</p>
+                    </b-card>
                   </div>
                   <div>
+                    <h3 class="mb-2">Drawings &amp; Attachments</h3>
+                    <b-card class="attachments-display">
+                      <p class="text-danger my-0">No drawings or other attachments added.</p>
+                    </b-card>
                   </div>
                 </div>
               </b-col>
               <b-col sm="5" lg="4">
                 <div class="d-flex flex-column">
-                  <h3>Details</h3>
-                  <h3>Client Info</h3>
-                  <p>Name: {{ workorder.clientName }}</p>
-                  <p>Phone Number: {{ workorder.clientNumber }}</p>
-                  <p>Email: {{ workorder.clientEmail }}</p>
+                  <div class="mb-4">
+                    <h3 class="mb-2">Details</h3>
+                    <b-card>
+
+                    </b-card>
+                  </div>
+                  <div>
+                    <h3 class="mb-2">Client Info</h3>
+                    <b-card>
+                      <b-form-group class="details-row"
+                        label="Name:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientName }}</span>
+                      </b-form-group>
+                      <b-form-group class="details-row"
+                        label="Phone Number:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientPhoneNumber }}</span>
+                      </b-form-group>
+                      <b-form-group class="details-row"
+                        label="Email:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientEmail }}</span>
+                      </b-form-group>
+                    </b-card>
+                  </div>
                 </div>
               </b-col>
             </b-row>
@@ -65,12 +101,14 @@
                   <b-table hover outlined :items="materials" :fields="materialsFields" :busy="isMaterialsBusy">
                     <template slot="thead-top" slot-scope="data">
                       <tr>
-                        <!-- <th colspan="5">&nbsp;</th> -->
                         <th colspan="6">
-                          <b-button v-b-modal.add-material size="lg" variant="primary" class="float-right">
-                            <FaIcon icon="plus" class="mr-3"/>
-                            Add material
-                          </b-button>
+                          <div class="d-flex flex-row justify-content-between align-items-end">
+                            <h4>Total Material Cost: <span class="text-primary">${{ calculateTotalMaterialCost() }}</span></h4>
+                            <b-button v-b-modal.add-material size="lg" variant="primary" class="float-right">
+                              <FaIcon icon="plus" class="mr-3"/>
+                              Add material
+                            </b-button>
+                          </div>
                         </th>
                       </tr>
                     </template>
@@ -89,7 +127,7 @@
                   </b-table>
                 </b-tab>
 
-                <b-tab title="Time Entries">
+                <b-tab title="Time Entries & Labour">
                   <b-table hover outlined :items="workorder.timeEntries">
 
                   </b-table>
@@ -105,6 +143,12 @@
               <b-tabs card>
 
                 <b-tab title="Comments" active>
+                  <div class="d-flex flex-row justify-content-end w-100">
+                    <b-button v-b-modal.add-comment variant="primary" size="lg">
+                      <FaIcon icon="plus" class="mr-3"/>
+                      Add Comment
+                    </b-button>
+                  </div>
                   <b-list-group>
                     <b-list-group-item v-for="comment in commentsAscendingAge" :key="comment.timestamp">
                       <Comment :comment="comment" />
@@ -127,7 +171,24 @@
       </b-col> -->
     </b-row>
     <b-modal id="add-comment">
-
+      <b-form>
+        <b-form-group
+          id="comment-group"
+          label="Comment:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right"
+          label-for="comment-input">
+          <b-form-textarea
+            id="comment-input"
+            type="text"
+            size="lg"
+            v-model="newComment"
+            required
+            placeholder="Add a comment..."/>
+        </b-form-group>
+      </b-form>
     </b-modal>
     <b-modal id="change-status" title="Change Status">
       <b-form>
@@ -401,6 +462,21 @@ export default {
 <style lang="scss">
 @import "../../styles/variables.scss";
 
+.form-group.details-row {
+  font-size: 1.25rem;
+  margin-bottom: 0 !important;
+  & .form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & .col-form-label {
+      font-weight: 600;
+    }
+  }
+}
+.details-span {
+  font-size: inherit;
+}
 .cost-append {
   // width: 3rem;
   padding: 0 4px;
@@ -408,5 +484,11 @@ export default {
   font-size: 1.3rem;
   border: 1px solid $gray-400;
   background-color: $gray-300;
+}
+.attachments-display {
+  //  height: 100px;
+}
+#comment-input {
+  height: 100px;
 }
 </style>
