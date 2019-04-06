@@ -15,7 +15,7 @@
             <b-col class="d-flex justify-content-end">
               <b-button-toolbar>
                 <b-button-group size="lg" class="mr-2">
-                  <b-button variant="outline-primary">Add Comment</b-button>
+                  <b-button v-b-modal.add-comment variant="outline-primary">Add Comment</b-button>
                   <b-button variant="outline-primary">Add Note</b-button>
                 </b-button-group>
                 <b-button v-b-modal.change-status variant="primary" size="lg" class="mr-2">Update Status</b-button>
@@ -30,21 +30,104 @@
             <b-row>
               <b-col sm="7" lg="8">
                 <div class="d-flex flex-column">
-                  <div>
-                    <h3>Description</h3>
-                    <p>{{ workorder.description }}</p>
+                  <div class="mb-5">
+                    <div class="d-flex flex-row w-100 align-items-baseline mb-2">
+                      <h3 class="mb-2">Description</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <p class="my-0">{{ workorder.description }}</p>
                   </div>
                   <div>
+                    <div class="d-flex flex-row w-100 align-items-baseline mb-2">
+                      <h3 class="mb-2">Drawings &amp; Attachments</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <b-card class="attachments-display">
+                      <p class="text-danger my-0">No drawings or other attachments added.</p>
+                    </b-card>
                   </div>
                 </div>
               </b-col>
               <b-col sm="5" lg="4">
                 <div class="d-flex flex-column">
-                  <h3>Details</h3>
-                  <h3>Client Info</h3>
-                  <p>Name: {{ workorder.clientName }}</p>
-                  <p>Phone Number: {{ workorder.clientNumber }}</p>
-                  <p>Email: {{ workorder.clientEmail }}</p>
+                  <div class="mb-5">
+                    <div class="d-flex flex-row w-100 align-items-baseline">
+                      <h3 class="mb-2">Details</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <b-form-group class="details-row"
+                      label="Status:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.state.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Faculty:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.faculty.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Purpose:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.purpose.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Date Required:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ displayDate(workorder.dateRequiredBy) }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Date Created:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ displayDate(workorder.dateCreated) }}</span>
+                    </b-form-group>
+                  </div>
+                  <div>
+                    <div class="d-flex flex-row w-100 align-items-baseline">
+                      <h3 class="mb-2">Client Info</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <!-- <b-card> -->
+                      <b-form-group class="details-row"
+                        label="Name:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientName }}</span>
+                      </b-form-group>
+                      <b-form-group class="details-row"
+                        label="Phone Number:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientPhoneNumber }}</span>
+                      </b-form-group>
+                      <b-form-group class="details-row"
+                        label="Email:"
+                        label-cols-sm="3"
+                        label-cols-xl="4"
+                        label-size="lg"
+                        label-align="left">
+                        <span class="details-span">{{ workorder.clientEmail }}</span>
+                      </b-form-group>
+                    <!-- </b-card> -->
+                  </div>
                 </div>
               </b-col>
             </b-row>
@@ -65,12 +148,14 @@
                   <b-table hover outlined :items="materials" :fields="materialsFields" :busy="isMaterialsBusy">
                     <template slot="thead-top" slot-scope="data">
                       <tr>
-                        <!-- <th colspan="5">&nbsp;</th> -->
                         <th colspan="6">
-                          <b-button v-b-modal.add-material size="lg" variant="primary" class="float-right">
-                            <FaIcon icon="plus" class="mr-3"/>
-                            Add material
-                          </b-button>
+                          <div class="d-flex flex-row justify-content-between align-items-end">
+                            <h4>Total Material Cost: <span class="text-primary">${{ calculateTotalMaterialCost() }}</span></h4>
+                            <b-button v-b-modal.add-material size="lg" variant="primary" class="float-right">
+                              <FaIcon icon="plus" class="mr-3"/>
+                              Add material
+                            </b-button>
+                          </div>
                         </th>
                       </tr>
                     </template>
@@ -89,7 +174,7 @@
                   </b-table>
                 </b-tab>
 
-                <b-tab title="Time Entries">
+                <b-tab title="Time Entries & Labour">
                   <b-table hover outlined :items="workorder.timeEntries">
 
                   </b-table>
@@ -105,6 +190,12 @@
               <b-tabs card>
 
                 <b-tab title="Comments" active>
+                  <div class="d-flex flex-row justify-content-end w-100">
+                    <b-button v-b-modal.add-comment variant="primary" size="lg" class="mb-3">
+                      <FaIcon icon="plus" class="mr-3"/>
+                      Add Comment
+                    </b-button>
+                  </div>
                   <b-list-group>
                     <b-list-group-item v-for="comment in commentsAscendingAge" :key="comment.timestamp">
                       <Comment :comment="comment" />
@@ -126,10 +217,44 @@
         </b-row>
       </b-col> -->
     </b-row>
-    <b-modal id="add-comment">
 
+    <b-modal id="add-comment" title="Add Comment" v-model="showAddComment">
+      <b-form>
+        <b-form-group
+          id="comment-username-group"
+          class="details-row"
+          label="Username:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right">
+          <span class="details-span">{{ addCommentModal.username }}</span>
+        </b-form-group>
+        <b-form-group
+          id="comment-group"
+          class="details-row"
+          label="Comment:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right"
+          label-for="comment-input">
+          <b-form-textarea
+            id="comment-input"
+            type="text"
+            size="lg"
+            v-model="addCommentModal.comment"
+            required
+            placeholder="Add a comment..."/>
+        </b-form-group>
+      </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="cancelAddComment()">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="addComment()">Add Comment</b-button>
+      </div>
     </b-modal>
-    <b-modal id="change-status" title="Change Status">
+
+    <b-modal id="change-status" title="Change Status" v-model="showChangeStatus">
       <b-form>
         <b-form-group
           id="state-group"
@@ -165,7 +290,12 @@
             placeholder="Add a comment on the status update..."/>
         </b-form-group>
       </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="cancelChangeStatus()">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="changeStatus()">Add Comment</b-button>
+      </div>
     </b-modal>
+
     <b-modal id="add-material" title="Add Material" v-model="showAddMaterial" size="md">
       <b-form>
         <b-form-group
@@ -237,10 +367,12 @@
         <b-button variant="primary" size="lg" @click="addMaterial()">Add Material</b-button>
       </div>
     </b-modal>
+
   </b-container>
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import Comment from './../Activities/Comment.vue'
 
 export default {
@@ -261,6 +393,7 @@ export default {
       transitions: null,
       stateChange: {
         selectedTransition: null,
+        username: "Jonathon Wells",
         comment: ''
       },
       addMaterialModal: {
@@ -268,8 +401,14 @@ export default {
         quantity: 0,
         costPerUnit: 0
       },
+      addCommentModal: {
+        username: "Jonathon Wells",
+        comment: ''
+      },
       allMaterials: null,
+      showChangeStatus: false,
       showAddMaterial: false,
+      showAddComment: false,
       isMaterialsBusy: false,
       materialsFields: [
         {
@@ -348,20 +487,15 @@ export default {
       }))
   },
   methods: {
+    displayDate(date) {
+      return dayjs(date).format('MMMM DD, YYYY');
+    },
     calculateTotalMaterialCost() {
       var totalCost = 0
       this.materials.forEach(material => {
         totalCost += material.quantityUsed * material.costPerUnit
       })
       return totalCost.toFixed(2)
-    },
-    changeStatus() {
-      this.$http
-        .put('https://localhost:5001/api/Workorders/' + this.workorderId + '/status',
-          { ID: this.workorder.status.id + 1 })
-        .then(response => {
-          this.workorder = response.data
-        })
     },
     formatTransitions(transitions) {
       return transitions.map(t => {
@@ -371,8 +505,32 @@ export default {
         }
       })
     },
+    changeStatus() {
+      this.$http
+        .post('https://localhost:5001/api/workorders/' + this.workorderId + '/state',
+          {
+            NewStateId: this.stateChange.selectedTransition,
+            username: this.stateChange.username,
+            comment: this.stateChange.comment
+          })
+        .then(response => {
+          this.$http
+            .get('https://localhost:5001/api/workorders/' + this.workorderId)
+            .then(workorder => {
+              this.workorder = workorder.data
+            })
+        })
+      this.showChangeStatus = false
+    },
+    cancelChangeStatus() {
+      this.stateChange = {
+        selectedTransition: null,
+        username: "Jonathon Wells",
+        comment: ''
+      }
+      this.showChangeStatus = false
+    },
     addMaterial() {
-      console.log("In addMaterial()")
       this.$http
         .post('https://localhost:5001/api/workorders/' + this.workorderId + "/materials",
           {
@@ -393,6 +551,22 @@ export default {
         costPerUnit: 0
       }
       this.showAddMaterial = false
+    },
+    addComment() {
+      this.$http
+        .post('https://localhost:5001/api/workorders/' + this.workorderId + "/comments",
+          this.addCommentModal)
+        .then(response => {
+          this.workorder.comments.push(response.data)
+        })
+      this.showAddComment = false
+    },
+    cancelAddComment() {
+      this.addCommentModal = {
+        username: "Jonathon Wells",
+        comment: ''
+      }
+      this.showAddComment = false
     }
   }
 }
@@ -401,6 +575,22 @@ export default {
 <style lang="scss">
 @import "../../styles/variables.scss";
 
+
+.form-group.details-row {
+  font-size: 1.25rem;
+  margin-bottom: 0 !important;
+  & .form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & .col-form-label {
+      font-weight: 600;
+    }
+  }
+}
+.details-span {
+  font-size: inherit;
+}
 .cost-append {
   // width: 3rem;
   padding: 0 4px;
@@ -408,5 +598,15 @@ export default {
   font-size: 1.3rem;
   border: 1px solid $gray-400;
   background-color: $gray-300;
+}
+.attachments-display {
+  //  height: 100px;
+}
+.underline-separator {
+  border-bottom: 2px solid $gray-700;
+  margin-left: 4px;
+}
+#comment-input {
+  height: 100px;
 }
 </style>

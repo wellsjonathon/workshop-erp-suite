@@ -36,7 +36,7 @@
     <div class="nav__account-area">
       <NavBarItem :collapsed="isCollapsed"
                   link="/account"
-                  linkName="Chris Yung"
+                  linkName="Jonathon Wells"
                   linkIcon="user"
                   :isAccount="true"/>
     </div>

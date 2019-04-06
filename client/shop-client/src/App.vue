@@ -145,7 +145,7 @@ h1 {
     cursor: pointer;
   }
 }
-.table {
+.table, .tabs, p {
   font-size: 1.2rem !important;
 }
 </style>

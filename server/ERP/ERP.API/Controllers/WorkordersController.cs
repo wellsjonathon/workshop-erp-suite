@@ -65,7 +65,7 @@ namespace ERP.API.Controllers
             public int? Limit { get; set; }
             public int? State { get; set; }
             public int? Faculty { get; set; }
-            public int? Use { get; set; }
+            public int? Purpose { get; set; }
         }
         public class WorkorderSearchParams
         {
@@ -125,6 +125,7 @@ namespace ERP.API.Controllers
                 .Include(w => w.Comments)
                 .Include(w => w.Notes)
                 .Include(w => w.Faculty)
+                .Include(w => w.Purpose)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workorder == null)
@@ -240,9 +241,9 @@ namespace ERP.API.Controllers
             {
                 workorders = workorders.Where(w => w.Faculty.Id == filters.Faculty);
             }
-            if (filters.Use != null)
+            if (filters.Purpose != null)
             {
-                workorders = workorders.Where(w => w.Purpose.Id == filters.Use);
+                workorders = workorders.Where(w => w.Purpose.Id == filters.Purpose);
             }
 
             if (filters.Limit != null)
