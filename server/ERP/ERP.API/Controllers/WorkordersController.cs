@@ -125,6 +125,7 @@ namespace ERP.API.Controllers
                 .Include(w => w.Comments)
                 .Include(w => w.Notes)
                 .Include(w => w.Faculty)
+                .Include(w => w.Purpose)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workorder == null)

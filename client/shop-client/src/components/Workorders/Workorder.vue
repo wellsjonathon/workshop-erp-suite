@@ -15,7 +15,7 @@
             <b-col class="d-flex justify-content-end">
               <b-button-toolbar>
                 <b-button-group size="lg" class="mr-2">
-                  <b-button variant="outline-primary">Add Comment</b-button>
+                  <b-button v-b-modal.add-comment variant="outline-primary">Add Comment</b-button>
                   <b-button variant="outline-primary">Add Note</b-button>
                 </b-button-group>
                 <b-button v-b-modal.change-status variant="primary" size="lg" class="mr-2">Update Status</b-button>
@@ -30,14 +30,18 @@
             <b-row>
               <b-col sm="7" lg="8">
                 <div class="d-flex flex-column">
-                  <div class="mb-4">
-                    <h3 class="mb-2">Description</h3>
-                    <b-card>
-                      <p class="my-0">{{ workorder.description }}</p>
-                    </b-card>
+                  <div class="mb-5">
+                    <div class="d-flex flex-row w-100 align-items-baseline mb-2">
+                      <h3 class="mb-2">Description</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <p class="my-0">{{ workorder.description }}</p>
                   </div>
                   <div>
-                    <h3 class="mb-2">Drawings &amp; Attachments</h3>
+                    <div class="d-flex flex-row w-100 align-items-baseline mb-2">
+                      <h3 class="mb-2">Drawings &amp; Attachments</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
                     <b-card class="attachments-display">
                       <p class="text-danger my-0">No drawings or other attachments added.</p>
                     </b-card>
@@ -46,15 +50,58 @@
               </b-col>
               <b-col sm="5" lg="4">
                 <div class="d-flex flex-column">
-                  <div class="mb-4">
-                    <h3 class="mb-2">Details</h3>
-                    <b-card>
-
-                    </b-card>
+                  <div class="mb-5">
+                    <div class="d-flex flex-row w-100 align-items-baseline">
+                      <h3 class="mb-2">Details</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <b-form-group class="details-row"
+                      label="Status:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.state.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Faculty:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.faculty.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Purpose:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ workorder.purpose.name }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Date Required:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ displayDate(workorder.dateRequiredBy) }}</span>
+                    </b-form-group>
+                    <b-form-group class="details-row"
+                      label="Date Created:"
+                      label-cols-sm="3"
+                      label-cols-xl="4"
+                      label-size="lg"
+                      label-align="left">
+                      <span class="details-span">{{ displayDate(workorder.dateCreated) }}</span>
+                    </b-form-group>
                   </div>
                   <div>
-                    <h3 class="mb-2">Client Info</h3>
-                    <b-card>
+                    <div class="d-flex flex-row w-100 align-items-baseline">
+                      <h3 class="mb-2">Client Info</h3>
+                      <span class="underline-separator flex-grow-1"></span>
+                    </div>
+                    <!-- <b-card> -->
                       <b-form-group class="details-row"
                         label="Name:"
                         label-cols-sm="3"
@@ -79,7 +126,7 @@
                         label-align="left">
                         <span class="details-span">{{ workorder.clientEmail }}</span>
                       </b-form-group>
-                    </b-card>
+                    <!-- </b-card> -->
                   </div>
                 </div>
               </b-col>
@@ -171,7 +218,7 @@
       </b-col> -->
     </b-row>
 
-    <b-modal id="add-comment" v-model="showAddComment">
+    <b-modal id="add-comment" title="Add Comment" v-model="showAddComment">
       <b-form>
         <b-form-group
           id="comment-username-group"
@@ -207,7 +254,7 @@
       </div>
     </b-modal>
 
-    <b-modal id="change-status" title="Change Status">
+    <b-modal id="change-status" title="Change Status" v-model="showChangeStatus">
       <b-form>
         <b-form-group
           id="state-group"
@@ -243,6 +290,10 @@
             placeholder="Add a comment on the status update..."/>
         </b-form-group>
       </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="cancelChangeStatus()">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="changeStatus()">Add Comment</b-button>
+      </div>
     </b-modal>
 
     <b-modal id="add-material" title="Add Material" v-model="showAddMaterial" size="md">
@@ -321,6 +372,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import Comment from './../Activities/Comment.vue'
 
 export default {
@@ -341,6 +393,7 @@ export default {
       transitions: null,
       stateChange: {
         selectedTransition: null,
+        username: "Jonathon Wells",
         comment: ''
       },
       addMaterialModal: {
@@ -353,6 +406,7 @@ export default {
         comment: ''
       },
       allMaterials: null,
+      showChangeStatus: false,
       showAddMaterial: false,
       showAddComment: false,
       isMaterialsBusy: false,
@@ -433,20 +487,15 @@ export default {
       }))
   },
   methods: {
+    displayDate(date) {
+      return dayjs(date).format('MMMM DD, YYYY');
+    },
     calculateTotalMaterialCost() {
       var totalCost = 0
       this.materials.forEach(material => {
         totalCost += material.quantityUsed * material.costPerUnit
       })
       return totalCost.toFixed(2)
-    },
-    changeStatus() {
-      this.$http
-        .put('https://localhost:5001/api/Workorders/' + this.workorderId + '/status',
-          { ID: this.workorder.status.id + 1 })
-        .then(response => {
-          this.workorder = response.data
-        })
     },
     formatTransitions(transitions) {
       return transitions.map(t => {
@@ -455,6 +504,31 @@ export default {
           text: t.nextState.name
         }
       })
+    },
+    changeStatus() {
+      this.$http
+        .post('https://localhost:5001/api/workorders/' + this.workorderId + '/state',
+          {
+            NewStateId: this.stateChange.selectedTransition,
+            username: this.stateChange.username,
+            comment: this.stateChange.comment
+          })
+        .then(response => {
+          this.$http
+            .get('https://localhost:5001/api/workorders/' + this.workorderId)
+            .then(workorder => {
+              this.workorder = workorder.data
+            })
+        })
+      this.showChangeStatus = false
+    },
+    cancelChangeStatus() {
+      this.stateChange = {
+        selectedTransition: null,
+        username: "Jonathon Wells",
+        comment: ''
+      }
+      this.showChangeStatus = false
     },
     addMaterial() {
       this.$http
@@ -527,6 +601,10 @@ export default {
 }
 .attachments-display {
   //  height: 100px;
+}
+.underline-separator {
+  border-bottom: 2px solid $gray-700;
+  margin-left: 4px;
 }
 #comment-input {
   height: 100px;
