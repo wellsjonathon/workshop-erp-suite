@@ -144,7 +144,7 @@
 
                 <b-tab title="Comments" active>
                   <div class="d-flex flex-row justify-content-end w-100">
-                    <b-button v-b-modal.add-comment variant="primary" size="lg">
+                    <b-button v-b-modal.add-comment variant="primary" size="lg" class="mb-3">
                       <FaIcon icon="plus" class="mr-3"/>
                       Add Comment
                     </b-button>
@@ -170,10 +170,22 @@
         </b-row>
       </b-col> -->
     </b-row>
-    <b-modal id="add-comment">
+
+    <b-modal id="add-comment" v-model="showAddComment">
       <b-form>
         <b-form-group
+          id="comment-username-group"
+          class="details-row"
+          label="Username:"
+          label-cols-sm="3"
+          label-cols-xl="2"
+          label-size="lg"
+          label-align="right">
+          <span class="details-span">{{ addCommentModal.username }}</span>
+        </b-form-group>
+        <b-form-group
           id="comment-group"
+          class="details-row"
           label="Comment:"
           label-cols-sm="3"
           label-cols-xl="2"
@@ -184,12 +196,17 @@
             id="comment-input"
             type="text"
             size="lg"
-            v-model="newComment"
+            v-model="addCommentModal.comment"
             required
             placeholder="Add a comment..."/>
         </b-form-group>
       </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="cancelAddComment()">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="addComment()">Add Comment</b-button>
+      </div>
     </b-modal>
+
     <b-modal id="change-status" title="Change Status">
       <b-form>
         <b-form-group
@@ -227,6 +244,7 @@
         </b-form-group>
       </b-form>
     </b-modal>
+
     <b-modal id="add-material" title="Add Material" v-model="showAddMaterial" size="md">
       <b-form>
         <b-form-group
@@ -298,6 +316,7 @@
         <b-button variant="primary" size="lg" @click="addMaterial()">Add Material</b-button>
       </div>
     </b-modal>
+
   </b-container>
 </template>
 
@@ -329,8 +348,13 @@ export default {
         quantity: 0,
         costPerUnit: 0
       },
+      addCommentModal: {
+        username: "Jonathon Wells",
+        comment: ''
+      },
       allMaterials: null,
       showAddMaterial: false,
+      showAddComment: false,
       isMaterialsBusy: false,
       materialsFields: [
         {
@@ -433,7 +457,6 @@ export default {
       })
     },
     addMaterial() {
-      console.log("In addMaterial()")
       this.$http
         .post('https://localhost:5001/api/workorders/' + this.workorderId + "/materials",
           {
@@ -454,6 +477,22 @@ export default {
         costPerUnit: 0
       }
       this.showAddMaterial = false
+    },
+    addComment() {
+      this.$http
+        .post('https://localhost:5001/api/workorders/' + this.workorderId + "/comments",
+          this.addCommentModal)
+        .then(response => {
+          this.workorder.comments.push(response.data)
+        })
+      this.showAddComment = false
+    },
+    cancelAddComment() {
+      this.addCommentModal = {
+        username: "Jonathon Wells",
+        comment: ''
+      }
+      this.showAddComment = false
     }
   }
 }
@@ -461,6 +500,7 @@ export default {
 
 <style lang="scss">
 @import "../../styles/variables.scss";
+
 
 .form-group.details-row {
   font-size: 1.25rem;
