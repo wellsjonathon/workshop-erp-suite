@@ -45,7 +45,9 @@ namespace ERP.API.Controllers
         [HttpGet("calendar/time-entries")]
         public IEnumerable<TimeEntry> GetTimeEntries()
         {
-            return _context.TimeEntries.Include(t => t.TimeType);
+            return _context.TimeEntries
+                .Include(t => t.TimeType)
+                .Include(t => t.Workorder);
         }
 
         // POST: api/calendar/time-entries
@@ -57,7 +59,8 @@ namespace ERP.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            timeEntry.TimeType =  _context.TimeTypes.Single<TimeType>(t => t.Id == timeEntry.TimeTypeId);
+            timeEntry.TimeType = await _context.TimeTypes.FirstOrDefaultAsync(t => t.Id == timeEntry.TimeTypeId);
+            timeEntry.Workorder = await _context.Workorders.FirstOrDefaultAsync(w => w.Id == timeEntry.WorkorderId);
             _context.TimeEntries.Add(timeEntry);
             await _context.SaveChangesAsync();
 
@@ -75,6 +78,7 @@ namespace ERP.API.Controllers
 
             var time_entry = await _context.TimeEntries
                 .Include(t => t.TimeType)
+                .Include(w => w.Workorder)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (time_entry == null)

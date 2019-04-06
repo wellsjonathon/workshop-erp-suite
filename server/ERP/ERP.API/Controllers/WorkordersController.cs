@@ -183,7 +183,7 @@ namespace ERP.API.Controllers
             // TODO: Update workflows/states to determine first (and last?) state of workflow
             workorder.State = await _context.States.FirstOrDefaultAsync(x => x.Id == 1);
             workorder.Faculty = await _context.Faculties.FirstOrDefaultAsync(f => f.Id == workorder.FacultyId);
-            workorder.Purpose = await _context.Purposes.FirstOrDefaultAsync(u => u.Id == workorder.PurposeId);
+            workorder.Purpose = await _context.Purposes.FirstOrDefaultAsync(p => p.Id == workorder.PurposeId);
             workorder.DateCreated = DateTime.Now;
             workorder.Semester = await _context.Semesters
                 .FirstOrDefaultAsync(s => 

@@ -100,7 +100,7 @@
                     <div class="d-flex flex-column w-100">
                       <vue-cal
                         xsmall
-                        class="datepicker vuecal--rounded-theme vuecal--green-theme"
+                        class="datepicker vuecal--rounded-theme vuecal-workorder vuecal--green-theme"
                         :selected-date="workorder.dateRequiredBy"
                         @day-focus="workorder.dateRequiredBy = $event"
                         hide-view-selector
@@ -330,40 +330,41 @@ label {
   line-height: 2rem;
   font-size: 1.25rem;
 }
-.vuecal {
-  font-size: 1rem;
-}
-.vuecal__cell {
-  font-size: 1.25rem;
-  background-color: $primary-lighter;
-  &.today .vuecal__cell-content {
-    background-color: $primary !important;
+.vuecal-workorder{
+  .vuecal {
+    font-size: 1rem;
   }
-  &.selected .vuecal__cell-content {
-    border: 1.5px solid $primary-dark !important;
+  .vuecal__cell {
+    font-size: 1.25rem;
+    &.today .vuecal__cell-content {
+      background-color: $primary !important;
+    }
+    &.selected .vuecal__cell-content {
+      border: 1.5px solid $primary-dark !important;
+    }
   }
-}
-.vuecal__cell-content {
-  background-color: fade-out($primary-lighter, 0.8) !important;
-}
+  .vuecal__cell-content {
+    background-color: fade-out($primary-lighter, 0.8) !important;
+  }
 
-#client-info-group {
-  border-style: dashed !important;
+  #client-info-group {
+    border-style: dashed !important;
+  }
+  #description, #description-input {
+    height: 100px;
+  }
+  #attachments-input {
+    height: $input-height-lg;
+    line-height: $input-line-height-lg;
+  }
+  /*
+  .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
+  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: $primary-lighter;}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+  .vuecal__cell.selected:before {border-color: $success; background-color: fade-out($success, 0.7)}
+  */
 }
-#description, #description-input {
-  height: 100px;
-}
-#attachments-input {
-  height: $input-height-lg;
-  line-height: $input-line-height-lg;
-}
-/*
-.vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
-.vuecal__menu li {border-bottom-color: #fff;color: #fff;}
-.vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-.vuecal__title {background-color: $primary-lighter;}
-.vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-.vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
-.vuecal__cell.selected:before {border-color: $success; background-color: fade-out($success, 0.7)}
-*/
 </style>

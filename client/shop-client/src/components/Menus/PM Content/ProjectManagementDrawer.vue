@@ -9,7 +9,7 @@
     </div> -->
     <div class="pmqa__times d-flex flex-direction-column align-items-center">
       <vue-cal
-        class="pmqa__day-view w-100 mt-2"
+        class="pmqa__day-view pmqa-vuecal w-100 mt-2"
         xsmall
         hide-view-selector
         :selected-date="date.current"
@@ -125,6 +125,36 @@ export default {
   height: 1px;
   border: none;
   background-image: linear-gradient(90deg, rgba(0,0,0,0), #EFEFF4, rgba(0,0,0,0));
+}
+.pmqa-vuecal{
+  background-color: $primary !important;
+  .vuecal__title {
+    //background-color: rgba(0,0,0,0) !important;
+    margin: 0.5rem 0 1rem;
+  }
+  .vuecal__flex{
+    background-color: $primary !important;
+  }
+  .vuecal__time-column {
+    color: $offwhite;
+    border: 1px solid $offwhite;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    > .vuecal__time-cell {
+      color: $offwhite;
+      margin: 0 4px;
+    }
+  }
+  .vuecal__cell::before {
+    border-right: none;
+    border-left: none;
+    border-top: none;
+  }
+  .vuecal__body {
+    margin: 0 1rem;
+    background-color: none;
+  }
 }
 .pmqa__day-view {
   color: $offwhite;

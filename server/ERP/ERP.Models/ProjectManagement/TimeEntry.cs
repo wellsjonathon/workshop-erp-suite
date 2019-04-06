@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ERP.Models.Workorders;
+using Newtonsoft.Json;
 
 namespace ERP.Models.ProjectManagement
 {
@@ -17,6 +18,8 @@ namespace ERP.Models.ProjectManagement
         public int TimeTypeId { get; set; }
         public TimeType TimeType { get; set; }
         // TODO: Determine if explicit foreign key is needed or not
+        public int WorkorderId { get; set; }
+        [JsonIgnore]
         public Workorder Workorder { get; set; } // Optional
     }
 }

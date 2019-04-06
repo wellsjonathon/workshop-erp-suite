@@ -25,7 +25,7 @@
                 </b-button>
               </b-button-toolbar>
             </b-col>
-          </b-row>
+            </b-row>
           <b-card-body>
             <b-row>
               <b-col cols="8">

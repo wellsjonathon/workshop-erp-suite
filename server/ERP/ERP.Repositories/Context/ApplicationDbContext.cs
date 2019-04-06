@@ -96,7 +96,8 @@ namespace ERP.Repositories.Context
             builder.Entity<TimeEntry>()
                 .HasOne(e => e.Workorder)
                 .WithMany(w => w.TimeEntries)
-                .IsRequired(false);
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // TODO: Create specific seed functions
             WorkflowSeed.Seed(builder);
