@@ -33,8 +33,23 @@
       <b-col>
        <!-- {{timeEntries}} -->
       </b-col>
-    <b-modal id="add-time-entry" title="Add Time Entry">
+    <b-modal id="add-time-entry" title="Add Time Entry" v-model="showAddedTimeEntries">
       <b-form>
+        <b-form-group
+            id="title-group"
+            label="Title:"
+            label-cols-sm="3"
+            label-cols-xl="2"
+            label-size="lg"
+            label-align="right"
+            label-for="title-input">
+            <b-form-input
+              id="title-input"
+              type="text"
+              size="lg"
+              v-model="newTimeEntry.title"
+              required/>
+          </b-form-group>
         <b-form-group
           id="timeTypeId-group"
           label="Type of Entry:"
@@ -68,21 +83,42 @@
             </b-form-select>
           </b-form-group>
           <b-form-group
-            id="duration-group"
-            label="Duration:"
+            id="start-group"
+            label="Start Time:"
             label-cols-sm="3"
             label-cols-xl="2"
             label-size="lg"
             label-align="right"
-            label-for="duration-input">
+            label-for="start-input">
             <b-form-input
-              id="duration-input"
+              id="start-input"
               type="text"
               size="lg"
-              v-model="newTimeEntry.duration"
-              required/>
+              v-model="newTimeEntry.start"
+              required
+              placeholder="YYYY-MM-DD"/>
+          </b-form-group>
+          <b-form-group
+            id="end-group"
+            label="End Time:"
+            label-cols-sm="3"
+            label-cols-xl="2"
+            label-size="lg"
+            label-align="right"
+            label-for="end-input">
+            <b-form-input
+              id="end-input"
+              type="text"
+              size="lg"
+              v-model="newTimeEntry.end"
+              required
+              placeholder="YYYY-MM-DD"/>
           </b-form-group>
       </b-form>
+      <div slot="modal-footer" class="w-100 d-flex flex-row justify-content-end">
+        <b-button variant="outline-danger" size="lg" class="mr-2" @click="this.cancelAddTimeEntry">Cancel</b-button>
+        <b-button variant="primary" size="lg" @click="addTimeEntry()">Add Time Entry</b-button>
+      </div>
     </b-modal>
   </b-container>
 </template>
@@ -99,10 +135,13 @@ export default {
     return {
       events: [],
       timeEntries: [],
+      showAddedTimeEntries: false,
       newTimeEntry: {
         selectedTimeType: null,
         selectedBillableTime: null,
-        duration:''
+        title:'',
+        start:'',
+        end:''
       },
       breadcrumbs: [
         {
@@ -160,6 +199,24 @@ export default {
           }
         }
       )
+    },
+    addTimeEntry() {
+      this.$http
+      .post('https://localhose:5001/api/calendartime-entries')
+      .then(response => {
+        this.events = this.toTimeEntry(timeEntries.data)
+      })
+      this.showAddedTimeEntries = false
+    },
+    cancelAddTimeEntry(){
+      this.newTimeEntry = {
+        selectedTimeType: null,
+        selectedBillableTime: null,
+        title:'',
+        start:'',
+        end:''
+      }
+      this.showAddedTimeEntries = false
     }
   },
   mounted: function () {
@@ -174,7 +231,6 @@ export default {
         this.events = this.toTimeEntry(timeEntries.data)
       }))
   },
-
 }
 </script>
 
